@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       margin: { top: "16mm", bottom: "16mm", left: "14mm", right: "14mm" },
     });
 
-    return new NextResponse(pdf, {
+    return new NextResponse(pdf as any, {
       headers: {
         "content-type": "application/pdf",
         "content-disposition": `attachment; filename="Bank_Account_Resolution.pdf"`,

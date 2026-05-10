@@ -25,7 +25,7 @@ function sigImagePara(base64: string | undefined) {
         new ImageRun({
           data,
           transformation: { width: 100, height: 40 },
-        }),
+        } as any),
       ],
     });
   } catch (e) {
@@ -147,12 +147,7 @@ export async function POST(req: Request) {
   });
 
   const buffer = await Packer.toBuffer(doc);
-  const arrayBuffer = buffer.buffer.slice(
-    buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength,
-  ) as ArrayBuffer;
-
-  return new NextResponse(arrayBuffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "content-type":
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

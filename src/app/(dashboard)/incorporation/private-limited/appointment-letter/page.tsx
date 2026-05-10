@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AppointmentLetterPage from "@/components/pvt-ltd/AppointmentLetterPage";
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <AppointmentLetterPage />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AppointmentLetterPage />
+    </Suspense>
+  );
 }

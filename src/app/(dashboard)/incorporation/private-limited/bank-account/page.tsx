@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { Metadata } from "next";
 import BankAccountPage from "@/components/pvt-ltd/BankAccountPage";
 
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <BankAccountPage />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <BankAccountPage />
+    </Suspense>
+  );
 }

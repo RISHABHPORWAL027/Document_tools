@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import SpecimenSignaturePage from "@/components/SpecimenSignaturePage";
 
 export const metadata: Metadata = {
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function SpecimenSignatureRoute() {
-  return <SpecimenSignaturePage />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SpecimenSignaturePage />
+    </Suspense>
+  );
 }

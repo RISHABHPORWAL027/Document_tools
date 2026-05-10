@@ -21,7 +21,7 @@ function sigImagePara(base64: string | undefined) {
         new ImageRun({
           data,
           transformation: { width: 120, height: 45 },
-        }),
+        } as any),
       ],
     });
   } catch (e) {
@@ -112,7 +112,7 @@ export async function POST(req: Request) {
   });
 
   const buffer = await Packer.toBuffer(doc);
-  return new NextResponse(buffer, {
+  return new NextResponse(new Uint8Array(buffer), {
     headers: {
       "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       "content-disposition": `attachment; filename="Bank_Account_Resolution.docx"`,

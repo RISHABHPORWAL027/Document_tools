@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import NocPage from "@/components/NocPage";
 
 export const metadata: Metadata = {
@@ -6,5 +7,9 @@ export const metadata: Metadata = {
 };
 
 export default function NocRoute() {
-  return <NocPage />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <NocPage />
+    </Suspense>
+  );
 }

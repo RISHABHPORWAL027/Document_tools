@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       pdf.byteOffset + pdf.byteLength,
     ) as ArrayBuffer;
 
-    return new NextResponse(arrayBuffer, {
+    return new NextResponse(arrayBuffer as any, {
       headers: {
         "content-type": "application/pdf",
         "content-disposition": `attachment; filename="${body.fileName || "document.pdf"}"`,

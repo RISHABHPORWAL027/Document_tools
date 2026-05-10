@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import EligibilityConsentPage from "@/components/pvt-ltd/EligibilityConsentPage";
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function Page() {
-  return <EligibilityConsentPage />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <EligibilityConsentPage />
+    </Suspense>
+  );
 }
