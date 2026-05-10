@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import ModulePageClient from "@/components/ModulePageClient";
+import dynamic from "next/dynamic";
+
+const ModulePageClient = dynamic(() => import("@/components/ModulePageClient"), {
+  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
+});;
 import { getFlow, moduleGroupedDocsForFlow } from "@/lib/site/registry";
 
 const flow = getFlow("bank_account");

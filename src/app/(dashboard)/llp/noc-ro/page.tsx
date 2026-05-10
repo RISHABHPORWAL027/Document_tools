@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import LlpNocRoPage from "@/components/llp/LlpNocRoPage";
+import dynamic from "next/dynamic";
+
+const LlpNocRoPage = dynamic(() => import("@/components/llp/LlpNocRoPage"), {
+  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
+});;
 
 export const metadata: Metadata = {
-  title: "LLP NOC — Registered Office",
+  title: "LLP NOC for Registered Office | No Objection Certificate Generator",
+  description: "Create a No Objection Certificate (NOC) from the property owner for LLP incorporation. Verbatim legal format.",
+  keywords: ["LLP NOC", "No Objection Certificate", "registered office address proof", "LLP address proof"],
 };
 
 function Fallback() {

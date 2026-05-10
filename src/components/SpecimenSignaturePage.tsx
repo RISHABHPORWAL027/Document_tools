@@ -12,8 +12,6 @@ type DirectorEntry = {
 
 type SpecimenFormData = {
   establishmentName: string;
-  /** Company common seal / authorised signatory block — image */
-  companySignatureImageUrl: string;
   directors: DirectorEntry[];
 };
 
@@ -36,7 +34,6 @@ const initialDirector: DirectorEntry = {
 function createInitialSpecimenData(): SpecimenFormData {
   return {
     establishmentName: "",
-    companySignatureImageUrl: "",
     directors: [{ ...initialDirector }, { ...initialDirector }],
   };
 }
@@ -83,20 +80,10 @@ export default function SpecimenSignaturePage() {
     reader.readAsDataURL(file);
   }
 
-  function handleCompanySignatureUpload(file: File | undefined) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      update("companySignatureImageUrl", e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  }
-
   function handleProfileSelect(profile: CompanyProfile) {
     setData((prev) => ({
       ...prev,
       establishmentName: profile.companyName || prev.establishmentName,
-      companySignatureImageUrl: prev.companySignatureImageUrl,
       directors:
         profile.directors.length > 0
           ? profile.directors.map((d) => ({
@@ -168,34 +155,6 @@ export default function SpecimenSignaturePage() {
                 />
               </Input>
 
-              <div className="rounded-xl border border-indigo-200 bg-indigo-50/80 p-3">
-                <div className="text-sm font-semibold text-indigo-950">
-                  Company signature / common seal (optional)
-                </div>
-                <p className="mt-1 text-xs text-indigo-900">
-                  Upload a scan of the company signature or common seal for this
-                  specimen card — in addition to each director&apos;s signature
-                  below.
-                </p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className={`${inputClass} mt-2`}
-                  onChange={(e) =>
-                    handleCompanySignatureUpload(e.target.files?.[0])
-                  }
-                />
-                {data.companySignatureImageUrl ? (
-                  <div className="mt-2 rounded-lg border bg-white p-2">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={data.companySignatureImageUrl}
-                      alt="Company signature"
-                      className="max-h-24 object-contain"
-                    />
-                  </div>
-                ) : null}
-              </div>
 
               {/* DIRECTORS */}
               <div className="rounded-xl border bg-zinc-50 p-3">
@@ -367,20 +326,6 @@ function buildSpecimenHtml(data: SpecimenFormData): string {
       ? escapeHtml(s)
       : '<span style="color:#aaa">_______________</span>';
 
-  const companySigBlock = `<div class="dir-card">
-      <div class="dir-row">
-        <span class="dir-label">Company / Common seal (specimen)</span>
-        <span class="dir-sep">:</span>
-        <span class="dir-sig">
-          ${
-            data.companySignatureImageUrl
-              ? `<img src="${data.companySignatureImageUrl.replace(/"/g, "&quot;")}" alt="Company seal" style="max-height:80px;max-width:280px;object-fit:contain;" />`
-              : '<div style="width:200px;height:60px;border:1px solid #ccc;"></div>'
-          }
-        </span>
-      </div>
-    </div>`;
-
   const directorCards = data.directors
     .map(
       (dir, idx) => `
@@ -395,14 +340,14 @@ function buildSpecimenHtml(data: SpecimenFormData): string {
           <span class="dir-sep"> &ndash; </span>
           <span class="dir-val">${val(dir.designation)}</span>
         </div>
-        <div class="dir-row">
+        <div class="dir-row" style="margin-top: 15px;">
           <span class="dir-label">Specimen Signature</span>
           <span class="dir-sep">:</span>
           <span class="dir-sig">
             ${
               dir.signatureImageUrl
-                ? `<img src="${dir.signatureImageUrl}" alt="Signature" style="max-height:60px;max-width:200px;object-fit:contain;" />`
-                : '<div style="width:200px;height:60px;border:1px solid #ccc;"></div>'
+                ? `<img src="${dir.signatureImageUrl}" alt="Signature" style="max-height:80px;max-width:250px;object-fit:contain;" />`
+                : '<div style="width:250px;height:70px;border:1px solid #ccc; background: #fafafa;"></div>'
             }
           </span>
         </div>
@@ -437,17 +382,14 @@ function buildSpecimenHtml(data: SpecimenFormData): string {
       text-transform: uppercase;
     }
 
-    .establishment {
-      margin-bottom: 20px;
-      overflow-wrap: break-word;
-    }
-    .establishment .label {
-      font-size: 11pt;
-      color: #555;
-    }
-    .establishment .value {
+    .establishment-row {
+      margin-bottom: 25px;
       font-size: 13pt;
       font-weight: bold;
+    }
+    .establishment-row .label {
+      font-weight: normal;
+      font-size: 11pt;
     }
 
     .dir-card {
@@ -494,12 +436,11 @@ function buildSpecimenHtml(data: SpecimenFormData): string {
       for Registration of the Company
     </div>
 
-    <div class="establishment">
-      <div class="label">NAME OF ESTABLISHMENT</div>
-      <div class="value">${val(data.establishmentName)}</div>
+    <div class="establishment-row">
+      <span class="label">NAME OF ESTABLISHMENT</span>
+      <span class="sep"> &ndash; </span>
+      <span class="value">${val(data.establishmentName)}</span>
     </div>
-
-    ${companySigBlock}
 
     ${directorCards}
 

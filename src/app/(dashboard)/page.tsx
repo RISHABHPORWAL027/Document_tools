@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import WorkspaceHomeClient from "@/components/site/WorkspaceHomeClient";
+import dynamic from "next/dynamic";
+
+const WorkspaceHomeClient = dynamic(() => import("@/components/site/WorkspaceHomeClient"), {
+  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
+});;
 
 export const metadata: Metadata = {
   title: "Workspace",

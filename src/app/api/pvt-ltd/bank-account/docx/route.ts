@@ -78,30 +78,30 @@ export async function POST(req: Request) {
           para(`For ${company}`, true),
           blank(),
           new Table({
-             width: { size: 100, type: WidthType.PERCENTAGE },
-             borders: {
-               top: { style: BorderStyle.NONE },
-               bottom: { style: BorderStyle.NONE },
-               left: { style: BorderStyle.NONE },
-               right: { style: BorderStyle.NONE },
-               insideHorizontal: { style: BorderStyle.NONE },
-               insideVertical: { style: BorderStyle.NONE },
-             },
-             rows: [
-               new TableRow({
-                 children: [
-                   new TableCell({ children: [], width: { size: 60, type: WidthType.PERCENTAGE } }),
-                   new TableCell({
-                     width: { size: 40, type: WidthType.PERCENTAGE },
-                     children: [
-                       sigImagePara(v.signatureImage),
-                       para(`( ${v.signatoryName || "________________"} )`, true, AlignmentType.CENTER),
-                       para(v.signatoryDesignation || "Director", false, AlignmentType.CENTER),
-                     ]
-                   })
-                 ]
-               })
-             ]
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            borders: {
+              top: { style: BorderStyle.NONE },
+              bottom: { style: BorderStyle.NONE },
+              left: { style: BorderStyle.NONE },
+              right: { style: BorderStyle.NONE },
+              insideHorizontal: { style: BorderStyle.NONE },
+              insideVertical: { style: BorderStyle.NONE },
+            },
+            rows: [
+              new TableRow({
+                children: [
+                  new TableCell({ children: [], width: { size: 60, type: WidthType.PERCENTAGE } }),
+                  new TableCell({
+                    width: { size: 40, type: WidthType.PERCENTAGE },
+                    children: [
+                      sigImagePara(v.signatureImage),
+                      para(`( ${v.signatoryName || "________________"} )`, true, AlignmentType.CENTER),
+                      para(v.signatoryDesignation || "Director", false, AlignmentType.CENTER),
+                    ]
+                  })
+                ]
+              })
+            ]
           }),
           blank(),
           para(`Place: ${v.place || "________________"}`),

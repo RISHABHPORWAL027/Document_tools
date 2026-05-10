@@ -3,7 +3,10 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
+import { useCompanyProfile } from "@/lib/profiles/use-profiles";
 import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
+import { useDocumentPrefill } from "@/lib/profiles/useDocumentPrefill";
+import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import { buildLlpForm9Html, type LlpForm9Values } from "@/lib/llp/form9-html";
@@ -68,6 +71,7 @@ function Input({
 export default function LlpForm9Page() {
   const searchParams = useSearchParams();
   const companyFromUrl = searchParams.get("company");
+  const { profile } = useCompanyProfile(companyFromUrl || undefined);
 
   const [data, setData] = useState<LlpForm9Values>(() => initialForm());
   const [busy, setBusy] = useState(false);
@@ -77,27 +81,23 @@ export default function LlpForm9Page() {
     setData((prev) => ({ ...prev, [key]: value }));
   }
 
-  function handleProfileSelect(profile: CompanyProfile) {
-    const dir = profile.directors[0];
-    const addr = dir
-      ? [dir.address, dir.city, dir.state, dir.pincode].filter(Boolean).join(", ")
-      : "";
-    setData((prev) => ({
-      ...prev,
-      llpName: profile.companyName || prev.llpName,
-      partnerName: dir?.directorName ?? prev.partnerName,
-      fatherName: dir?.fatherName ?? prev.fatherName,
-      residentialAddress: addr || prev.residentialAddress,
-      nationality: dir?.nationality ?? prev.nationality,
-      occupation: dir?.occupation ?? prev.occupation,
-      dateOfBirth: dir?.dateOfBirth ?? prev.dateOfBirth,
-      email: dir?.email ?? prev.email,
-      mobile: dir?.mobileNumber ?? prev.mobile,
-      pan: dir?.pan ?? prev.pan,
-      dpin: (dir?.din ?? "").replace(/\D/g, "").slice(0, 8) || prev.dpin,
-      place: dir?.city || profile.place || prev.place,
-    }));
-  }
+  useDocumentPrefill(profile, setData, {
+    llpName: (p) => p.companyName || "",
+    partnerName: (p) => p.directors[0]?.directorName || "",
+    fatherName: (p) => p.directors[0]?.fatherName || "",
+    residentialAddress: (p) => {
+      const d = p.directors[0];
+      return d ? [d.address, d.city, d.state, d.pincode].filter(Boolean).join(", ") : "";
+    },
+    nationality: (p) => p.directors[0]?.nationality || "Indian",
+    occupation: (p) => p.directors[0]?.occupation || "",
+    dateOfBirth: (p) => p.directors[0]?.dateOfBirth || "",
+    email: (p) => p.directors[0]?.email || "",
+    mobile: (p) => p.directors[0]?.mobileNumber || "",
+    pan: (p) => p.directors[0]?.pan || "",
+    dpin: (p) => (p.directors[0]?.din || "").replace(/\D/g, "").slice(0, 8),
+    place: (p) => p.directors[0]?.city || p.place || "",
+  });
 
   function validate(): string | null {
     if (!data.partnerName?.trim()) return "Designated partner name is required.";
@@ -157,7 +157,7 @@ export default function LlpForm9Page() {
     <DocumentEditorLayout
       title="Form 9 — Consent as Designated Partner"
       description="Draft consent aligned with LLP incorporation practice. Match final wording with your CS."
-      onProfileSelect={handleProfileSelect}
+      onProfileSelect={(p) => {}}
       busy={busy}
       onDownload={download}
       previewHtml={previewHtml}
@@ -168,6 +168,9 @@ export default function LlpForm9Page() {
             <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs">LLP & Partner Details</h2>
             <Input label="Name of LLP (proposed)" required>
               <input className={inputClass} placeholder="e.g. Dray Consulting LLP" value={data.llpName} onChange={(e) => update("llpName", e.target.value)} />
+            </Input>
+            <Input label="Address of LLP (under incorporation)" required>
+              <textarea className={inputClass} rows={2} placeholder="Proposed registered office address" value={data.llpAddress} onChange={(e) => update("llpAddress", e.target.value)} />
             </Input>
             <Input label="Designated Partner — Full Name" required>
               <input className={inputClass} value={data.partnerName} onChange={(e) => update("partnerName", e.target.value)} />
@@ -188,7 +191,11 @@ export default function LlpForm9Page() {
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input label="Date of Birth">
-                <input type="date" className={inputClass} value={data.dateOfBirth} onChange={(e) => update("dateOfBirth", e.target.value)} />
+              <LegalDatePicker 
+                className={inputClass} 
+                value={data.dateOfBirth} 
+                onChange={(parts) => update("dateOfBirth", parts.dateIso)} 
+              />
               </Input>
               <Input label="PAN">
                 <input className={inputClass} placeholder="ABCDE1234F" maxLength={10} value={data.pan} onChange={(e) => update("pan", e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))} />
@@ -213,7 +220,11 @@ export default function LlpForm9Page() {
               <input className={inputClass} value={data.place} onChange={(e) => update("place", e.target.value)} />
             </Input>
             <Input label="Date of Signing">
-              <input type="date" className={inputClass} value={data.date} onChange={(e) => update("date", e.target.value)} />
+              <LegalDatePicker 
+                className={inputClass} 
+                value={data.date} 
+                onChange={(parts) => update("date", parts.dateIso)} 
+              />
             </Input>
             <SignatureUpload label="Partner Signature" onSignatureChange={(sig) => update("signatureImage", sig || "")} />
             <Input label="Printed Name Under Signature">

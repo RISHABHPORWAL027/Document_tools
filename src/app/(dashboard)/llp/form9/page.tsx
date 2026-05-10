@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import LlpForm9Page from "@/components/llp/LlpForm9Page";
+import dynamic from "next/dynamic";
+
+const LlpForm9Page = dynamic(() => import("@/components/llp/LlpForm9Page"), {
+  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
+});;
 
 export const metadata: Metadata = {
   title: "LLP Form 9 — Designated Partner Consent",

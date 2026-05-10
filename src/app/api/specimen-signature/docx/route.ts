@@ -51,19 +51,9 @@ export async function POST(req: Request) {
     new Paragraph({ text: "" }),
     new Paragraph({
       children: [
-        new TextRun({ text: "NAME OF ESTABLISHMENT: ", bold: true }),
-        new TextRun({ text: val(data.establishmentName) }),
-      ],
-    }),
-    new Paragraph({ text: "" }),
-    new Paragraph({
-      children: [
-        new TextRun({ text: "Company / Common seal (specimen): ", bold: true }),
-        new TextRun({
-          text: (data.companySignatureImageUrl ?? "").trim()
-            ? "Image provided (use PDF export for embedded scan)."
-            : "_______________",
-        }),
+        new TextRun({ text: "NAME OF ESTABLISHMENT ", bold: true }),
+        new TextRun({ text: " – " }),
+        new TextRun({ text: val(data.establishmentName), bold: true }),
       ],
     }),
     new Paragraph({ text: "" }),
@@ -73,35 +63,27 @@ export async function POST(req: Request) {
     lines.push(
       new Paragraph({
         children: [
-          new TextRun({ text: `Director ${idx + 1}: `, bold: true }),
-          new TextRun({ text: val(dir.name) }),
+          new TextRun({ text: `Name of the Director ${idx + 1}` }),
+          new TextRun({ text: " – " }),
+          new TextRun({ text: val(dir.name), bold: true }),
         ],
       }),
       new Paragraph({
         children: [
-          new TextRun({ text: "Designation: " }),
-          new TextRun({ text: val(dir.designation) }),
+          new TextRun({ text: "Designation" }),
+          new TextRun({ text: " – " }),
+          new TextRun({ text: val(dir.designation), bold: true }),
         ],
       }),
-      new Paragraph({ text: "Specimen Signature: _______________" }),
+      new Paragraph({
+        children: [
+          new TextRun({ text: "Specimen Signature : " }),
+        ],
+      }),
       new Paragraph({ text: "" }),
     );
   });
 
-  lines.push(
-    new Paragraph({
-      children: [
-        new TextRun({ text: "Date: " }),
-        new TextRun({ text: fDate(data.date) }),
-      ],
-    }),
-    new Paragraph({
-      children: [
-        new TextRun({ text: "Place: " }),
-        new TextRun({ text: val(data.place) }),
-      ],
-    }),
-  );
 
   const doc = new Document({ sections: [{ children: lines }] });
   const buffer = await Packer.toBuffer(doc);

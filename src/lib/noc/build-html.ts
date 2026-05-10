@@ -97,7 +97,7 @@ export function buildNocHtml(raw: NocValues): string {
     padding: 0;
   }
   .page {
-    width: 210mm;
+    width: 100%;
     min-height: 297mm;
     margin: 0 auto;
     padding: 22mm 20mm 20mm 25mm;
@@ -197,25 +197,27 @@ export function buildNocHtml(raw: NocValues): string {
 
   @media print {
     body { padding: 0; }
-    .page { margin: 0; }
+    .page { width: 210mm; margin: 0; padding: 22mm 20mm 20mm 25mm; }
   }
 </style>
 </head>
 <body>
 <div class="page">
 
-  <!-- ── Letterhead: From (left) + Date (right) ── -->
+  <!-- ── Letterhead: From (left) ── -->
   <div class="letterhead">
     <div class="from-block">
       <div class="from-label">From:-</div>
       <div class="from-name">${e(ownerName)}</div>
       <div class="from-addr">${e(ownerAddress)}</div>
     </div>
-    <div class="date-block">${e(date)}</div>
   </div>
 
   <!-- ── Full-width separator ── -->
   <hr class="separator"/>
+
+  <!-- ── Date ── -->
+  <div class="date-block" style="margin-bottom: 5mm; text-align: right;">${e(date)}</div>
 
   <!-- ── To ── -->
   <div class="to-section">

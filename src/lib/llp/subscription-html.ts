@@ -1,8 +1,15 @@
-/** LLP Subscription sheet — partner contributions (FiLLiP pack style). */
+/** LLP Subscription sheet — pixel-perfect match to original document. */
 
-export type LlpSubscriptionRow = {
-  partnerName?: string;
-  contributionRs?: string;
+export type LlpSubscriptionPartner = {
+  name?: string;
+  fatherName?: string;
+  address?: string;
+  pan?: string;
+  dob?: string;
+  mobile?: string;
+  email?: string;
+  occupation?: string;
+  designation?: string; // e.g. Designated Partner
   signatureImage?: string;
 };
 
@@ -10,7 +17,12 @@ export type LlpSubscriptionValues = {
   llpName?: string;
   place?: string;
   date?: string;
-  rows?: LlpSubscriptionRow[];
+  witnessName?: string;
+  witnessAddress?: string;
+  witnessProfession?: string;
+  witnessMembership?: string;
+  witnessSignatureImage?: string;
+  partners?: LlpSubscriptionPartner[];
 };
 
 function e(s: string): string {
@@ -21,7 +33,7 @@ function e(s: string): string {
     .replace(/\n/g, "<br/>");
 }
 
-const BLANK = "—";
+const BLANK = "________________";
 
 function fmtDate(iso: string): string {
   if (!iso) return BLANK;
@@ -35,43 +47,36 @@ function fmtDate(iso: string): string {
 }
 
 export function buildLlpSubscriptionHtml(raw: LlpSubscriptionValues): string {
-  const llp = raw.llpName?.trim() || "________________";
-  const place = raw.place?.trim() || "________________";
-  const date = fmtDate(raw.date?.trim() || "");
-  const rows =
-    raw.rows?.filter((r) => r.partnerName?.trim() || r.contributionRs?.trim()) ??
-    [];
-  const displayRows =
-    rows.length > 0
-      ? rows
-      : [
-          { partnerName: "", contributionRs: "" },
-          { partnerName: "", contributionRs: "" },
-        ];
+  const partners = raw.partners?.length ? raw.partners : [{ designation: "Designated Partner" }, { designation: "Designated Partner" }];
+  const date = fmtDate(raw.date || "");
+  const place = raw.place || BLANK;
+  
+  const witnessName = raw.witnessName || BLANK;
+  const witnessAddr = raw.witnessAddress || BLANK;
+  const witnessProf = raw.witnessProfession || BLANK;
+  const witnessMem = raw.witnessMembership || "";
 
-  const totalRs = displayRows.reduce((acc, r) => {
-    const n = parseFloat(String(r.contributionRs ?? "").replace(/,/g, ""));
-    return acc + (Number.isFinite(n) ? n : 0);
-  }, 0);
-  const totalLabel =
-    totalRs > 0
-      ? totalRs.toLocaleString("en-IN", { maximumFractionDigits: 2 })
-      : "________";
-
-  const tbody = displayRows
-    .map((r, i) => {
-      const nm = r.partnerName?.trim() || BLANK;
-      const rs = r.contributionRs?.trim() || BLANK;
-      return `<tr>
-        <td style="text-align:center;padding:8px;border:1px solid #333;">${i + 1}</td>
-        <td style="padding:8px;border:1px solid #333;">${e(nm)}</td>
-        <td style="padding:8px;border:1px solid #333;text-align:right;">${e(rs)}</td>
-        <td style="padding:4px;border:1px solid #333;text-align:center;vertical-align:middle;">
-          ${r.signatureImage ? `<img src="${r.signatureImage}" style="max-height:12mm;max-width:30mm;object-fit:contain;" />` : ""}
-        </td>
-      </tr>`;
-    })
-    .join("");
+  const partnerBlocks = partners.map((p, i) => `
+    <div class="partner-section">
+      <div class="partner-details">
+        <div class="row"><strong>Name of Designated Partner:</strong> ${e(p.name || BLANK)}</div>
+        <div class="row"><strong>Father Name:</strong> ${e(p.fatherName || BLANK)}</div>
+        <div class="row"><strong>R/O:</strong> ${e(p.address || BLANK)}</div>
+        <div class="row"><strong>PAN:</strong> ${e(p.pan || BLANK)}</div>
+        <div class="row"><strong>Date of Birth:</strong> ${e(p.dob || BLANK)}</div>
+        <div class="row"><strong>Mobile number-:</strong> ${e(p.mobile || BLANK)}</div>
+        <div class="row"><strong>Email Id:</strong> ${e(p.email || BLANK)}</div>
+        <div class="row"><strong>Occupation:</strong> ${e(p.occupation || BLANK)}</div>
+        <div class="row" style="margin-top: 10px; font-weight: bold;">${e(p.designation || "Designated Partner")}</div>
+      </div>
+      <div class="partner-sig">
+        <div class="sig-box">
+          ${p.signatureImage ? `<img src="${p.signatureImage}" style="max-height: 20mm; max-width: 45mm; object-fit: contain;" />` : ""}
+        </div>
+        <div style="text-align: center; font-size: 9pt; margin-top: 2mm;">(Signature)</div>
+      </div>
+    </div>
+  `).join("");
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -81,87 +86,131 @@ export function buildLlpSubscriptionHtml(raw: LlpSubscriptionValues): string {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Times New Roman", Times, serif;
-    font-size: 12pt;
-    color: #111;
+    font-size: 11pt;
+    color: #000;
     background: #fff;
+    line-height: 1.4;
   }
   .page {
-    width: 210mm;
+    width: 100%;
     min-height: 297mm;
     margin: 0 auto;
-    padding: 18mm 16mm;
+    padding: 20mm;
+    background: #fff;
   }
-  h1 {
+  
+  .title {
     text-align: center;
-    font-size: 14pt;
     font-weight: bold;
-    text-transform: uppercase;
-    margin-bottom: 2mm;
-    letter-spacing: 0.04em;
+    text-decoration: underline;
+    font-size: 14pt;
+    margin-bottom: 6mm;
   }
-  .sub {
-    text-align: center;
-    font-size: 11pt;
-    color: #444;
+
+  .intro-text {
+    text-align: justify;
+    margin-bottom: 5mm;
+  }
+
+  .consent-text {
     margin-bottom: 8mm;
   }
-  .meta {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4mm;
-    margin-bottom: 6mm;
-    font-size: 11pt;
+
+  .partner-section {
+    display: flex;
+    border: 1px solid #000;
+    margin-bottom: -1px; /* collapse borders */
   }
-  table { width: 100%; border-collapse: collapse; margin-bottom: 6mm; }
-  th {
-    background: #f4f4f5;
-    font-weight: 700;
-    font-size: 10pt;
-    padding: 8px;
-    border: 1px solid #333;
-    text-align: left;
+  .partner-details {
+    flex: 2;
+    padding: 10px;
+    border-right: 1px solid #000;
   }
-  .note {
-    font-size: 10.5pt;
-    text-align: justify;
-    line-height: 1.5;
-    margin-top: 6mm;
-    color: #333;
+  .partner-sig {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
-  @media print { .page { margin: 0; } }
+  .sig-box {
+    width: 100%;
+    min-height: 25mm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .row {
+    margin-bottom: 2mm;
+  }
+
+  .witness-section {
+    display: flex;
+    border: 1px solid #000;
+    margin-top: 10mm;
+  }
+  .witness-details {
+    flex: 2;
+    padding: 10px;
+    border-right: 1px solid #000;
+  }
+  .witness-sig {
+    flex: 1;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .meta-row {
+    margin-top: 10mm;
+    font-weight: bold;
+  }
+
+  @media print {
+    body { padding: 0; }
+    .page { width: 210mm; margin: 0; padding: 20mm; border: none; }
+  }
 </style>
 </head>
 <body>
 <div class="page">
-  <h1>Subscription Sheet</h1>
-  <div class="sub">Limited Liability Partnership — contribution by partners</div>
-  <div class="meta">
-    <div><strong>Name of LLP (proposed):</strong> ${e(llp)}</div>
-    <div style="text-align:right;"><strong>Date:</strong> ${e(date)}</div>
-    <div><strong>Place:</strong> ${e(place)}</div>
+  <div class="title">SUBSCRIBER SHEET</div>
+
+  <div class="intro-text">
+    We the several persons, whose names are subscribed below, are desirous of being formed into a LLP for carrying on as lawful business with a view of profit and have entered and agreed to enter into a LLP agreement in writing and we respectively agree to contribute money or other benefit or to perform services for the LLP in accordance with the LLP agreement, the particulars of which are stated against our respective names.
   </div>
-  <table>
-    <thead>
-      <tr>
-        <th style="width:8%;text-align:center;">Sl.</th>
-        <th style="width:38%;">Name of Partner / Designated Partner</th>
-        <th style="width:22%;text-align:right;">Contribution (₹)</th>
-        <th style="width:32%;">Signature</th>
-      </tr>
-    </thead>
-    <tbody>${tbody}
-      <tr>
-        <td colspan="2" style="padding:8px;border:1px solid #333;text-align:right;font-weight:bold;">Total</td>
-        <td style="padding:8px;border:1px solid #333;text-align:right;font-weight:bold;">${e(totalLabel)}</td>
-        <td style="border:1px solid #333;"></td>
-      </tr>
-    </tbody>
-  </table>
-  <p class="note">
-    Each subscriber confirms subscription to the contribution amounts stated above towards the formation of the LLP.
-    Figures should match supportings filed with FiLLiP / incorporation documents. This sheet is for drafting convenience —
-    align wording with your professional advisor and latest MCA forms.
-  </p>
+
+  <div class="consent-text">
+    We hereby give our consent to become a partner/designated partner/nominee/nominee&amp; designated partner of the LLP pursuant to section 7(4)/ 25(3)(c) of the Limited Liability Partnership Act, 2008:
+  </div>
+
+  ${partnerBlocks}
+
+  <div class="witness-section">
+    <div class="witness-details">
+      <div class="row"><strong>Name, Address and profession (along with professional membership number) of witness</strong></div>
+      <div style="margin-top: 4mm;">
+        ${e(witnessName)}<br/>
+        ${e(witnessAddr)}<br/>
+        ${e(witnessProf)} ${witnessMem ? `(Membership No. ${e(witnessMem)})` : ""}
+      </div>
+    </div>
+    <div class="witness-sig">
+      <div class="sig-box">
+        ${raw.witnessSignatureImage ? `<img src="${raw.witnessSignatureImage}" style="max-height: 20mm; max-width: 45mm; object-fit: contain;" />` : ""}
+      </div>
+      <div style="text-align: center; font-size: 9pt; margin-top: 2mm;">(Signature of witness)</div>
+    </div>
+  </div>
+
+  <div class="meta-row">
+    <div>Date: ${e(date)}</div>
+    <div>Place: ${e(place)}</div>
+  </div>
+
 </div>
 </body>
 </html>`;

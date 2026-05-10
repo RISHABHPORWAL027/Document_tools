@@ -1,6 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import Dir2Page from "@/components/Dir2Page";
+import dynamic from "next/dynamic";
+
+const Dir2Page = dynamic(() => import("@/components/Dir2Page"), {
+  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
+});;
 
 export const metadata: Metadata = {
   title: "DIR-2 Consent to Act as Director",

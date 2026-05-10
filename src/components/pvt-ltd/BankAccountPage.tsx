@@ -2,7 +2,10 @@
 
 import React, { useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
+import { useCompanyProfile } from "@/lib/profiles/use-profiles";
+import { useDocumentPrefill } from "@/lib/profiles/useDocumentPrefill";
 import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
+import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import { buildBankAccountHtml, BankAccountValues } from "@/lib/pvt-ltd/bank-account-html";
@@ -23,17 +26,20 @@ function Input({ label, required, children }: { label: string; required?: boolea
 
 export default function BankAccountPage() {
   const searchParams = useSearchParams();
-  const companyFromUrl = searchParams.get("company");
+  const companyId = searchParams.get("company");
+  const { profile } = useCompanyProfile(companyId || undefined);
 
   const [data, setData] = useState<BankAccountValues>({
     companyName: "",
     cin: "",
     regAddress: "",
     meetingDate: new Date().toISOString().split("T")[0],
+    meetingTime: "11:00 AM",
     meetingVenue: "",
     bankName: "",
     bankBranch: "",
-    bankAddress: "",
+    contactNumber: "",
+    companyEmail: "",
     authorizedSignatories: [
       { name: "", din: "", pan: "", designation: "Director" }
     ],
@@ -51,22 +57,19 @@ export default function BankAccountPage() {
     setData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleProfileSelect = (profile: CompanyProfile) => {
-    setData((prev) => ({
-      ...prev,
-      companyName: profile.companyName || prev.companyName,
-      cin: profile.cin || prev.cin,
-      regAddress: profile.registeredAddress || prev.regAddress,
-      place: profile.place || prev.place,
-      authorizedSignatories: profile.directors.map(d => ({
-        name: d.directorName || "",
-        din: d.din || "",
-        pan: d.pan || "",
-        designation: "Director"
-      })),
-      signatoryName: profile.directors[0]?.directorName || prev.signatoryName,
-    }));
-  };
+  useDocumentPrefill(profile, setData, {
+    companyName: (p) => p.companyName || "",
+    cin: (p) => p.cin || "",
+    regAddress: (p) => p.registeredAddress || "",
+    place: (p) => p.place || "",
+    authorizedSignatories: (p) => p.directors.map(d => ({
+      name: d.directorName || "",
+      din: d.din || "",
+      pan: d.pan || "",
+      designation: "Director"
+    })),
+    signatoryName: (p) => p.directors[0]?.directorName || "",
+  });
 
   const addSignatory = () => {
     setData(prev => ({
@@ -114,8 +117,8 @@ export default function BankAccountPage() {
     <DocumentEditorLayout
       title="Board Resolution — Bank Account"
       description="Resolution for opening and operating a current bank account for the company."
-      companyId={companyFromUrl}
-      onProfileSelect={handleProfileSelect}
+      companyId={companyId}
+      onProfileSelect={() => {}}
       busy={busy}
       onDownload={handleDownload}
       previewHtml={previewHtml}
@@ -126,10 +129,29 @@ export default function BankAccountPage() {
             <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs">Meeting Details</h2>
             <div className="grid gap-4 md:grid-cols-2">
               <Input label="Meeting Date" required>
-                <input type="date" className={inputClass} value={data.meetingDate} onChange={(e) => update("meetingDate", e.target.value)} />
+                <LegalDatePicker 
+                  className={inputClass} 
+                  value={data.meetingDate} 
+                  onChange={(parts) => update("meetingDate", parts.dateIso)} 
+                />
               </Input>
-              <Input label="Meeting Venue">
-                <input className={inputClass} placeholder="Registered Office Address" value={data.meetingVenue} onChange={(e) => update("meetingVenue", e.target.value)} />
+              <Input label="Meeting Time" required>
+                <input type="text" className={inputClass} placeholder="11:00 AM" value={data.meetingTime} onChange={(e) => update("meetingTime", e.target.value)} />
+              </Input>
+            </div>
+            <Input label="Meeting Venue">
+              <input className={inputClass} placeholder="Registered Office Address" value={data.meetingVenue} onChange={(e) => update("meetingVenue", e.target.value)} />
+            </Input>
+          </div>
+
+          <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">
+            <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs">Company Contact</h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <Input label="Contact Number">
+                <input className={inputClass} placeholder="+91 98765 43210" value={data.contactNumber} onChange={(e) => update("contactNumber", e.target.value)} />
+              </Input>
+              <Input label="Company Email">
+                <input className={inputClass} placeholder="info@company.com" value={data.companyEmail} onChange={(e) => update("companyEmail", e.target.value)} />
               </Input>
             </div>
           </div>
@@ -152,7 +174,7 @@ export default function BankAccountPage() {
             <div className="space-y-4">
               {data.authorizedSignatories.map((sig, i) => (
                 <div key={i} className="rounded-lg border border-zinc-100 bg-zinc-50/50 p-4 space-y-3 relative">
-                   <div className="flex items-center justify-between border-b pb-2">
+                  <div className="flex items-center justify-between border-b pb-2">
                     <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Signatory #{i + 1}</span>
                     {data.authorizedSignatories.length > 1 && (
                       <button onClick={() => removeSignatory(i)} className="text-xs font-medium text-red-600 hover:text-red-700">Remove</button>
@@ -199,7 +221,11 @@ export default function BankAccountPage() {
                 <input className={inputClass} value={data.place} onChange={(e) => update("place", e.target.value)} />
               </Input>
               <Input label="Date of Certification">
-                <input type="date" className={inputClass} value={data.date} onChange={(e) => update("date", e.target.value)} />
+                <LegalDatePicker 
+                  className={inputClass} 
+                  value={data.date} 
+                  onChange={(parts) => update("date", parts.dateIso)} 
+                />
               </Input>
             </div>
           </div>

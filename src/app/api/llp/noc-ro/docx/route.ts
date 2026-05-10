@@ -1,34 +1,40 @@
 import { NextResponse } from "next/server";
 import { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun } from "docx";
-import {
-  llpNocRoSignatoryIdPlain,
-  type LlpNocRoValues,
-} from "@/lib/llp/noc-ro-html";
+import { type LlpNocRoValues } from "@/lib/llp/noc-ro-html";
 
 export const runtime = "nodejs";
+
+const BLANK = "________________";
 
 function para(
   text: string,
   bold = false,
   align?: (typeof AlignmentType)[keyof typeof AlignmentType],
+  size = 26,
+  underline = false
 ) {
   return new Paragraph({
     alignment: align,
-    children: [new TextRun({ text, bold, font: "Times New Roman", size: 26 })],
+    children: [new TextRun({ 
+      text, 
+      bold, 
+      underline: underline ? {} : undefined,
+      font: "Times New Roman", 
+      size 
+    })],
   });
 }
 
-function sigImagePara(base64: string | undefined, align: (typeof AlignmentType)[keyof typeof AlignmentType] = AlignmentType.LEFT) {
+function sigImagePara(base64: string | undefined) {
   if (!base64 || !base64.includes("base64,")) return [];
   try {
     const data = Buffer.from(base64.split(",")[1], "base64");
     return [
       new Paragraph({
-        alignment: align,
         children: [
           new ImageRun({
             data,
-            transformation: { width: 100, height: 40 },
+            transformation: { width: 120, height: 45 },
           } as any),
         ],
       }),
@@ -38,8 +44,15 @@ function sigImagePara(base64: string | undefined, align: (typeof AlignmentType)[
   }
 }
 
-function blank() {
-  return new Paragraph({ text: "" });
+function fmtDate(iso: string): string {
+  if (!iso) return BLANK;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  }).replace(/\//g, "."); 
 }
 
 export async function POST(req: Request) {
@@ -51,80 +64,58 @@ export async function POST(req: Request) {
   }
 
   const v = body.values;
-  const ownerName = v.ownerName?.trim() || "";
-  const ownerAddress = v.ownerAddress?.trim() || "";
-  const rawDate = v.date?.trim() || "";
-  const date = /^\d{4}-\d{2}-\d{2}$/.test(rawDate)
-    ? new Date(rawDate + "T00:00:00").toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    : rawDate;
-  const llpName = v.llpName?.trim() || "";
-  const regAddress = v.registeredOfficeAddress?.trim() || "";
-  const sigs =
-    v.signatories?.length && v.signatories.length > 0
-      ? v.signatories
-      : [];
-
-  const signatoryParagraphs: Paragraph[] = [];
-  sigs.forEach((s, i) => {
-    signatoryParagraphs.push(...sigImagePara(s.signatureImage));
-    signatoryParagraphs.push(
-      para(s.name?.trim() || "________________", true),
-      para(s.position?.trim() || "Designated Partner"),
-      para(llpNocRoSignatoryIdPlain(s.dpin, s.pan)),
-    );
-    if (i < sigs.length - 1) signatoryParagraphs.push(blank());
-  });
+  const ownerName = v.ownerName?.trim() || BLANK;
+  const ownerAddress = v.ownerAddress?.trim() || BLANK;
+  const dateStr = fmtDate(v.date?.trim() || "");
+  const llpName = v.llpName?.trim() || BLANK;
+  const regAddress = v.registeredOfficeAddress?.trim() || BLANK;
+  const dpName = v.designatedPartnerName?.trim() || BLANK;
 
   const doc = new Document({
     sections: [
       {
         children: [
-          para("From:-"),
           para(ownerName, true),
           para(ownerAddress),
-          blank(),
-          para(date, true, AlignmentType.RIGHT),
-          blank(),
-          para("To,"),
-          para("Central Registration Centre, Ministry of Corporate Affairs"),
-          para("Indian Institute of Corporate Affairs (IICA),"),
-          para("Plot no. 6, 7, 8, Sector 5, IMT Manesar,"),
-          para("Gurgaon, Haryana, India, 122050"),
-          blank(),
-          para(
-            `SUBJECT:  REGARDING USE OF MY ADDRESS AS REGISTERED OFFICE OF ${llpName.toUpperCase()} (LIMITED LIABILITY PARTNERSHIP)`,
-            true,
-            AlignmentType.JUSTIFIED,
-          ),
-          blank(),
-          para("Dear Sir/Madam,", true),
-          blank(),
-          para(
-            `I, ${ownerName}, being the registered owner of the property, hereby give my consent and permission to use the premises owned by me as the Registered Office of ${llpName}, a Limited Liability Partnership proposed to be registered / under incorporation with the Registrar of Companies. A copy of the address proof is attached herewith.`,
-            false,
-            AlignmentType.JUSTIFIED,
-          ),
-          blank(),
-          para("Address of the property is as below:"),
-          para(regAddress, true),
-          blank(),
-          para(
-            "I have no objection if the said Limited Liability Partnership uses these premises for its business purposes in accordance with law.",
-            true,
-            AlignmentType.JUSTIFIED,
-          ),
-          blank(),
-          blank(),
-          ...sigImagePara(v.ownerSignatureImage as any),
-          para(ownerName),
-          blank(),
-          para("Accepted & Consented", true),
-          blank(),
-          ...signatoryParagraphs,
+          new Paragraph({ text: "" }),
+          para(`Dated: ${dateStr}`),
+          new Paragraph({ text: "" }),
+          para("Central Processing Center/ The Registrar of Companies"),
+          para("Ministry of Corporate Affairs"),
+          para("Manesar, Gurgaon (Haryana) 122050"),
+          new Paragraph({ text: "" }),
+          para(`Dated ${dateStr}`, true, AlignmentType.RIGHT),
+          new Paragraph({ text: "" }),
+          para(`Sub.: NO OBJECTION FOR USE OF PREMISES AS REGISTERED OFFICE OF ${llpName}`, true, AlignmentType.CENTER, 26, true),
+          new Paragraph({ text: "" }),
+          para("Dear Sir,"),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            alignment: AlignmentType.JUSTIFIED,
+            children: [
+              new TextRun({ text: "I, ", font: "Times New Roman", size: 26 }),
+              new TextRun({ text: ownerName, bold: true, font: "Times New Roman", size: 26 }),
+              new TextRun({ text: ", being the owner of the property situated at ", font: "Times New Roman", size: 26 }),
+              new TextRun({ text: regAddress, bold: true, font: "Times New Roman", size: 26 }),
+              new TextRun({ text: ", do hereby authorize ", font: "Times New Roman", size: 26 }),
+              new TextRun({ text: dpName, bold: true, font: "Times New Roman", size: 26 }),
+              new TextRun({ text: ", designated partners of ", font: "Times New Roman", size: 26 }),
+              new TextRun({ text: llpName, bold: true, font: "Times New Roman", size: 26 }),
+              new TextRun({ text: ", to set up an office at ", font: "Times New Roman", size: 26 }),
+              new TextRun({ text: regAddress, bold: true, font: "Times New Roman", size: 26 }),
+              new TextRun({ text: ".", font: "Times New Roman", size: 26 }),
+            ],
+          }),
+          new Paragraph({ text: "" }),
+          para("The proof for having ownership of the said premises Electricity Bill being enclosed herewith."),
+          new Paragraph({ text: "" }),
+          para("Thanking you"),
+          new Paragraph({ text: "" }),
+          para("Yours Faithfully"),
+          ...sigImagePara(v.ownerSignatureImage),
+          para("OWNER", true),
+          new Paragraph({ text: "" }),
+          para("Encl.: Copy of the Electricity Bill", true),
         ],
       },
     ],
@@ -133,10 +124,8 @@ export async function POST(req: Request) {
   const buffer = await Packer.toBuffer(doc);
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
-      "content-type":
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "content-disposition":
-        'attachment; filename="LLP-NOC-Registered-Office.docx"',
+      "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "content-disposition": 'attachment; filename="LLP-NOC-RO.docx"',
     },
   });
 }

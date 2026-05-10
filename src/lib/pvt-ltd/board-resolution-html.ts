@@ -5,8 +5,12 @@ export interface BrFormData {
   cin?: string;
   regAddress: string;
   meetingDate: string;
+  meetingTime: string;
   meetingVenue: string;
+  auditorFirmName: string;
+  auditorFrn: string;
   chairmanName: string;
+  directors: { name: string; din: string; designation: string }[];
   signatoryName: string;
   signatoryDesignation: string;
   signatureImage?: string;
@@ -15,15 +19,76 @@ export interface BrFormData {
   resolutions: string[];
 }
 
+function e(s: string): string {
+  return escapeHtml(s).replace(/\n/g, "<br/>");
+}
+const BLANK = "________________";
+
+function parseDateParts(iso: string): { dayName: string; dayNum: string; monthName: string; year: string; formatted: string } {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso))
+    return { dayName: BLANK, dayNum: BLANK, monthName: BLANK, year: BLANK, formatted: BLANK };
+  const d = new Date(iso + "T00:00:00");
+  const days = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+  const months = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+  const ord = (n: number) => { const s = ["TH","ST","ND","RD"]; const v = n%100; return s[(v-20)%10]||s[v]||s[0]; };
+  return {
+    dayName: days[d.getDay()],
+    dayNum: String(d.getDate()),
+    monthName: months[d.getMonth()],
+    year: String(d.getFullYear()),
+    formatted: `${days[d.getDay()]}, ${d.getDate()}${ord(d.getDate())} ${months[d.getMonth()]}, ${d.getFullYear()}`,
+  };
+}
+
 export function buildBrHtml(data: BrFormData) {
-  const resolutionsHtml = data.resolutions
-    .map(
-      (res, i) => `
-    <div class="resolution-item">
-      <p><strong>RESOLVED THAT</strong> ${escapeHtml(res)}</p>
-    </div>`
-    )
-    .join("");
+  const company = data.companyName?.trim() || BLANK;
+  const regAddr = data.regAddress?.trim() || BLANK;
+  const venue = data.meetingVenue?.trim() || regAddr;
+  const dp = parseDateParts(data.meetingDate);
+  const time = data.meetingTime?.trim() || "10:30 AM";
+  const auditorFirm = data.auditorFirmName?.trim() || BLANK;
+  const auditorFrn = data.auditorFrn?.trim() || BLANK;
+
+  const dirs = data.directors?.length ? data.directors : [
+    { name: "", din: "", designation: "Director" },
+    { name: "", din: "", designation: "Director" },
+  ];
+
+  // Build director signature blocks
+  const dirSigBlocks = dirs.map(d => `
+    <div class="dir-sig-block">
+      <div class="dir-sig-space"></div>
+      <div class="dir-name">${e(d.name?.trim() || BLANK)}</div>
+      <div class="dir-desg">${e(d.designation?.trim() || "DIRECTOR")}</div>
+      <div class="dir-din">DIN: ${e(d.din?.trim() || BLANK)}</div>
+    </div>`).join("");
+
+  // Custom resolutions or default auditor appointment
+  let resolutionsHtml = "";
+  if (data.resolutions?.length && data.resolutions.some(r => r.trim())) {
+    resolutionsHtml = data.resolutions
+      .filter(r => r.trim())
+      .map(res => `<div class="body-para">"<strong>RESOLVED THAT</strong> ${e(res)}"</div>`)
+      .join("");
+  } else {
+    resolutionsHtml = `
+    <div class="sub-heading">APPOINTMENT OF STATUTORY AUDITOR OF THE COMPANY</div>
+
+    <div class="body-para">
+      "<strong>RESOLVED THAT</strong> pursuant to the provisions of Section 139(6) and other applicable
+      provisions, if any, of the Companies Act, 2013 read with the rules made thereunder,
+      <strong>M/S ${e(auditorFirm)}, CHARTERED ACCOUNTANTS, (FRN: ${e(auditorFrn)})</strong> be and are hereby
+      appointed as the First Statutory Auditors of the Company to hold office from the date of
+      incorporation till the conclusion of the first Annual General Meeting, at such remuneration
+      as may be mutually agreed between the Board of Directors and the Auditors."
+    </div>
+
+    <div class="body-para">
+      "<strong>RESOLVED FURTHER THAT</strong> any Director of the Company be and is hereby authorized to sign
+      and file necessary forms and do all such acts, deeds and things as may be required to give
+      effect to this resolution."
+    </div>`;
+  }
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -34,78 +99,103 @@ export function buildBrHtml(data: BrFormData) {
     body {
       font-family: "Times New Roman", Times, serif;
       font-size: 12pt;
-      line-height: 1.5;
+      line-height: 1.6;
       color: #000;
-      padding: 20mm;
+      background: #fff;
+      padding: 0;
+    }
+    .page {
+      width: 100%;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 20mm 25mm;
       background: #fff;
       overflow-wrap: break-word;
-      word-wrap: break-word;
+      word-break: break-word;
     }
-    .page { max-width: 800px; margin: 0 auto; overflow-wrap: break-word; }
-    .header { text-align: center; margin-bottom: 10mm; }
-    .company-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 2mm; }
-    .company-info { font-size: 10pt; color: #333; margin-bottom: 4mm; }
-    
-    .title { text-align: center; font-weight: bold; text-decoration: underline; margin-bottom: 8mm; font-size: 14pt; }
-    
-    .meeting-info { margin-bottom: 6mm; text-align: justify; }
-    
-    .resolution-container { margin-bottom: 10mm; }
-    .resolution-item { margin-bottom: 6mm; text-align: justify; }
-    
-    .footer { margin-top: 15mm; display: flex; justify-content: space-between; align-items: flex-start; }
-    .sig-block { text-align: right; min-width: 200px; }
-    .sig-line { border-top: 1px solid #000; margin-top: 15mm; padding-top: 2mm; font-weight: bold; }
-    
+
+    /* ── Title ── */
+    .title-block {
+      text-align: center;
+      font-weight: bold;
+      font-size: 11pt;
+      text-transform: uppercase;
+      line-height: 1.7;
+      margin-bottom: 8mm;
+    }
+    .sub-heading {
+      text-align: center;
+      font-weight: bold;
+      text-decoration: underline;
+      text-transform: uppercase;
+      margin-bottom: 6mm;
+      font-size: 12pt;
+    }
+
+    /* ── Body ── */
+    .body-para {
+      text-align: justify;
+      line-height: 1.7;
+      margin-bottom: 5mm;
+      font-size: 12pt;
+    }
+
+    /* ── Certification ── */
+    .cert-block {
+      text-align: center;
+      font-weight: bold;
+      font-style: italic;
+      margin: 10mm 0 6mm 0;
+      font-size: 11pt;
+    }
+
+    /* ── Signature ── */
+    .for-company {
+      font-weight: bold;
+      margin-top: 10mm;
+      margin-bottom: 8mm;
+      font-size: 12pt;
+    }
+    .dir-sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm 12mm;
+      margin-top: 4mm;
+    }
+    .dir-sig-block { min-width: 0; }
+    .dir-sig-space { height: 15mm; border-bottom: 1px solid #000; margin-bottom: 2mm; }
+    .dir-name { font-weight: bold; font-size: 11pt; word-break: break-word; }
+    .dir-desg { font-weight: bold; font-size: 10pt; margin-top: 1mm; }
+    .dir-din { font-size: 10pt; margin-top: 1mm; }
+
     @media print {
       body { padding: 0; }
-      .page { max-width: none; }
+      .page { width: 210mm; margin: 0; padding: 15mm 20mm; }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="header">
-      <div class="company-name">${escapeHtml(data.companyName)}</div>
-      <div class="company-info">
-        ${data.cin ? `CIN: ${escapeHtml(data.cin)}<br/>` : ""}
-        Regd. Office: ${escapeHtml(data.regAddress)}
-      </div>
-      <hr style="border: 1px solid #000; margin-top: 4mm;" />
+
+    <!-- ── Title ── -->
+    <div class="title-block">
+      CERTIFIED TRUE COPY OF THE RESOLUTION PASSED IN THE MEETING OF BOARD OF DIRECTORS OF
+      ${e(company)}, HELD ON ${e(dp.formatted)} AT ${e(time)} AT THE REGISTERED OFFICE
+      OF THE COMPANY AT ${e(venue)}
     </div>
 
-    <div class="title">CERTIFIED TRUE COPY OF THE RESOLUTION PASSED AT THE MEETING OF THE BOARD OF DIRECTORS OF ${escapeHtml(
-      data.companyName
-    )} HELD ON ${new Date(data.meetingDate).toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "long",
-    year: "numeric",
-  })} AT ${escapeHtml(data.meetingVenue)}</div>
+    <!-- ── Resolutions ── -->
+    ${resolutionsHtml}
 
-    <div class="resolution-container">
-      ${resolutionsHtml}
+    <!-- ── Certification ── -->
+    <div class="cert-block">//Certified true Copy//</div>
+
+    <!-- ── Signature ── -->
+    <div class="for-company">For ${e(company)}</div>
+    <div class="dir-sig-grid">
+      ${dirSigBlocks}
     </div>
 
-    <div class="footer">
-      <div>
-        <strong>Date:</strong> ${new Date(data.date).toLocaleDateString("en-IN", {
-          day: "2-digit",
-          month: "long",
-          year: "numeric",
-        })}<br/>
-        <strong>Place:</strong> ${escapeHtml(data.place)}
-      </div>
-      <div class="sig-block">
-        <div>For <strong>${escapeHtml(data.companyName)}</strong></div>
-        <div style="margin-top: 10mm; border-bottom: 1px solid #000; min-height: 10mm; display: flex; align-items: flex-end; justify-content: flex-end; padding-bottom: 2mm;">
-          ${data.signatureImage ? `<img src="${data.signatureImage}" style="max-height: 15mm; max-width: 45mm; object-fit: contain;" />` : `<div style="height: 10mm;"></div>`}
-        </div>
-        <div style="margin-top: 2mm; font-weight: bold;">
-          ${escapeHtml(data.signatoryName)}<br/>
-          (${escapeHtml(data.signatoryDesignation)})
-        </div>
-      </div>
-    </div>
   </div>
 </body>
 </html>`;

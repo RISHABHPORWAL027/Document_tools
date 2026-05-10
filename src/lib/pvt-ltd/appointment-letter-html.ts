@@ -6,16 +6,66 @@ export interface AppointmentLetterData {
   regAddress: string;
   date: string;
   appointeeName: string;
+  appointeeFrn: string;
   appointeeAddress: string;
+  meetingDate: string;
   designation: string;
   effectiveDate: string;
   termYears: string;
+  directors: { name: string; din: string; designation: string }[];
   signatoryName: string;
   signatoryDesignation: string;
   signatureImage?: string;
 }
 
+function e(s: string): string {
+  return escapeHtml(s).replace(/\n/g, "<br/>");
+}
+const BLANK = "________________";
+
+function fmtDate(iso: string): string {
+  if (!iso) return BLANK;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+}
+
+function fmtDateSlash(iso: string): string {
+  if (!iso) return BLANK;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
+  const parts = iso.split("-");
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+
+function parseDateParts(iso: string): string {
+  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return BLANK;
+  const d = new Date(iso + "T00:00:00");
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const ord = (n: number) => { const s = ["th","st","nd","rd"]; const v = n%100; return s[(v-20)%10]||s[v]||s[0]; };
+  return `${d.getDate()}${ord(d.getDate())} ${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
 export function buildAppointmentLetterHtml(data: AppointmentLetterData) {
+  const company = data.companyName?.trim() || BLANK;
+  const appointee = data.appointeeName?.trim() || BLANK;
+  const appointeeFrn = data.appointeeFrn?.trim() || "";
+  const appointeeAddr = data.appointeeAddress?.trim() || BLANK;
+  const date = fmtDateSlash(data.date?.trim() || "");
+  const meetingDateText = parseDateParts(data.meetingDate?.trim() || "");
+
+  const dirs = data.directors?.length ? data.directors : [
+    { name: "", din: "", designation: "Director" },
+    { name: "", din: "", designation: "Director" },
+  ];
+
+  const dirSigBlocks = dirs.map(d => `
+    <div class="dir-sig-block">
+      <div class="dir-sig-space"></div>
+      <div class="dir-name">${e(d.name?.trim() || BLANK)}</div>
+      <div class="dir-desg">${e(d.designation?.trim() || "DIRECTOR")}</div>
+      <div class="dir-din">DIN: ${e(d.din?.trim() || BLANK)}</div>
+    </div>`).join("");
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,90 +77,99 @@ export function buildAppointmentLetterHtml(data: AppointmentLetterData) {
       font-size: 12pt;
       line-height: 1.6;
       color: #000;
-      padding: 20mm;
       background: #fff;
+      padding: 0;
     }
-    .page { max-width: 800px; margin: 0 auto; }
-    .header { text-align: center; margin-bottom: 10mm; }
-    .company-name { font-size: 16pt; font-weight: bold; text-transform: uppercase; margin-bottom: 2mm; }
-    .company-info { font-size: 10pt; color: #333; margin-bottom: 4mm; }
-    
-    .date-row { margin-bottom: 6mm; text-align: left; }
-    .appointee-block { margin-bottom: 8mm; }
-    
-    .title { text-align: center; font-weight: bold; text-decoration: underline; margin-bottom: 8mm; font-size: 13pt; }
-    
-    .content p { margin-bottom: 4mm; text-align: justify; }
-    .content ul { margin-left: 30px; margin-bottom: 4mm; }
-    
-    .sig-row { margin-top: 15mm; display: flex; justify-content: space-between; }
-    .sig-block { min-width: 250px; }
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 20mm 25mm;
+      background: #fff;
+      overflow-wrap: break-word;
+      word-break: break-word;
+    }
+
+    .date-row { margin-bottom: 6mm; font-size: 12pt; }
+    .to-block { margin-bottom: 6mm; font-size: 12pt; line-height: 1.7; }
+    .subject {
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 6mm;
+      font-size: 12pt;
+    }
+    .body-para {
+      text-align: justify;
+      line-height: 1.7;
+      margin-bottom: 5mm;
+      font-size: 12pt;
+    }
+    .closing { margin-top: 6mm; font-size: 12pt; }
+
+    /* ── Signature ── */
+    .for-company {
+      font-weight: bold;
+      margin-top: 10mm;
+      margin-bottom: 8mm;
+      font-size: 12pt;
+    }
+    .dir-sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6mm 12mm;
+      margin-top: 4mm;
+    }
+    .dir-sig-block { min-width: 0; }
+    .dir-sig-space { height: 15mm; border-bottom: 1px solid #000; margin-bottom: 2mm; }
+    .dir-name { font-weight: bold; font-size: 11pt; word-break: break-word; }
+    .dir-desg { font-weight: bold; font-size: 10pt; margin-top: 1mm; }
+    .dir-din { font-size: 10pt; margin-top: 1mm; }
+
+    @media print {
+      body { padding: 0; }
+      .page { margin: 0; padding: 15mm 20mm; }
+    }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="header">
-      <div class="company-name">${escapeHtml(data.companyName)}</div>
-      <div class="company-info">
-        CIN: ${escapeHtml(data.cin)}<br/>
-        Regd. Office: ${escapeHtml(data.regAddress)}
-      </div>
-      <hr style="border: 1px solid #000; margin-top: 4mm;" />
+
+    <!-- ── Date ── -->
+    <div class="date-row">Date: ${e(date)}</div>
+
+    <!-- ── To ── -->
+    <div class="to-block">
+      <strong>To,</strong><br/>
+      <strong>M/S ${e(appointee)}</strong><br/>
+      <strong>CHARTERED ACCOUNTANTS</strong><br/>
+      ${appointeeFrn ? `<strong>(FRN: ${e(appointeeFrn)})</strong><br/>` : ""}
+      <strong>Regd Add</strong>: ${e(appointeeAddr)}
     </div>
 
-    <div class="date-row">
-      <strong>Date:</strong> ${new Date(data.date).toLocaleDateString("en-IN", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })}
+    <!-- ── Subject ── -->
+    <div class="subject">SUBJECT: APPOINTMENT AS STATUTORY AUDITOR OF THE COMPANY</div>
+
+    <!-- ── Body ── -->
+    <div class="body-para">Dear Sir,</div>
+
+    <div class="body-para">
+      This is to inform you that, your firm have been appointed as the Statutory Auditors of the
+      Company at the Board Meeting of the company held on ${e(meetingDateText)} to hold office from
+      the date of incorporation till the conclusion of the first Annual General Meeting.
     </div>
 
-    <div class="appointee-block">
-      To,<br/>
-      <strong>${escapeHtml(data.appointeeName)}</strong><br/>
-      ${escapeHtml(data.appointeeAddress)}
+    <div class="body-para">
+      Kindly convey your acceptance letter for your appointment within the statutory period.
     </div>
 
-    <div class="title">
-      SUB: LETTER OF APPOINTMENT AS ${escapeHtml(data.designation).toUpperCase()}
+    <div class="closing">Thanking you.</div>
+
+    <!-- ── Signature ── -->
+    <div class="for-company">For ${e(company)}</div>
+    <div class="dir-sig-grid">
+      ${dirSigBlocks}
     </div>
 
-    <div class="content">
-      <p>Dear ${escapeHtml(data.appointeeName)},</p>
-      <p>We are pleased to inform you that the Board of Directors of <strong>${escapeHtml(data.companyName)}</strong> (the "Company") has approved your appointment as <strong>${escapeHtml(data.designation)}</strong> of the Company with effect from <strong>${new Date(data.effectiveDate).toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" })}</strong>.</p>
-      
-      <p>The terms and conditions of your appointment are as follows:</p>
-      
-      <ol style="margin-left: 20px;">
-        <li><strong>Term:</strong> Your appointment is for a term of ${escapeHtml(data.termYears)} years, subject to the provisions of the Companies Act, 2013.</li>
-        <li><strong>Role and Duties:</strong> Your role and duties will be those normally associated with the position of ${escapeHtml(data.designation)} under the Companies Act, 2013 and the Articles of Association of the Company.</li>
-        <li><strong>Code of Conduct:</strong> You are expected to adhere to the Company's Code of Conduct and maintain the highest standards of integrity.</li>
-        <li><strong>Confidentiality:</strong> You shall maintain absolute confidentiality regarding the Company's business and affairs.</li>
-      </ol>
-
-      <p>Please sign and return a copy of this letter as a token of your acceptance.</p>
-      <p>We look forward to your valuable contribution to the growth of the Company.</p>
-    </div>
-
-    <div class="sig-row">
-      <div class="sig-block">
-        <div>For <strong>${escapeHtml(data.companyName)}</strong></div>
-        <div style="margin-top: 10mm; border-bottom: 1px solid #eee; min-height: 10mm; display: flex; align-items: flex-end;">
-          ${data.signatureImage ? `<img src="${data.signatureImage}" style="max-height: 15mm; max-width: 45mm; object-fit: contain;" />` : `<div style="height: 10mm;"></div>`}
-        </div>
-        <div style="margin-top: 2mm;">
-          <strong>${escapeHtml(data.signatoryName)}</strong><br/>
-          (${escapeHtml(data.signatoryDesignation)})
-        </div>
-      </div>
-      <div class="sig-block" style="text-align: right;">
-        <div>Accepted by:</div>
-        <div style="margin-top: 15mm;">
-          <strong>${escapeHtml(data.appointeeName)}</strong>
-        </div>
-      </div>
-    </div>
   </div>
 </body>
 </html>`;

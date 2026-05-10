@@ -1,17 +1,29 @@
 import { NextResponse } from "next/server";
-import { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun } from "docx";
+import { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun, Table, TableRow, TableCell, BorderStyle, WidthType } from "docx";
 import type { LlpForm9Values } from "@/lib/llp/form9-html";
 
 export const runtime = "nodejs";
+
+const BLANK = "________________";
 
 function para(
   text: string,
   bold = false,
   align?: (typeof AlignmentType)[keyof typeof AlignmentType],
+  size = 24, // 12pt
+  italic = false,
+  underline = false
 ) {
   return new Paragraph({
     alignment: align,
-    children: [new TextRun({ text, bold, font: "Times New Roman", size: 26 })],
+    children: [new TextRun({ 
+      text, 
+      bold: bold || undefined, 
+      italics: italic || undefined,
+      underline: underline ? {} : undefined,
+      font: "Times New Roman", 
+      size 
+    })],
   });
 }
 
@@ -35,14 +47,11 @@ function sigImagePara(base64: string | undefined, align: (typeof AlignmentType)[
   }
 }
 
-function blank() {
-  return new Paragraph({ text: "" });
-}
-
-function fmtLong(iso: string): string {
-  if (!iso) return "";
+function fmtDate(iso: string): string {
+  if (!iso) return BLANK;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
-  return new Date(iso + "T00:00:00").toLocaleDateString("en-IN", {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -58,61 +67,147 @@ export async function POST(req: Request) {
   }
 
   const v = body.values;
-  const dpin = v.dpin?.replace(/\D/g, "").trim() ?? "";
-  const dpinLine = dpin.length === 8 ? dpin : "____________";
-  const sigPrinted =
-    v.signaturePrintedName?.trim() || v.partnerName?.trim() || "____________";
+  const llp = v.llpName?.trim() || BLANK;
+  const llpAddress = v.llpAddress?.trim() || BLANK;
+  const name = v.partnerName?.trim() || BLANK;
+  const father = v.fatherName?.trim() || BLANK;
+  const addr = v.residentialAddress?.trim() || BLANK;
+  const email = v.email?.trim() || BLANK;
+  const mob = v.mobile?.trim() || BLANK;
+  const pan = v.pan?.trim().toUpperCase() || BLANK;
+  const dpin = v.dpin?.replace(/\D/g, "").trim() || "";
+  const dpinLine = dpin.length === 8 ? dpin : BLANK;
+  const nominee = v.nomineeDetails?.trim() || BLANK;
+  const dateStr = fmtDate(v.date?.trim() || "");
+  const sigPrinted = v.signaturePrintedName?.trim() || v.partnerName?.trim() || BLANK;
+  
   const wN = v.witnessName?.trim() ?? "";
   const wA = v.witnessAddress?.trim() ?? "";
-  const witnessBlock =
-    wN || wA
-      ? [wN, wA].filter(Boolean).join("\n")
-      : v.witnessNameAddress?.trim() || "";
+  const witness = (wN || wA) ? [wN, wA].filter(Boolean).join("\n") : BLANK;
 
   const doc = new Document({
     sections: [
       {
         children: [
-          para(
-            "CONSENT TO ACT AS DESIGNATED PARTNER (LLP FORM 9 — ILLUSTRATIVE DRAFT)",
-            true,
-            AlignmentType.CENTER,
-          ),
-          blank(),
-          blank(),
-          para(`Name of LLP: ${v.llpName?.trim() || ""}`),
-          para(`Designated Partner: ${v.partnerName?.trim() || ""}`, true),
-          para(`Father / Mother's name: ${v.fatherName?.trim() || ""}`),
-          para(`Residential address: ${v.residentialAddress?.trim() || ""}`),
-          para(`Nationality: ${v.nationality?.trim() || "Indian"}`),
-          para(`Occupation: ${v.occupation?.trim() || ""}`),
-          para(`Date of birth: ${fmtLong(v.dateOfBirth?.trim() || "")}`),
-          para(`PAN: ${v.pan?.trim().toUpperCase() || ""}`),
-          para(`DPIN: ${dpinLine}`),
-          para(`Email: ${v.email?.trim() || ""}`),
-          para(`Mobile: ${v.mobile?.trim() || ""}`),
-          blank(),
-          para(
-            `I, ${v.partnerName?.trim() || "____________"}, hereby consent to become the Designated Partner of ${v.llpName?.trim() || "____________"} and undertake to comply with the provisions of the Limited Liability Partnership Act, 2008 and rules made thereunder, including filing of statutory documents and payment of fees as applicable.`,
-            false,
-            AlignmentType.JUSTIFIED,
-          ),
-          blank(),
-          blank(),
-          para(`Place: ${v.place?.trim() || ""}`),
-          para(`Date: ${fmtLong(v.date?.trim() || "")}`),
-          blank(),
-          blank(),
-          ...sigImagePara(v.signatureImage),
-          para("Signature of Designated Partner", true),
-          para(`(${sigPrinted})`),
-          blank(),
-          blank(),
-          para("Witness (Name & Address)", true),
-          blank(),
-          ...(witnessBlock
-            ? witnessBlock.split(/\r?\n/).map((line) => para(line))
-            : [para("________________"), blank(), blank()]),
+          para("Form 9", true, AlignmentType.CENTER, 28),
+          para("Consent to act as Designated Partner", true, AlignmentType.CENTER, 24),
+          para("[Pursuant to Section 7(3) of the Limited Liability Partnership Act, 2008]", false, AlignmentType.CENTER, 20, true),
+          new Paragraph({
+            border: { bottom: { style: BorderStyle.SINGLE, color: "auto", space: 1, size: 12 } as any },
+            children: [],
+          }),
+          new Paragraph({ text: "" }),
+          para(`Date: ${dateStr}`, false, AlignmentType.RIGHT),
+          new Paragraph({ text: "" }),
+          para("To,"),
+          para(llp, true),
+          para("(under incorporation)", false, undefined, 20, true),
+          para(llpAddress),
+          new Paragraph({ text: "" }),
+          para("Subject: Consent to act as Designated Partner", true),
+          new Paragraph({ text: "" }),
+          para(`I, ${name} hereby testify my consent to act as designated partner of the ${llp} pursuant to Section 7(3) of the Limited Liability Partnership Act, 2008.`),
+          new Paragraph({ text: "" }),
+          para("I, also hereby undertake to contribute money or other property or other benefit or to perform services for Limited Liability Partnership as per my obligations described in the Limited Liability Partnership Partnership Agreement."),
+          new Paragraph({ text: "" }),
+          
+          new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            rows: [
+              new TableRow({
+                children: [
+                  new TableCell({ children: [para("S.No.", true, AlignmentType.CENTER)], width: { size: 10, type: WidthType.PERCENTAGE } }),
+                  new TableCell({ children: [para("Subject", true)], width: { size: 40, type: WidthType.PERCENTAGE } }),
+                  new TableCell({ children: [para("Particulars", true)], width: { size: 50, type: WidthType.PERCENTAGE } }),
+                ],
+              }),
+              ...[
+                ["1", "Designated Partner Identification Number (DPIN)", dpinLine],
+                ["2", "PAN", pan],
+                ["3", "Name", name],
+                ["4", "Father's / Husband's Name", father],
+                ["5", "Present Residential Address", addr],
+                ["6", "E-Mail ID", email],
+                ["7", "Mobile No.", mob],
+                ["8", "Name of the Partnership Firm / LLPIN & Name of LLP / CIN & Name of Company whose nominee the designated partner is.", nominee],
+              ].map(([n, s, p]) => new TableRow({
+                children: [
+                  new TableCell({ children: [para(n, false, AlignmentType.CENTER)] }),
+                  new TableCell({ children: [para(s)] }),
+                  new TableCell({ children: [para(p)] }),
+                ],
+              })),
+            ],
+          }),
+
+          new Paragraph({ text: "" }),
+          para("Declaration", true, undefined, 24, false, true),
+          new Paragraph({
+            children: [
+              new TextRun({ text: "1. I declare that I have not been convicted of any offence in connection with the promotion, formation or management of any company or LLP and have not been found guilty of any fraud or misfeasance or of any breach of duty to any company under this Act, or any previous company law in the last five years. I further declare that if appointed, my total directorship in all the companies shall not exceed the prescribed number of companies in which a person can be appointed as Director.", font: "Times New Roman", size: 24 })
+            ],
+            alignment: AlignmentType.JUSTIFIED,
+          }),
+          new Paragraph({ text: "" }),
+          new Paragraph({
+            children: [
+              new TextRun({ text: "2. I further declare that –", font: "Times New Roman", size: 24 })
+            ],
+          }),
+          new Paragraph({
+            indent: { left: 720 },
+            children: [
+              new TextRun({ text: "I am not required to obtain the security clearance from the Ministry of Home Affairs, Government of India, under sub-rule (1) of rule 10 before applying for director identification number.", font: "Times New Roman", size: 24 })
+            ],
+            alignment: AlignmentType.JUSTIFIED,
+          }),
+          new Paragraph({ text: "" }),
+
+          new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            borders: {
+              top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE },
+              left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE },
+              insideHorizontal: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.NONE },
+            },
+            rows: [
+              new TableRow({
+                children: [
+                  new TableCell({
+                    children: [
+                      para("Signed:", true),
+                      ...sigImagePara(v.signatureImage),
+                      para(`(${sigPrinted})`, true),
+                    ],
+                  }),
+                  new TableCell({
+                    children: [
+                      para("Witness (Name & Address):", true),
+                      ...witness.split("\n").map(l => para(l)),
+                    ],
+                  }),
+                ],
+              }),
+            ],
+          }),
+          
+          new Paragraph({ text: "" }),
+          new Table({
+            width: { size: 100, type: WidthType.PERCENTAGE },
+            borders: {
+              top: { style: BorderStyle.NONE }, bottom: { style: BorderStyle.NONE },
+              left: { style: BorderStyle.NONE }, right: { style: BorderStyle.NONE },
+              insideHorizontal: { style: BorderStyle.NONE }, insideVertical: { style: BorderStyle.NONE },
+            },
+            rows: [
+              new TableRow({
+                children: [
+                  new TableCell({ children: [para(`Date: ${dateStr}`, true)] }),
+                  new TableCell({ children: [para(`Place: ${v.place || BLANK}`, true, AlignmentType.RIGHT), para("Enclosed: Copy of PAN Card and Address Proof", false, AlignmentType.RIGHT, 20, true)] }),
+                ],
+              }),
+            ],
+          }),
         ],
       },
     ],
@@ -121,10 +216,8 @@ export async function POST(req: Request) {
   const buffer = await Packer.toBuffer(doc);
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
-      "content-type":
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "content-disposition":
-        'attachment; filename="LLP-Form-9-Consent-Designated-Partner.docx"',
+      "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "content-disposition": 'attachment; filename="LLP-Form9.docx"',
     },
   });
 }

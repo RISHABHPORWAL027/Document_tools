@@ -1,19 +1,18 @@
 "use client";
 
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCompanyProfile } from "@/lib/profiles/use-profiles";
+import { useDocumentPrefill } from "@/lib/profiles/useDocumentPrefill";
 import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
+import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import {
   buildLlpSubscriptionHtml,
-  type LlpSubscriptionRow,
+  type LlpSubscriptionPartner,
   type LlpSubscriptionValues,
 } from "@/lib/llp/subscription-html";
-
-const REF_SUB =
-  "/company%20document/Company%20%3A%20LLP%20Incoorpation/LLP/Subscription%20Sheet_Dray%20Consulting%20LLP.doc";
 
 function isoToday(): string {
   const d = new Date();
@@ -23,8 +22,19 @@ function isoToday(): string {
   return `${y}-${m}-${day}`;
 }
 
-function emptyRow(): LlpSubscriptionRow {
-  return { partnerName: "", contributionRs: "" };
+function emptyPartner(): LlpSubscriptionPartner {
+  return {
+    name: "",
+    fatherName: "",
+    address: "",
+    pan: "",
+    dob: "",
+    mobile: "",
+    email: "",
+    occupation: "",
+    designation: "Designated Partner",
+    signatureImage: "",
+  };
 }
 
 function initialData(): LlpSubscriptionValues {
@@ -32,7 +42,12 @@ function initialData(): LlpSubscriptionValues {
     llpName: "",
     place: "",
     date: isoToday(),
-    rows: [emptyRow(), emptyRow()],
+    witnessName: "",
+    witnessAddress: "",
+    witnessProfession: "",
+    witnessMembership: "",
+    witnessSignatureImage: "",
+    partners: [emptyPartner(), emptyPartner()],
   };
 }
 
@@ -62,10 +77,29 @@ function Input({
 
 export default function LlpSubscriptionPage() {
   const searchParams = useSearchParams();
-  const companyFromUrl = searchParams.get("company");
-
+  const companyId = searchParams.get("company");
+  const { profile } = useCompanyProfile(companyId || undefined);
   const [data, setData] = useState<LlpSubscriptionValues>(() => initialData());
   const [busy, setBusy] = useState(false);
+
+  useDocumentPrefill(profile, setData, {
+    llpName: (p) => p.companyName || "",
+    place: (p) => p.directors[0]?.city || p.place || "",
+    partners: (p) => p.directors.length > 0
+      ? p.directors.map(d => ({
+          name: d.directorName || "",
+          fatherName: d.fatherName || "",
+          address: [d.address, d.city, d.state, d.pincode].filter(Boolean).join(", "),
+          pan: d.pan || "",
+          dob: d.dateOfBirth || "",
+          mobile: d.mobileNumber || "",
+          email: d.email || "",
+          occupation: d.occupation || "",
+          designation: "Designated Partner",
+          signatureImage: "",
+        }))
+      : undefined
+  });
 
   const previewHtml = useMemo(() => buildLlpSubscriptionHtml(data), [data]);
 
@@ -76,48 +110,30 @@ export default function LlpSubscriptionPage() {
     setData((prev) => ({ ...prev, [key]: value }));
   }
 
-  function updateRow(idx: number, key: keyof LlpSubscriptionRow, value: string) {
+  function updatePartner(idx: number, key: keyof LlpSubscriptionPartner, value: string) {
     setData((prev) => {
-      const rows = [...(prev.rows ?? [])];
-      rows[idx] = { ...rows[idx], [key]: value };
-      return { ...prev, rows };
+      const partners = [...(prev.partners ?? [])];
+      partners[idx] = { ...partners[idx], [key]: value };
+      return { ...prev, partners };
     });
   }
 
-  function addRow() {
+  function addPartner() {
     setData((prev) => ({
       ...prev,
-      rows: [...(prev.rows ?? []), emptyRow()],
+      partners: [...(prev.partners ?? []), emptyPartner()],
     }));
   }
 
-  function removeRow(idx: number) {
+  function removePartner(idx: number) {
     setData((prev) => {
-      const rows = prev.rows ?? [];
-      if (rows.length <= 1) return prev;
-      return { ...prev, rows: rows.filter((_, i) => i !== idx) };
+      const partners = prev.partners ?? [];
+      if (partners.length <= 1) return prev;
+      return { ...prev, partners: partners.filter((_, i) => i !== idx) };
     });
-  }
-
-  function handleProfileSelect(profile: CompanyProfile) {
-    setData((prev) => ({
-      ...prev,
-      llpName: profile.companyName || prev.llpName,
-      place: profile.directors[0]?.city || prev.place,
-      rows: profile.directors.length > 0
-        ? profile.directors.map(d => ({
-            partnerName: d.directorName,
-            contributionRs: "10,000"
-          }))
-        : prev.rows
-    }));
   }
 
   async function download(kind: "pdf" | "docx") {
-    if (!data.llpName?.trim()) {
-      alert("LLP name is required.");
-      return;
-    }
     setBusy(true);
     try {
       const res = await fetch(`/api/llp/subscription/${kind}`, {
@@ -141,13 +157,11 @@ export default function LlpSubscriptionPage() {
     }
   }
 
-  const rows = data.rows ?? [];
-
   return (
     <DocumentEditorLayout
       title="Subscription Sheet (LLP)"
-      description="Partner-wise contribution table for LLP formation drafts. Totals update from numeric amounts; align with FiLLiP and professional advice."
-      onProfileSelect={handleProfileSelect}
+      description="Subscriber details sheet as per original document format. Verbatim content for LLP formation."
+      onProfileSelect={() => {}}
       busy={busy}
       onDownload={download}
       previewHtml={previewHtml}
@@ -155,46 +169,96 @@ export default function LlpSubscriptionPage() {
       inputSection={
         <div className="space-y-6">
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">
-            <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs">LLP Details</h2>
+            <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs font-bold">LLP Details</h2>
             <Input label="Name of LLP (proposed)" required>
-              <input className={inputClass} placeholder="e.g. ABC Consulting LLP" value={data.llpName} onChange={(e) => update("llpName", e.target.value)} />
+              <input className={inputClass} placeholder="e.g. Dray Consulting LLP" value={data.llpName} onChange={(e) => update("llpName", e.target.value)} />
             </Input>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input label="Place">
                 <input className={inputClass} value={data.place} onChange={(e) => update("place", e.target.value)} />
               </Input>
               <Input label="Date">
-                <input type="date" className={inputClass} value={data.date} onChange={(e) => update("date", e.target.value)} />
+                <LegalDatePicker 
+                  className={inputClass} 
+                  value={data.date} 
+                  onChange={(parts) => update("date", parts.dateIso)} 
+                />
               </Input>
             </div>
           </div>
 
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs">Partners & Contributions</h2>
-              <button type="button" onClick={addRow} className="text-xs font-bold text-teal-700 hover:text-teal-800 uppercase tracking-tight">+ Add Row</button>
+              <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs font-bold">Subscribers / Partners</h2>
+              <button type="button" onClick={addPartner} className="text-xs font-bold text-teal-700 hover:text-teal-800 uppercase tracking-tight">+ Add Partner</button>
             </div>
             <div className="space-y-4">
-              {rows.map((row, i) => (
+              {data.partners?.map((p, i) => (
                 <div key={i} className="rounded-lg border border-zinc-100 bg-zinc-50/50 p-4 space-y-3 relative">
                   <div className="flex items-center justify-between border-b pb-2">
-                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Partner Row #{i + 1}</span>
-                    {rows.length > 1 && (
-                      <button onClick={() => removeRow(i)} className="text-xs font-medium text-red-600 hover:text-red-700">Remove</button>
+                    <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Partner #{i + 1}</span>
+                    {data.partners!.length > 1 && (
+                      <button onClick={() => removePartner(i)} className="text-xs font-medium text-red-600 hover:text-red-700">Remove</button>
                     )}
                   </div>
                   <div className="grid gap-3">
                     <Input label="Partner Name">
-                      <input className={inputClass} placeholder="As per ID" value={row.partnerName} onChange={(e) => updateRow(i, "partnerName", e.target.value)} />
+                      <input className={inputClass} value={p.name} onChange={(e) => updatePartner(i, "name", e.target.value)} />
                     </Input>
-                    <Input label="Contribution (₹)">
-                      <input className={inputClass} inputMode="decimal" placeholder="e.g. 10000" value={row.contributionRs} onChange={(e) => updateRow(i, "contributionRs", e.target.value)} />
+                    <Input label="Father Name">
+                      <input className={inputClass} value={p.fatherName} onChange={(e) => updatePartner(i, "fatherName", e.target.value)} />
                     </Input>
-                    <SignatureUpload label="Partner Signature" onSignatureChange={(sig) => updateRow(i, "signatureImage", sig || "")} />
+                    <Input label="Residential Address (R/O)">
+                      <textarea className={inputClass} rows={2} value={p.address} onChange={(e) => updatePartner(i, "address", e.target.value)} />
+                    </Input>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Input label="PAN">
+                        <input className={inputClass} value={p.pan} onChange={(e) => updatePartner(i, "pan", e.target.value.toUpperCase())} />
+                      </Input>
+                      <Input label="DOB">
+                        <input className={inputClass} value={p.dob} onChange={(e) => updatePartner(i, "dob", e.target.value)} />
+                      </Input>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Input label="Mobile">
+                        <input className={inputClass} value={p.mobile} onChange={(e) => updatePartner(i, "mobile", e.target.value)} />
+                      </Input>
+                      <Input label="Email">
+                        <input className={inputClass} value={p.email} onChange={(e) => updatePartner(i, "email", e.target.value)} />
+                      </Input>
+                    </div>
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      <Input label="Occupation">
+                        <input className={inputClass} value={p.occupation} onChange={(e) => updatePartner(i, "occupation", e.target.value)} />
+                      </Input>
+                      <Input label="Designation">
+                        <input className={inputClass} value={p.designation} onChange={(e) => updatePartner(i, "designation", e.target.value)} />
+                      </Input>
+                    </div>
+                    <SignatureUpload label="Signature" onSignatureChange={(sig) => updatePartner(i, "signatureImage", sig || "")} />
                   </div>
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">
+            <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs font-bold">Witness Details</h2>
+            <Input label="Witness Name">
+              <input className={inputClass} value={data.witnessName} onChange={(e) => update("witnessName", e.target.value)} />
+            </Input>
+            <Input label="Witness Address">
+              <textarea className={inputClass} rows={2} value={data.witnessAddress} onChange={(e) => update("witnessAddress", e.target.value)} />
+            </Input>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Input label="Profession">
+                <input className={inputClass} placeholder="e.g. Chartered Accountant" value={data.witnessProfession} onChange={(e) => update("witnessProfession", e.target.value)} />
+              </Input>
+              <Input label="Membership No.">
+                <input className={inputClass} value={data.witnessMembership} onChange={(e) => update("witnessMembership", e.target.value)} />
+              </Input>
+            </div>
+            <SignatureUpload label="Witness Signature" onSignatureChange={(sig) => update("witnessSignatureImage", sig || "")} />
           </div>
         </div>
       }

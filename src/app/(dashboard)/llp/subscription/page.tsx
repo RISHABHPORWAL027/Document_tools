@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import LlpSubscriptionPage from "@/components/llp/LlpSubscriptionPage";
+import dynamic from "next/dynamic";
+
+const LlpSubscriptionPage = dynamic(() => import("@/components/llp/LlpSubscriptionPage"), {
+  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
+});;
 
 export const metadata: Metadata = {
-  title: "LLP Subscription Sheet",
+  title: "LLP Subscription Sheet Generator | MCA Compliance",
+  description: "Generate professional LLP Subscription Sheets with automated partner details and signature sections.",
+  keywords: ["LLP subscription sheet", "subscriber sheet", "LLP incorporation", "MCA form generator"],
 };
 
 function Fallback() {

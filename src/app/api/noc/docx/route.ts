@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { Document, Packer, Paragraph, TextRun, AlignmentType } from "docx";
+import { Document, Packer, Paragraph, TextRun, AlignmentType, BorderStyle } from "docx";
 import { type NocValues, nocSignatoryIdPlain } from "@/lib/noc/build-html";
 
 export const runtime = "nodejs";
@@ -57,6 +57,11 @@ export async function POST(req: Request) {
           para(ownerName, true),
           para(ownerAddress),
           blank(),
+          new Paragraph({
+            border: { bottom: { style: BorderStyle.SINGLE, color: "auto", space: 1, size: 6 } as any },
+            children: [],
+          }),
+          blank(),
           para(date, true, AlignmentType.RIGHT),
           blank(),
           para("To,"),
@@ -101,12 +106,7 @@ export async function POST(req: Request) {
   });
 
   const buffer = await Packer.toBuffer(doc);
-  const arrayBuffer = buffer.buffer.slice(
-    buffer.byteOffset,
-    buffer.byteOffset + buffer.byteLength,
-  ) as ArrayBuffer;
-
-  return new NextResponse(arrayBuffer, {
+  return new NextResponse(buffer as any, {
     headers: {
       "content-type":
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

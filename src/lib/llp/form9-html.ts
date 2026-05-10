@@ -1,7 +1,8 @@
-/** Form 9 — Consent to act as Designated Partner (LLP) — generator-friendly layout. */
+/** Form 9 — Consent to act as Designated Partner (LLP) — pixel-perfect match to original document. */
 
 export type LlpForm9Values = {
   llpName?: string;
+  llpAddress?: string;
   partnerName?: string;
   fatherName?: string;
   residentialAddress?: string;
@@ -12,15 +13,13 @@ export type LlpForm9Values = {
   mobile?: string;
   pan?: string;
   dpin?: string;
+  /** Nominee LLP/Company details */
+  nomineeDetails?: string;
   place?: string;
   date?: string;
-  /**
-   * Printed under “Signature of Designated Partner”. If blank, uses partner name.
-   */
   signaturePrintedName?: string;
   witnessName?: string;
   witnessAddress?: string;
-  /** Legacy single field — if set without witnessName, still shown */
   witnessNameAddress?: string;
   signatureImage?: string;
 };
@@ -48,6 +47,7 @@ function fmtDate(iso: string): string {
 
 export function buildLlpForm9Html(v: LlpForm9Values): string {
   const llp = v.llpName?.trim() || BLANK;
+  const llpAddress = v.llpAddress?.trim() || BLANK;
   const name = v.partnerName?.trim() || BLANK;
   const father = v.fatherName?.trim() || BLANK;
   const addr = v.residentialAddress?.trim() || BLANK;
@@ -59,10 +59,10 @@ export function buildLlpForm9Html(v: LlpForm9Values): string {
   const pan = v.pan?.trim().toUpperCase() || BLANK;
   const dpin = v.dpin?.replace(/\D/g, "").trim() || "";
   const dpinLine = dpin.length === 8 ? dpin : BLANK;
+  const nominee = v.nomineeDetails?.trim() || BLANK;
   const place = v.place?.trim() || BLANK;
   const date = fmtDate(v.date?.trim() || "");
-  const sigPrinted =
-    v.signaturePrintedName?.trim() || v.partnerName?.trim() || BLANK;
+  const sigPrinted = v.signaturePrintedName?.trim() || v.partnerName?.trim() || BLANK;
   const wName = v.witnessName?.trim() ?? "";
   const wAddr = v.witnessAddress?.trim() ?? "";
   const witnessCombined =
@@ -79,97 +79,265 @@ export function buildLlpForm9Html(v: LlpForm9Values): string {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     font-family: "Times New Roman", Times, serif;
-    font-size: 12.5pt;
-    color: #111;
+    font-size: 12pt;
+    color: #000;
     background: #fff;
-    line-height: 1.55;
+    line-height: 1.5;
   }
   .page {
-    width: 210mm;
+    width: 100%;
     min-height: 297mm;
     margin: 0 auto;
     padding: 18mm 22mm;
     background: #fff;
+    overflow-wrap: break-word;
+    word-break: break-word;
   }
-  .title {
+
+  /* ── Header ── */
+  .header {
     text-align: center;
+    border-bottom: 2px solid #000;
+    padding-bottom: 4mm;
+    margin-bottom: 6mm;
+  }
+  .header .form-title {
     font-size: 14pt;
     font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-    margin-bottom: 10mm;
-    border-bottom: 2px solid #111;
-    padding-bottom: 4mm;
   }
-  .field-row {
+  .header .form-subtitle {
+    font-size: 12pt;
+    font-weight: bold;
+    margin-top: 2mm;
+  }
+  .header .form-rule {
+    font-size: 10pt;
+    font-style: italic;
+    margin-top: 2mm;
+  }
+
+  /* ── Date row ── */
+  .date-row {
+    text-align: right;
+    margin-bottom: 4mm;
+    font-size: 12pt;
+  }
+
+  /* ── To section ── */
+  .to-block {
+    margin-bottom: 5mm;
+    font-size: 12pt;
+    line-height: 1.6;
+  }
+
+  /* ── Subject ── */
+  .subject {
+    font-weight: bold;
+    margin-bottom: 5mm;
+    font-size: 12pt;
+  }
+
+  /* ── Consent paragraphs ── */
+  .body-para {
+    text-align: justify;
+    line-height: 1.7;
+    margin-bottom: 5mm;
+    font-size: 12pt;
+  }
+
+  /* ── Details table ── */
+  .details-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 6mm 0;
+    font-size: 11pt;
+  }
+  .details-table th, .details-table td {
+    border: 1px solid #000;
+    padding: 5px 8px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .details-table th {
+    background: #f0f0f0;
+    font-weight: bold;
+    text-align: center;
+  }
+  .col-num { width: 40px; text-align: center !important; }
+  .col-label { width: 45%; }
+
+  /* ── Declaration ── */
+  .declaration {
+    margin: 6mm 0;
+    font-size: 12pt;
+  }
+  .declaration .heading {
+    font-weight: bold;
+    text-decoration: underline;
+    margin-bottom: 4mm;
+  }
+  .declaration ol {
+    margin-left: 20px;
+    margin-bottom: 4mm;
+  }
+  .declaration li {
+    text-align: justify;
+    margin-bottom: 4mm;
+    line-height: 1.6;
+  }
+  .declaration .indent {
+    margin-left: 40px;
+    margin-top: 2mm;
+    font-size: 11.5pt;
+  }
+
+  /* ── Signature section ── */
+  .sig-section {
+    margin-top: 8mm;
     display: grid;
-    grid-template-columns: 140px 1fr;
-    gap: 2mm 4mm;
+    grid-template-columns: 1fr 1fr;
+    gap: 10mm;
+  }
+  .sig-box {
+    font-size: 11pt;
+  }
+  .sig-box .label {
+    font-weight: bold;
     margin-bottom: 3mm;
-    align-items: baseline;
-    word-break: break-word;
-    overflow-wrap: break-word;
   }
-  .label { font-weight: 600; font-size: 11pt; color: #333; flex-shrink: 0; }
-  .value { 
-    border-bottom: 1px solid #ccc; 
-    min-height: 1.3em; 
-    padding-bottom: 1mm;
-    word-break: break-word;
-    overflow-wrap: break-word;
+  .sig-space {
+    border-bottom: 1px solid #000;
+    min-height: 12mm;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 2mm;
   }
-  .block { margin-top: 6mm; text-align: justify; }
-  .witness { margin-top: 14mm; display: grid; grid-template-columns: 1fr 1fr; gap: 12mm; }
-  .sig-box { border-top: 1px solid #000; padding-top: 2mm; font-size: 11pt; }
-  @media print { body { padding: 0; } .page { margin: 0; } }
+  .sig-name {
+    font-weight: bold;
+    margin-top: 2mm;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6mm;
+    font-size: 12pt;
+  }
+
+  .enclosure {
+    margin-top: 6mm;
+    font-size: 11pt;
+    font-style: italic;
+  }
+
+  @media print { body { padding: 0; } .page { width: 210mm; margin: 0; padding: 18mm 22mm; } }
 </style>
 </head>
 <body>
 <div class="page">
-  <div class="title">Consent to act as Designated Partner<br/><span style="font-size:11pt;font-weight:normal;">(LLP Form 9 — illustrative draft)</span></div>
 
-  <div class="field-row"><span class="label">Name of LLP</span><span class="value">${e(llp)}</span></div>
-  <div class="field-row"><span class="label">Designated Partner</span><span class="value">${e(name)}</span></div>
-  <div class="field-row"><span class="label">Father / Mother&apos;s name</span><span class="value">${e(father)}</span></div>
-  <div class="field-row"><span class="label">Residential address</span><span class="value">${e(addr)}</span></div>
-  <div class="field-row"><span class="label">Nationality</span><span class="value">${e(nat)}</span></div>
-  <div class="field-row"><span class="label">Occupation</span><span class="value">${e(occ)}</span></div>
-  <div class="field-row"><span class="label">Date of birth</span><span class="value">${e(dob)}</span></div>
-  <div class="field-row"><span class="label">PAN</span><span class="value">${e(pan)}</span></div>
-  <div class="field-row"><span class="label">DPIN</span><span class="value">${e(dpinLine)}</span></div>
-  <div class="field-row"><span class="label">Email</span><span class="value">${e(email)}</span></div>
-  <div class="field-row"><span class="label">Mobile</span><span class="value">${e(mob)}</span></div>
-
-  <div class="block">
-    I, <strong>${e(name)}</strong>, hereby consent to become the Designated Partner of <strong>${e(llp)}</strong>
-    and undertake to comply with the provisions of the Limited Liability Partnership Act, 2008 and rules made thereunder,
-    including filing of statutory documents and payment of fees as applicable.
+  <!-- ── Header ── -->
+  <div class="header">
+    <div class="form-title">Form 9</div>
+    <div class="form-subtitle">Consent to act as Designated Partner</div>
+    <div class="form-rule">[Pursuant to Section 7(3) of the Limited Liability Partnership Act, 2008]</div>
   </div>
 
-  <div style="margin-top:10mm;display:flex;justify-content:space-between;gap:8mm;">
-    <div>
-      <div style="margin-bottom:2mm;font-weight:600;">Place</div>
-      <div class="value" style="min-width:45mm;">${e(place)}</div>
-    </div>
-    <div style="text-align:right;">
-      <div style="margin-bottom:2mm;font-weight:600;">Date</div>
-      <div class="value" style="min-width:45mm;display:inline-block;">${e(date)}</div>
-    </div>
+  <!-- ── Date ── -->
+  <div class="date-row">Date: ${e(date)}</div>
+
+  <!-- ── To ── -->
+  <div class="to-block">
+    To,<br/>
+    <strong>${e(llp)}</strong><br/>
+    <em>(under incorporation)</em><br/>
+    ${e(llpAddress)}
   </div>
 
-  <div class="witness">
+  <!-- ── Subject ── -->
+  <div class="subject">Subject: Consent to act as Designated Partner</div>
+
+  <!-- ── Consent body ── -->
+  <div class="body-para">
+    I, <strong>${e(name)}</strong> hereby testify my consent to act as designated partner of the
+    <strong>${e(llp)}</strong> pursuant to Section 7(3) of the Limited Liability Partnership Act, 2008.
+  </div>
+
+  <div class="body-para">
+    I, also hereby undertake to contribute money or other property or other benefit or to perform
+    services for Limited Liability Partnership as per my obligations described in the Limited
+    Liability Partnership Agreement.
+  </div>
+
+  <!-- ── Details table ── -->
+  <table class="details-table">
+    <thead>
+      <tr>
+        <th class="col-num">S.No.</th>
+        <th class="col-label">Subject</th>
+        <th>Particulars</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td class="col-num">1</td><td>Designated Partner Identification Number (DPIN)</td><td>${e(dpinLine)}</td></tr>
+      <tr><td class="col-num">2</td><td>PAN</td><td>${e(pan)}</td></tr>
+      <tr><td class="col-num">3</td><td>Name</td><td>${e(name)}</td></tr>
+      <tr><td class="col-num">4</td><td>Father's / Husband's Name</td><td>${e(father)}</td></tr>
+      <tr><td class="col-num">5</td><td>Present Residential Address</td><td>${e(addr)}</td></tr>
+      <tr><td class="col-num">6</td><td>E-Mail ID</td><td>${e(email)}</td></tr>
+      <tr><td class="col-num">7</td><td>Mobile No.</td><td>${e(mob)}</td></tr>
+      <tr>
+        <td class="col-num">8</td>
+        <td>Name of the Partnership Firm / LLPIN & Name of LLP / CIN & Name of Company whose nominee the designated partner is.</td>
+        <td>${e(nominee)}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ── Declaration ── -->
+  <div class="declaration">
+    <div class="heading">Declaration</div>
+    <ol>
+      <li>I declare that I have not been convicted of any offence in connection with the promotion,
+      formation or management of any company or LLP and have not been found guilty of any fraud or
+      misfeasance or of any breach of duty to any company under this Act, or any previous company law
+      in the last five years. I further declare that if appointed, my total directorship in all the
+      companies shall not exceed the prescribed number of companies in which a person can be appointed
+      as Director.</li>
+      <li>I further declare that –
+        <div class="indent">I am not required to obtain the security clearance from the Ministry of Home
+        Affairs, Government of India, under sub-rule (1) of rule 10 before applying for director
+        identification number.</div>
+      </li>
+    </ol>
+  </div>
+
+  <!-- ── Signature ── -->
+  <div class="sig-section">
     <div class="sig-box">
-      <strong>Signature of Designated Partner</strong><br/>
-      <div style="margin: 4mm 0; border-bottom: 1px solid #eee; min-height: 10mm; display: flex; align-items: flex-end;">
-        ${v.signatureImage ? `<img src="${v.signatureImage}" style="max-height: 15mm; max-width: 45mm; object-fit: contain;" />` : `<div style="height: 10mm;"></div>`}
+      <div class="label">Signed:</div>
+      <div class="sig-space">
+        ${v.signatureImage ? `<img src="${v.signatureImage}" style="max-height: 12mm; max-width: 40mm; object-fit: contain;" />` : `<div style="height: 12mm;"></div>`}
       </div>
-      (${e(sigPrinted)})
+      <div class="sig-name">(${e(sigPrinted)})</div>
     </div>
     <div class="sig-box">
-      <strong>Witness (Name &amp; Address)</strong><br/><br/><br/>
-      ${e(witness)}
+      <div class="label">Witness (Name & Address):</div>
+      <div style="margin-top: 6mm; line-height: 1.6;">
+        ${e(witness)}
+      </div>
     </div>
   </div>
+
+  <!-- ── Date / Place ── -->
+  <div class="meta-row">
+    <div><strong>Date:</strong> ${e(date)}</div>
+    <div><strong>Place:</strong> ${e(place)}</div>
+  </div>
+
+  <!-- ── Enclosure ── -->
+  <div class="enclosure">Enclosed: Copy of PAN Card and Address Proof</div>
+
 </div>
 </body>
 </html>`;

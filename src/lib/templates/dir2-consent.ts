@@ -106,11 +106,10 @@ export const dir2ConsentTemplateHtml = `
     </tr>
   </table>
 
-  <!-- DECLARATION -->
   <div class="declaration">
     <div class="heading">Declaration</div>
-    <p>I declare that I have not been convicted of any offence in connection with the promotion, formation or management of any company or LLP and have not been found guilty of any fraud or misfeasance or of any breach of duty to any company under this Act or any previous company law in the last five years. I further declare that if appointed my total Directorship in all the companies shall not exceed the prescribed number of companies in which a person can be appointed as a Director.</p>
-    <p>I am not required to obtain the security clearance from the Ministry of Home Affairs, Government of India under sub-rule (1) of rule 10 before applying for director identification number.</p>
+    <p>1) I declare that I have not been convicted of any offence in connection with the promotion, formation or management of any company or LLP and have not been found guilty of any fraud or misfeasance or of any breach of duty to any company under this Act or any previous company law in the last five years. I further declare that if appointed my total Directorship in all the companies shall not exceed the prescribed number of companies in which a person can be appointed as a Director.</p>
+    <p>2) I am not required to obtain the security clearance from the Ministry of Home Affairs, Government of India under sub-rule (1) of rule 10 before applying for director identification number.</p>
   </div>
 
   <!-- SIGNATURE -->
@@ -127,35 +126,12 @@ export const dir2ConsentTemplateHtml = `
     </div>
   </div>
 
-  <!-- ATTACHMENTS -->
   <div class="attachments">
     <div class="heading">Attachments:</div>
-    <ol>
-      <li>
-        Proof of Identity —
-        {{#if identityProofName}}
-          <strong>File:</strong> {{identityProofName}}
-        {{else}}
-          {{#if identityProofDetails}}
-            {{identityProofDetails}}
-          {{else}}
-            _______________
-          {{/if}}
-        {{/if}}
-      </li>
-      <li>
-        Proof of Residence —
-        {{#if addressProofName}}
-          <strong>File:</strong> {{addressProofName}}
-        {{else}}
-          {{#if addressProofDetails}}
-            {{addressProofDetails}}
-          {{else}}
-            _______________
-          {{/if}}
-        {{/if}}
-      </li>
-    </ol>
+    <div style="margin-left: 20px;">
+      <div>Proof of Identity</div>
+      <div>Proof of Residence</div>
+    </div>
   </div>
 
 </div>

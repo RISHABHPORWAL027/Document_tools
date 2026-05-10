@@ -1,39 +1,44 @@
 import { NextResponse } from "next/server";
 import { Document, Packer, Paragraph, TextRun, AlignmentType, ImageRun, Table, TableRow, TableCell, WidthType, BorderStyle } from "docx";
-import type { LlpSubscriptionValues } from "@/lib/llp/subscription-html";
+import { type LlpSubscriptionValues } from "@/lib/llp/subscription-html";
 
 export const runtime = "nodejs";
+
+const BLANK = "________________";
 
 function para(
   text: string,
   bold = false,
   align?: (typeof AlignmentType)[keyof typeof AlignmentType],
+  size = 24,
 ) {
   return new Paragraph({
     alignment: align,
-    children: [new TextRun({ text, bold, font: "Times New Roman", size: 24 })],
+    children: [new TextRun({ text, bold, font: "Times New Roman", size })],
   });
 }
 
 function sigImagePara(base64: string | undefined) {
-  if (!base64 || !base64.includes("base64,")) return new Paragraph({ text: "" });
+  if (!base64 || !base64.includes("base64,")) return [];
   try {
     const data = Buffer.from(base64.split(",")[1], "base64");
-    return new Paragraph({
-      alignment: AlignmentType.CENTER,
-      children: [
-        new ImageRun({
-          data,
-          transformation: { width: 100, height: 40 },
-        } as any),
-      ],
-    });
+    return [
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        children: [
+          new ImageRun({
+            data,
+            transformation: { width: 100, height: 40 },
+          } as any),
+        ],
+      }),
+    ];
   } catch (e) {
-    return new Paragraph({ text: "" });
+    return [];
   }
 }
 
-function cell(p: Paragraph | Paragraph[]) {
+function cell(p: Paragraph | Paragraph[], width = 50) {
   return new TableCell({
     children: Array.isArray(p) ? p : [p],
     borders: {
@@ -42,18 +47,16 @@ function cell(p: Paragraph | Paragraph[]) {
       left: { style: BorderStyle.SINGLE, size: 1 },
       right: { style: BorderStyle.SINGLE, size: 1 },
     },
+    width: { size: width, type: WidthType.PERCENTAGE },
     verticalAlign: "center" as any,
   });
 }
 
-function blank() {
-  return new Paragraph({ text: "" });
-}
-
-function fmtLong(iso: string): string {
-  if (!iso) return "";
+function fmtDate(iso: string): string {
+  if (!iso) return BLANK;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return iso;
-  return new Date(iso + "T00:00:00").toLocaleDateString("en-IN", {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-IN", {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -69,78 +72,74 @@ export async function POST(req: Request) {
   }
 
   const v = body.values;
-  const rows =
-    v.rows?.filter((r) => r.partnerName?.trim() || r.contributionRs?.trim()) ??
-    [];
-  const display =
-    rows.length > 0
-      ? rows
-      : [{ partnerName: "", contributionRs: "" }, { partnerName: "", contributionRs: "" }];
+  const partners = v.partners?.length ? v.partners : [{ designation: "Designated Partner" }, { designation: "Designated Partner" }];
+  const dateStr = fmtDate(v.date || "");
 
-  const totalRs = display.reduce((acc, r) => {
-    const n = parseFloat(String(r.contributionRs ?? "").replace(/,/g, ""));
-    return acc + (Number.isFinite(n) ? n : 0);
-  }, 0);
-
-  const headerRow = new TableRow({
-    children: [
-      cell(para("Sl.", true, AlignmentType.CENTER)),
-      cell(para("Partner Name", true)),
-      cell(para("Contribution (₹)", true, AlignmentType.RIGHT)),
-      cell(para("Signature", true, AlignmentType.CENTER)),
-    ],
-  });
-
-  const bodyRows = display.map((r, i) => {
-    return new TableRow({
-      children: [
-        cell(para(String(i + 1), false, AlignmentType.CENTER)),
-        cell(para(r.partnerName || "")),
-        cell(para(r.contributionRs || "", false, AlignmentType.RIGHT)),
-        cell(sigImagePara(r.signatureImage)),
+  const partnerTables = partners.map(p => {
+    return new Table({
+      width: { size: 100, type: WidthType.PERCENTAGE },
+      rows: [
+        new TableRow({
+          children: [
+            cell([
+              para(`Name of Designated Partner: ${p.name || BLANK}`),
+              para(`Father Name: ${p.fatherName || BLANK}`),
+              para(`R/O: ${p.address || BLANK}`),
+              para(`PAN: ${p.pan || BLANK}`),
+              para(`Date of Birth: ${p.dob || BLANK}`),
+              para(`Mobile number-: ${p.mobile || BLANK}`),
+              para(`Email Id: ${p.email || BLANK}`),
+              para(`Occupation: ${p.occupation || BLANK}`),
+              new Paragraph({ text: "" }),
+              para(p.designation || "Designated Partner", true),
+            ], 70),
+            cell([
+              ...sigImagePara(p.signatureImage),
+              para("(Signature)", false, AlignmentType.CENTER, 18),
+            ], 30),
+          ],
+        }),
       ],
     });
   });
 
-  const totalRow = new TableRow({
-    children: [
-      new TableCell({
-        children: [para("Total", true, AlignmentType.RIGHT)],
-        columnSpan: 2,
-        borders: {
-          top: { style: BorderStyle.SINGLE, size: 1 },
-          bottom: { style: BorderStyle.SINGLE, size: 1 },
-          left: { style: BorderStyle.SINGLE, size: 1 },
-          right: { style: BorderStyle.SINGLE, size: 1 },
-        },
-      }),
-      cell(para(totalRs.toLocaleString("en-IN", { maximumFractionDigits: 2 }), true, AlignmentType.RIGHT)),
-      cell(para("")),
-    ],
-  });
-
-  const table = new Table({
+  const witnessTable = new Table({
     width: { size: 100, type: WidthType.PERCENTAGE },
-    rows: [headerRow, ...bodyRows, totalRow],
+    rows: [
+      new TableRow({
+        children: [
+          cell([
+            para("Name, Address and profession (along with professional membership number) of witness", true),
+            new Paragraph({ text: "" }),
+            para(v.witnessName || BLANK),
+            para(v.witnessAddress || BLANK),
+            para(`${v.witnessProfession || BLANK} ${v.witnessMembership ? `(Membership No. ${v.witnessMembership})` : ""}`),
+          ], 70),
+          cell([
+            ...sigImagePara(v.witnessSignatureImage),
+            para("(Signature of witness)", false, AlignmentType.CENTER, 18),
+          ], 30),
+        ],
+      }),
+    ],
   });
 
   const doc = new Document({
     sections: [
       {
         children: [
-          para("SUBSCRIPTION SHEET — LIMITED LIABILITY PARTNERSHIP", true, AlignmentType.CENTER),
-          blank(),
-          para(`Name of LLP (proposed): ${v.llpName?.trim() || ""}`),
-          para(`Place: ${v.place?.trim() || ""}`),
-          para(`Date: ${fmtLong(v.date?.trim() || "")}`),
-          blank(),
-          table,
-          blank(),
-          para(
-            "Each subscriber confirms the contribution amounts stated above. Align figures with FiLLiP / incorporation documents.",
-            false,
-            AlignmentType.JUSTIFIED,
-          ),
+          para("SUBSCRIBER SHEET", true, AlignmentType.CENTER, 28),
+          new Paragraph({ text: "" }),
+          para("We the several persons, whose names are subscribed below, are desirous of being formed into a LLP for carrying on as lawful business with a view of profit and have entered and agreed to enter into a LLP agreement in writing and we respectively agree to contribute money or other benefit or to perform services for the LLP in accordance with the LLP agreement, the particulars of which are stated against our respective names.", false, AlignmentType.JUSTIFIED),
+          new Paragraph({ text: "" }),
+          para("We hereby give our consent to become a partner/designated partner/nominee/nominee& designated partner of the LLP pursuant to section 7(4)/ 25(3)(c) of the Limited Liability Partnership Act, 2008:", false, AlignmentType.JUSTIFIED),
+          new Paragraph({ text: "" }),
+          ...partnerTables.flatMap(t => [t, new Paragraph({ text: "" })]),
+          new Paragraph({ text: "" }),
+          witnessTable,
+          new Paragraph({ text: "" }),
+          para(`Date: ${dateStr}`, true),
+          para(`Place: ${v.place || BLANK}`, true),
         ],
       },
     ],
@@ -149,9 +148,8 @@ export async function POST(req: Request) {
   const buffer = await Packer.toBuffer(doc);
   return new NextResponse(new Uint8Array(buffer), {
     headers: {
-      "content-type":
-        "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "content-disposition": 'attachment; filename="LLP-Subscription-Sheet.docx"',
+      "content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "content-disposition": 'attachment; filename="LLP-Subscription.docx"',
     },
   });
 }
