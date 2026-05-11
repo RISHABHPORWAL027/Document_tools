@@ -2,6 +2,9 @@
 
 import Link from "next/link";
 import { useSyncExternalStore, useState } from "react";
+import * as Accordion from "@radix-ui/react-accordion";
+import * as Tabs from "@radix-ui/react-tabs";
+import { ChevronDown } from "lucide-react";
 import { Breadcrumbs } from "@/components/site/Breadcrumbs";
 import {
   getFlow,
@@ -180,48 +183,159 @@ export default function ModulePageClient({
         </div>
 
         {/* Generated documents by workflow step */}
-        <div className="lg:col-span-2 space-y-8">
+        <div className="lg:col-span-2 space-y-6">
           <div>
             <div className="text-sm font-bold text-zinc-800">
               Generate Documents
             </div>
             <p className="mt-1 text-xs font-medium uppercase tracking-wider text-zinc-400">
-              Flow — child steps
+              Entity Type
             </p>
             <p className="mt-2 text-sm text-zinc-600">
-              Pick your structure below; document tools are listed under each step.
-              Add new generators in the site registry to attach them to a step.
+              Select your entity type and access the required document generators.
             </p>
           </div>
-          {docGroups.map(({ subflow, docs }) => (
-            <section
-              key={subflow.id}
-              className="scroll-mt-24 border-l-2 border-zinc-200 pl-4 sm:pl-5"
-              style={{ borderColor: `${accentColor}40` }}
-            >
-              <div className="mb-3">
-                <h2 className="text-base font-bold text-zinc-900">
-                  {subflow.variant === "numbered"
-                    ? `${subflow.order}) ${subflow.title}`
-                    : subflow.title}
-                </h2>
-                {subflow.summary ? (
-                  <p className="mt-1 text-sm text-zinc-600">{subflow.summary}</p>
-                ) : null}
-              </div>
-              {docs.length === 0 ? (
-                <p className="rounded-lg border border-dashed border-zinc-200 bg-zinc-50/80 px-4 py-3 text-sm text-zinc-500">
-                  No document generators linked to this step yet.
-                </p>
-              ) : (
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {docs.map((doc) =>
-                    renderDocCard(doc, accentColor, selectedId),
+
+          {flowId === "incorporation" ? (
+            <Accordion.Root type="multiple" defaultValue={["private-limited"]} className="space-y-4">
+              <Accordion.Item value="private-limited" className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                <Accordion.Header className="flex">
+                  <Accordion.Trigger className="group flex flex-1 items-center justify-between bg-zinc-50 px-5 py-4 text-left font-bold text-zinc-900 transition-colors hover:bg-zinc-100">
+                    Private Limited
+                    <ChevronDown className="h-5 w-5 text-zinc-500 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                  </Accordion.Trigger>
+                </Accordion.Header>
+                <Accordion.Content className="overflow-hidden">
+                  <div className="px-5 py-5">
+                    <Tabs.Root defaultValue="incorporation" className="flex flex-col gap-5">
+                      <Tabs.List className="flex flex-wrap gap-2 border-b border-zinc-200 pb-2">
+                        <Tabs.Trigger
+                          value="incorporation"
+                          className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                        >
+                          Incorporation
+                        </Tabs.Trigger>
+                        <Tabs.Trigger
+                          value="auditor"
+                          className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                        >
+                          Auditor
+                        </Tabs.Trigger>
+                      </Tabs.List>
+
+                      <Tabs.Content value="incorporation" className="outline-none focus:ring-0">
+                        <p className="mb-4 text-sm text-zinc-600">Core documents for the SPICe+ filing process.</p>
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {docGroups.find(g => g.subflow.id === "inc-shared")?.docs.map(doc => renderDocCard(doc, accentColor, selectedId))}
+                        </div>
+                      </Tabs.Content>
+
+                      <Tabs.Content value="auditor" className="outline-none focus:ring-0">
+                        <Tabs.Root defaultValue="inc-auditor-first" className="flex flex-col gap-4 rounded-xl border bg-zinc-50 p-4">
+                          <Tabs.List className="flex flex-wrap gap-2">
+                            <Tabs.Trigger
+                              value="inc-auditor-first"
+                              className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm border border-zinc-200 data-[state=active]:border-zinc-900 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                            >
+                              First Auditor
+                            </Tabs.Trigger>
+                            <Tabs.Trigger
+                              value="inc-auditor-casual"
+                              className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm border border-zinc-200 data-[state=active]:border-zinc-900 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                            >
+                              Casual Vacancy
+                            </Tabs.Trigger>
+                            <Tabs.Trigger
+                              value="inc-auditor-reappointment"
+                              className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm border border-zinc-200 data-[state=active]:border-zinc-900 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                            >
+                              Reappointment
+                            </Tabs.Trigger>
+                            <Tabs.Trigger
+                              value="inc-auditor-resignation"
+                              className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm border border-zinc-200 data-[state=active]:border-zinc-900 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                            >
+                              Resignation
+                            </Tabs.Trigger>
+                          </Tabs.List>
+
+                          {["inc-auditor-first", "inc-auditor-casual", "inc-auditor-reappointment", "inc-auditor-resignation"].map(subflowId => {
+                            const group = docGroups.find(g => g.subflow.id === subflowId);
+                            if (!group) return null;
+                            return (
+                              <Tabs.Content key={subflowId} value={subflowId} className="outline-none focus:ring-0">
+                                {group.subflow.summary && (
+                                  <p className="mb-4 text-sm text-zinc-600">
+                                    {group.subflow.summary}
+                                  </p>
+                                )}
+                                <div className="grid gap-3 sm:grid-cols-2">
+                                  {group.docs.map(doc => renderDocCard(doc, accentColor, selectedId))}
+                                </div>
+                              </Tabs.Content>
+                            );
+                          })}
+                        </Tabs.Root>
+                      </Tabs.Content>
+                    </Tabs.Root>
+                  </div>
+                </Accordion.Content>
+              </Accordion.Item>
+
+              {docGroups.filter(g => !["inc-shared", "inc-auditor-first", "inc-auditor-casual", "inc-auditor-reappointment", "inc-auditor-resignation"].includes(g.subflow.id)).map(group => (
+                <Accordion.Item key={group.subflow.id} value={group.subflow.id} className="overflow-hidden rounded-xl border bg-white shadow-sm">
+                  <Accordion.Header className="flex">
+                    <Accordion.Trigger className="group flex flex-1 items-center justify-between bg-zinc-50 px-5 py-4 text-left font-bold text-zinc-900 transition-colors hover:bg-zinc-100">
+                      {group.subflow.title}
+                      <ChevronDown className="h-5 w-5 text-zinc-500 transition-transform duration-200 group-data-[state=open]:rotate-180" />
+                    </Accordion.Trigger>
+                  </Accordion.Header>
+                  <Accordion.Content className="overflow-hidden">
+                    <div className="px-5 py-5">
+                      {group.subflow.summary && (
+                        <p className="mb-4 text-sm text-zinc-600">{group.subflow.summary}</p>
+                      )}
+                      {group.docs.length === 0 ? (
+                        <p className="rounded-lg border border-dashed border-zinc-200 bg-zinc-50/80 px-4 py-3 text-sm text-zinc-500">
+                          No document generators linked to this step yet.
+                        </p>
+                      ) : (
+                        <div className="grid gap-3 sm:grid-cols-2">
+                          {group.docs.map((doc) => renderDocCard(doc, accentColor, selectedId))}
+                        </div>
+                      )}
+                    </div>
+                  </Accordion.Content>
+                </Accordion.Item>
+              ))}
+            </Accordion.Root>
+          ) : (
+            <div className="space-y-8">
+              {docGroups.map((group) => (
+                <div key={group.subflow.id}>
+                  <h3 className="text-base font-bold text-zinc-900 mb-2">
+                    {group.subflow.title}
+                  </h3>
+                  {group.subflow.summary && (
+                    <p className="mb-3 text-sm text-zinc-600">
+                      {group.subflow.summary}
+                    </p>
+                  )}
+                  {group.docs.length === 0 ? (
+                    <p className="rounded-lg border border-dashed border-zinc-200 bg-zinc-50/80 px-4 py-3 text-sm text-zinc-500">
+                      No document generators linked to this step yet.
+                    </p>
+                  ) : (
+                    <div className="grid gap-3 sm:grid-cols-2">
+                      {group.docs.map((doc) =>
+                        renderDocCard(doc, accentColor, selectedId),
+                      )}
+                    </div>
                   )}
                 </div>
-              )}
-            </section>
-          ))}
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>

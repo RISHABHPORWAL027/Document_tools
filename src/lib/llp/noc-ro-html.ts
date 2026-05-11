@@ -8,6 +8,8 @@ export type LlpNocRoValues = {
   llpName?: string;
   registeredOfficeAddress?: string; // Property address
   designatedPartnerName?: string; // The one being authorized
+  /** Custom enclosure note; defaults to "Copy of the Electricity Bill" */
+  electricityBillNote?: string;
 };
 
 function e(s: string): string {
@@ -162,7 +164,7 @@ export function buildLlpNocRoHtml(raw: LlpNocRoValues): string {
     <div style="font-weight: bold; margin-top: 2mm;">OWNER</div>
   </div>
 
-  <div class="enclosure">Encl.: Copy of the Electricity Bill</div>
+  <div class="enclosure">Encl.: ${raw.electricityBillNote?.trim() ? e(raw.electricityBillNote.trim()) : "Copy of the Electricity Bill"}</div>
 
 </div>
 </body>

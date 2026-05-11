@@ -29,8 +29,8 @@ export default function BoardResolutionPage() {
     auditorFrn: "",
     chairmanName: "",
     directors: [
-      { name: "", din: "", designation: "Director" },
-      { name: "", din: "", designation: "Director" },
+      { name: "", din: "", designation: "Director", pan: "" },
+      { name: "", din: "", designation: "Director", pan: "" },
     ],
     signatoryName: "",
     signatoryDesignation: "Director",
@@ -52,6 +52,7 @@ export default function BoardResolutionPage() {
           name: d.directorName || "",
           din: d.din || "",
           designation: "Director",
+          pan: "",
         }))
       : undefined,
     signatoryName: (p) => p.directors[0]?.directorName || "",
@@ -93,6 +94,7 @@ export default function BoardResolutionPage() {
                 name: d.directorName || "",
                 din: d.din || "",
                 designation: "Director",
+                pan: "",
               }))
             : prev.directors,
           signatoryName: p.directors[0]?.directorName || "",
@@ -197,7 +199,7 @@ export default function BoardResolutionPage() {
               <h2 className="text-lg font-semibold text-zinc-900">Directors</h2>
               <button 
                 type="button"
-                onClick={() => update("directors", [...data.directors, { name: "", din: "", designation: "Director" }])}
+                onClick={() => update("directors", [...data.directors, { name: "", din: "", designation: "Director", pan: "" }])}
                 className="text-xs font-medium text-blue-600 hover:text-blue-700"
               >
                 + Add Director
@@ -235,6 +237,39 @@ export default function BoardResolutionPage() {
                     }} />
                   </div>
                 </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-zinc-500 uppercase">Designation</label>
+                  <select
+                    className={inputClass}
+                    value={dir.designation}
+                    onChange={(e) => {
+                      const newDirs = [...data.directors];
+                      newDirs[i] = { ...newDirs[i], designation: e.target.value };
+                      update("directors", newDirs);
+                    }}
+                  >
+                    <option value="Director">Director</option>
+                    <option value="Managing Director">Managing Director</option>
+                    <option value="Additional Director">Additional Director</option>
+                    <option value="CEO">CEO</option>
+                  </select>
+                </div>
+                {dir.designation === "CEO" && (
+                  <div className="space-y-1">
+                    <label className="text-xs font-medium text-zinc-500 uppercase">PAN Card No.</label>
+                    <input
+                      className={inputClass}
+                      placeholder="ABCDE1234F"
+                      maxLength={10}
+                      value={dir.pan ?? ""}
+                      onChange={(e) => {
+                        const newDirs = [...data.directors];
+                        newDirs[i] = { ...newDirs[i], pan: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10) };
+                        update("directors", newDirs);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             ))}
           </div>

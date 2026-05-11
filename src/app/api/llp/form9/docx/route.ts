@@ -80,10 +80,6 @@ export async function POST(req: Request) {
   const nominee = v.nomineeDetails?.trim() || BLANK;
   const dateStr = fmtDate(v.date?.trim() || "");
   const sigPrinted = v.signaturePrintedName?.trim() || v.partnerName?.trim() || BLANK;
-  
-  const wN = v.witnessName?.trim() ?? "";
-  const wA = v.witnessAddress?.trim() ?? "";
-  const witness = (wN || wA) ? [wN, wA].filter(Boolean).join("\n") : BLANK;
 
   const doc = new Document({
     sections: [
@@ -141,7 +137,7 @@ export async function POST(req: Request) {
           }),
 
           new Paragraph({ text: "" }),
-          para("Declaration", true, undefined, 24, false, true),
+          para("Declaration", true, AlignmentType.CENTER, 24, false, true),
           new Paragraph({
             children: [
               new TextRun({ text: "1. I declare that I have not been convicted of any offence in connection with the promotion, formation or management of any company or LLP and have not been found guilty of any fraud or misfeasance or of any breach of duty to any company under this Act, or any previous company law in the last five years. I further declare that if appointed, my total directorship in all the companies shall not exceed the prescribed number of companies in which a person can be appointed as Director.", font: "Times New Roman", size: 24 })
@@ -175,15 +171,9 @@ export async function POST(req: Request) {
                 children: [
                   new TableCell({
                     children: [
-                      para("Signed:", true),
-                      ...sigImagePara(v.signatureImage),
-                      para(`(${sigPrinted})`, true),
-                    ],
-                  }),
-                  new TableCell({
-                    children: [
-                      para("Witness (Name & Address):", true),
-                      ...witness.split("\n").map(l => para(l)),
+                      para("Signed:", true, AlignmentType.RIGHT),
+                      ...sigImagePara(v.signatureImage, AlignmentType.RIGHT),
+                      para(`(${sigPrinted})`, true, AlignmentType.RIGHT),
                     ],
                   }),
                 ],
@@ -203,11 +193,12 @@ export async function POST(req: Request) {
               new TableRow({
                 children: [
                   new TableCell({ children: [para(`Date: ${dateStr}`, true)] }),
-                  new TableCell({ children: [para(`Place: ${v.place || BLANK}`, true, AlignmentType.RIGHT), para("Enclosed: Copy of PAN Card and Address Proof", false, AlignmentType.RIGHT, 20, true)] }),
                 ],
               }),
             ],
           }),
+          new Paragraph({ text: "" }),
+          para("Enclosed: Copy of PAN Card and Address Proof", false, undefined, 20, true),
         ],
       },
     ],

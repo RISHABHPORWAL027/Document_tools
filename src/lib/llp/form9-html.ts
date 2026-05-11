@@ -174,6 +174,7 @@ export function buildLlpForm9Html(v: LlpForm9Values): string {
   .declaration .heading {
     font-weight: bold;
     text-decoration: underline;
+    text-align: center;
     margin-bottom: 4mm;
   }
   .declaration ol {
@@ -194,9 +195,8 @@ export function buildLlpForm9Html(v: LlpForm9Values): string {
   /* ── Signature section ── */
   .sig-section {
     margin-top: 8mm;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10mm;
+    display: flex;
+    justify-content: flex-end;
   }
   .sig-box {
     font-size: 11pt;
@@ -219,7 +219,6 @@ export function buildLlpForm9Html(v: LlpForm9Values): string {
 
   .meta-row {
     display: flex;
-    justify-content: space-between;
     margin-top: 6mm;
     font-size: 12pt;
   }
@@ -321,18 +320,11 @@ export function buildLlpForm9Html(v: LlpForm9Values): string {
       </div>
       <div class="sig-name">(${e(sigPrinted)})</div>
     </div>
-    <div class="sig-box">
-      <div class="label">Witness (Name & Address):</div>
-      <div style="margin-top: 6mm; line-height: 1.6;">
-        ${e(witness)}
-      </div>
-    </div>
   </div>
 
-  <!-- ── Date / Place ── -->
+  <!-- ── Date ── -->
   <div class="meta-row">
     <div><strong>Date:</strong> ${e(date)}</div>
-    <div><strong>Place:</strong> ${e(place)}</div>
   </div>
 
   <!-- ── Enclosure ── -->

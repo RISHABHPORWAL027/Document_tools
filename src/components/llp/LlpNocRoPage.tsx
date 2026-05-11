@@ -25,6 +25,7 @@ function initialData(): LlpNocRoValues {
     llpName: "",
     registeredOfficeAddress: "",
     designatedPartnerName: "",
+    electricityBillNote: "",
   };
 }
 
@@ -133,6 +134,14 @@ export default function LlpNocRoPage() {
                 className={inputClass} 
                 value={data.date} 
                 onChange={(parts) => update("date", parts.dateIso)} 
+              />
+            </Input>
+            <Input label="Enclosure Note">
+              <input
+                className={inputClass}
+                placeholder="Copy of the Electricity Bill"
+                value={data.electricityBillNote ?? ""}
+                onChange={(e) => update("electricityBillNote", e.target.value)}
               />
             </Input>
           </div>

@@ -201,8 +201,8 @@ export default function LlpForm9Page() {
                 <input className={inputClass} placeholder="ABCDE1234F" maxLength={10} value={data.pan} onChange={(e) => update("pan", e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 10))} />
               </Input>
             </div>
-            <Input label="DPIN (8 digits)">
-              <input className={inputClass} inputMode="numeric" maxLength={8} placeholder="From MCA" value={data.dpin} onChange={(e) => update("dpin", e.target.value.replace(/\D/g, "").slice(0, 8))} />
+            <Input label="DPIN">
+              <input className={inputClass} placeholder="From MCA" value={data.dpin} onChange={(e) => update("dpin", e.target.value)} />
             </Input>
             <div className="grid gap-3 sm:grid-cols-2">
               <Input label="Email">
@@ -215,10 +215,8 @@ export default function LlpForm9Page() {
           </div>
 
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">
-            <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs">Signature & Witness</h2>
-            <Input label="Place">
-              <input className={inputClass} value={data.place} onChange={(e) => update("place", e.target.value)} />
-            </Input>
+            <h2 className="text-lg font-semibold text-zinc-900 uppercase tracking-wider text-xs">Signature</h2>
+
             <Input label="Date of Signing">
               <LegalDatePicker 
                 className={inputClass} 
@@ -230,15 +228,7 @@ export default function LlpForm9Page() {
             <Input label="Printed Name Under Signature">
               <input className={inputClass} placeholder="Leave blank to use partner name" value={data.signaturePrintedName ?? ""} onChange={(e) => update("signaturePrintedName", e.target.value)} />
             </Input>
-            <div className="space-y-4 border-t pt-4 mt-4">
-              <h3 className="text-sm font-bold text-zinc-700 uppercase tracking-tight">Witness Details</h3>
-              <Input label="Witness Name">
-                <input className={inputClass} placeholder="Witness name as per ID" value={data.witnessName ?? ""} onChange={(e) => update("witnessName", e.target.value)} />
-              </Input>
-              <Input label="Witness Address">
-                <textarea className={inputClass} rows={3} placeholder="Witness residential address" value={data.witnessAddress ?? ""} onChange={(e) => update("witnessAddress", e.target.value)} />
-              </Input>
-            </div>
+
           </div>
         </div>
       }

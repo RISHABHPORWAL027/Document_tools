@@ -63,18 +63,6 @@ export default function CompaniesClient() {
 
   return (
     <div className="space-y-4">
-      {/* Horizontal banner placeholder */}
-      <div className="flex min-h-[56px] items-center justify-center rounded-xl border border-dashed border-zinc-300 bg-zinc-50/80 px-4 py-3">
-        <div className="text-center">
-          <div className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">
-            Banner placeholder
-          </div>
-          <div className="mt-0.5 text-xs text-zinc-500">
-            Leaderboard / inline slot — replace when you wire real content
-          </div>
-        </div>
-      </div>
-
       {/* Page header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>

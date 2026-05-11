@@ -10,11 +10,7 @@ type CompanyItem = {
   designation: string;
 };
 
-type MembershipItem = {
-  instituteName: string;
-  membershipNumber: string;
-  certificateOfPracticeNumber: string;
-};
+
 
 type Dir2FormData = {
   companyName: string;
@@ -29,10 +25,12 @@ type Dir2FormData = {
   dateOfBirth: string;
   nationality: string;
   existingDirectorships: string;
-  directorCompanies: CompanyItem[];
+  /** Free-text listing of companies/designations for item 11 */
+  directorshipsText: string;
   /** Free-text for item 11 (also auto-filled from company profile) */
   priorDirectorshipDetails: string;
-  professionalMembership: MembershipItem[];
+  /** Free-text listing of professional memberships for item 12 */
+  membershipText: string;
   place: string;
   date: string;
   identityProofName: string;
@@ -75,11 +73,9 @@ function createInitialFormData(): Dir2FormData {
     dateOfBirth: "",
     nationality: "",
     existingDirectorships: "",
-    directorCompanies: [{ companyName: "", designation: "Director" }],
+    directorshipsText: "",
     priorDirectorshipDetails: "",
-    professionalMembership: [
-      { instituteName: "", membershipNumber: "", certificateOfPracticeNumber: "" },
-    ],
+    membershipText: "",
     place: "",
     date: isoToday(),
     identityProofName: "",
@@ -124,10 +120,12 @@ export default function Dir2Page() {
         nationality: dir?.nationality ?? "",
         place: (dir?.city ?? "").trim() || profile.place || prev.place,
         priorDirectorshipDetails: dir?.priorDirectorshipDetails ?? "",
-        professionalMembership:
+        membershipText:
           profile.professionalMemberships.length > 0
             ? profile.professionalMemberships
-            : prev.professionalMembership,
+                .map((m) => `${m.instituteName} | Membership No: ${m.membershipNumber} | COP No: ${m.certificateOfPracticeNumber}`)
+                .join("\n")
+            : prev.membershipText,
       }));
     },
     [],
@@ -372,8 +370,6 @@ export default function Dir2Page() {
               </Input>
               <Input label="No. of existing companies as Director (total count)" required>
                 <input
-                  type="number"
-                  min={0}
                   className={inputClass}
                   value={data.existingDirectorships}
                   onChange={(e) => update("existingDirectorships", e.target.value)}
@@ -381,64 +377,22 @@ export default function Dir2Page() {
                 />
               </Input>
 
-              {/* EXISTING COMPANIES */}
-              <DynamicCard
-                title="Existing company details"
-                description="List each company where you already act as Director, Managing Director, CEO, Whole-time Director, Company Secretary, CFO, Manager, etc. Use + Add for more rows."
-                onAdd={() =>
-                  update("directorCompanies", [
-                    ...data.directorCompanies,
-                    { companyName: "", designation: "Director" },
-                  ])
-                }
-              >
-                {data.directorCompanies.map((row, idx) => (
-                  <div key={`company-${idx}`} className="rounded-lg border bg-white p-3">
-                    <div className="grid gap-2">
-                      <input
-                        className={inputClass}
-                        placeholder="Company Name"
-                        value={row.companyName}
-                        onChange={(e) => {
-                          const next = [...data.directorCompanies];
-                          next[idx] = { ...next[idx], companyName: e.target.value };
-                          update("directorCompanies", next);
-                        }}
-                      />
-                      <select
-                        className={inputClass}
-                        value={row.designation}
-                        onChange={(e) => {
-                          const next = [...data.directorCompanies];
-                          next[idx] = { ...next[idx], designation: e.target.value };
-                          update("directorCompanies", next);
-                        }}
-                      >
-                        {designationOptions.map((opt) => (
-                          <option key={opt} value={opt}>
-                            {opt}
-                          </option>
-                        ))}
-                      </select>
-                      <button
-                        type="button"
-                        className={removeBtnClass}
-                        onClick={() => {
-                          const next = data.directorCompanies.filter((_, i) => i !== idx);
-                          update(
-                            "directorCompanies",
-                            next.length
-                              ? next
-                              : [{ companyName: "", designation: "Director" }],
-                          );
-                        }}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </DynamicCard>
+              {/* EXISTING COMPANIES — free-text field */}
+              <div className="rounded-xl border border-zinc-200 bg-white p-3">
+                <label className="mb-1 block text-sm font-semibold text-zinc-900">
+                  Existing company details
+                </label>
+                <p className="mb-2 text-xs leading-relaxed text-zinc-600">
+                  List each company where you already act as Director, Managing Director, CEO, Whole-time Director, Company Secretary, CFO, Manager, etc. Type freely — e.g. "1. ABC Pvt Ltd — Director".
+                </p>
+                <textarea
+                  className={inputClass}
+                  rows={5}
+                  value={data.directorshipsText ?? ""}
+                  onChange={(e) => update("directorshipsText", e.target.value)}
+                  placeholder={"1. ABC Private Limited — Director\n2. XYZ Pvt Ltd — Managing Director"}
+                />
+              </div>
 
               <div className="rounded-xl border border-zinc-200 bg-white p-3">
                 <label className="mb-1 block text-sm font-semibold text-zinc-900">
@@ -461,83 +415,21 @@ export default function Dir2Page() {
               </div>
 
               {/* PROFESSIONAL MEMBERSHIP */}
-              <DynamicCard
-                title="Professional Membership Details"
-                description="ICAI, ICSI, ICMAI membership if applicable"
-                onAdd={() =>
-                  update("professionalMembership", [
-                    ...data.professionalMembership,
-                    {
-                      instituteName: "",
-                      membershipNumber: "",
-                      certificateOfPracticeNumber: "",
-                    },
-                  ])
-                }
-              >
-                {data.professionalMembership.map((row, idx) => (
-                  <div key={`membership-${idx}`} className="rounded-lg border bg-white p-3">
-                    <div className="grid gap-2">
-                      <input
-                        className={inputClass}
-                        placeholder="Institute Name (e.g. ICAI)"
-                        value={row.instituteName}
-                        onChange={(e) => {
-                          const next = [...data.professionalMembership];
-                          next[idx] = { ...next[idx], instituteName: e.target.value };
-                          update("professionalMembership", next);
-                        }}
-                      />
-                      <input
-                        className={inputClass}
-                        placeholder="Membership Number"
-                        value={row.membershipNumber}
-                        onChange={(e) => {
-                          const next = [...data.professionalMembership];
-                          next[idx] = { ...next[idx], membershipNumber: e.target.value };
-                          update("professionalMembership", next);
-                        }}
-                      />
-                      <input
-                        className={inputClass}
-                        placeholder="Certificate of Practice Number"
-                        value={row.certificateOfPracticeNumber}
-                        onChange={(e) => {
-                          const next = [...data.professionalMembership];
-                          next[idx] = {
-                            ...next[idx],
-                            certificateOfPracticeNumber: e.target.value,
-                          };
-                          update("professionalMembership", next);
-                        }}
-                      />
-                      <button
-                        type="button"
-                        className={removeBtnClass}
-                        onClick={() => {
-                          const next = data.professionalMembership.filter(
-                            (_, i) => i !== idx,
-                          );
-                          update(
-                            "professionalMembership",
-                            next.length
-                              ? next
-                              : [
-                                  {
-                                    instituteName: "",
-                                    membershipNumber: "",
-                                    certificateOfPracticeNumber: "",
-                                  },
-                                ],
-                          );
-                        }}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </DynamicCard>
+              <div className="rounded-xl border border-zinc-200 bg-white p-3">
+                <label className="mb-1 block text-sm font-semibold text-zinc-900">
+                  Professional Membership Details
+                </label>
+                <p className="mb-2 text-xs leading-relaxed text-zinc-600">
+                  ICAI, ICSI, ICMAI membership if applicable. Type freely — e.g. "1. ICAI | Membership No: 12345 | COP No: 67890".
+                </p>
+                <textarea
+                  className={inputClass}
+                  rows={4}
+                  value={data.membershipText ?? ""}
+                  onChange={(e) => update("membershipText", e.target.value)}
+                  placeholder="e.g. ICAI | Membership No: 123456 | COP No: 654321"
+                />
+              </div>
 
               <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-3">
                 <div className="text-sm font-semibold text-zinc-900">
@@ -709,32 +601,12 @@ function buildDir2Html(data: Dir2FormData) {
     ? `<div class="prior-narrative" style="margin-bottom:8px;">${escapeHtml(narrative).replace(/\n/g, "<br>")}</div>`
     : "";
 
-  const companies = data.directorCompanies.filter(
-    (x) => x.companyName.trim() || x.designation.trim(),
-  );
-  const memberships = data.professionalMembership.filter(
-    (x) =>
-      x.instituteName.trim() ||
-      x.membershipNumber.trim() ||
-      x.certificateOfPracticeNumber.trim(),
-  );
-
-  const companiesHtml = companies.length
-    ? companies
-        .map(
-          (c, i) =>
-            `<div class="sub-item">${i + 1}. ${val(c.companyName)} — ${val(c.designation)}</div>`,
-        )
-        .join("")
+  const companiesHtml = data.directorshipsText?.trim()
+    ? `<div class="prior-narrative" style="white-space:pre-wrap;margin-bottom:8px;">${escapeHtml(data.directorshipsText.trim())}</div>`
     : '<span class="blank">N/A</span>';
 
-  const membershipsHtml = memberships.length
-    ? memberships
-        .map(
-          (m, i) =>
-            `<div class="sub-item">${i + 1}. ${val(m.instituteName)} | Membership No: ${val(m.membershipNumber)} | COP No: ${val(m.certificateOfPracticeNumber)}</div>`,
-        )
-        .join("")
+  const membershipsHtml = data.membershipText?.trim()
+    ? `<div class="prior-narrative" style="white-space:pre-wrap;margin-bottom:8px;">${escapeHtml(data.membershipText.trim())}</div>`
     : '<span class="blank">N/A</span>';
 
   return `<!DOCTYPE html>

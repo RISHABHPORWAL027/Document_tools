@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   FLOWS,
   TOOLS,
@@ -18,6 +18,15 @@ function flowHref(flow: FlowDefinition) {
 export default function WorkspaceHomeClient() {
   const [query, setQuery] = useState("");
 
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev === 0 ? 1 : 0));
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   const filteredTools = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return TOOLS;
@@ -29,73 +38,91 @@ export default function WorkspaceHomeClient() {
   }, [query]);
 
   return (
-    <div className="space-y-8">
-      {/* Hero */}
-      <section className="overflow-hidden rounded-2xl border border-zinc-200 bg-gradient-to-br from-[#1a2e7e] to-[#243a9e] p-6 text-white shadow-sm sm:p-8">
-        <p className="text-xs font-semibold uppercase tracking-widest text-blue-200">
-          Compliance workspace
-        </p>
-        <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
-          Find the right document in one place
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-blue-100">
-          Save each company once, then open any flow below. Every generator pulls from
-          the same profile — add new tools to the catalogue as you grow.
-        </p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link
-            href="/companies"
-            className="inline-flex items-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-[#1a2e7e] shadow-sm hover:bg-blue-50"
-          >
-            Manage companies
-          </Link>
-          <Link
-            href="/companies/new"
-            className="inline-flex items-center rounded-lg border border-white/40 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10"
-          >
-            New company profile
-          </Link>
-        </div>
-      </section>
-
-      {/* How it works */}
-      <section className="rounded-xl border bg-white p-5 shadow-sm">
-        <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400">
-          How it works
-        </h2>
-        <ol className="mt-4 grid gap-4 sm:grid-cols-3">
-          {[
-            {
-              step: "1",
-              title: "Company data",
-              body: "Create or edit a company under Manage companies. Directors and office address stay synced everywhere.",
-            },
-            {
-              step: "2",
-              title: "Pick a workflow",
-              body: "Company / LLP incorporation, bank account, or GST — open the flow, choose your sub-stage, then generate.",
-            },
-            {
-              step: "3",
-              title: "Generate",
-              body: "Open a tool, auto-fill from the profile, then download PDF or Word or print.",
-            },
-          ].map((item) => (
-            <li
-              key={item.step}
-              className="flex gap-3 rounded-lg border border-zinc-100 bg-zinc-50/80 p-4"
+    <div className="mx-auto max-w-5xl space-y-8 px-4 py-6 text-center sm:px-6 lg:px-8">
+      {/* Auto-sliding Carousel for Hero and How it works */}
+      <div className="relative overflow-hidden rounded-2xl border border-zinc-200 shadow-sm min-h-[400px] sm:min-h-[300px]">
+        
+        {/* Slide 0: Compliance Workspace Hero */}
+        <div className={`absolute inset-0 transition-opacity duration-1000 flex flex-col justify-center items-center p-6 sm:p-8 bg-gradient-to-br from-[#1a2e7e] to-[#243a9e] text-white ${activeSlide === 0 ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'}`}>
+          <p className="text-xs font-semibold uppercase tracking-widest text-blue-200">
+            Compliance workspace
+          </p>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight sm:text-3xl">
+            Find the right document in one place
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-blue-100">
+            Save each company once, then open any flow below. Every generator pulls from
+            the same profile — add new tools to the catalogue as you grow.
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/companies"
+              className="inline-flex items-center rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-[#1a2e7e] shadow-sm hover:bg-blue-50"
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800">
-                {item.step}
-              </span>
-              <div>
-                <div className="font-semibold text-zinc-900">{item.title}</div>
-                <p className="mt-1 text-sm leading-snug text-zinc-600">{item.body}</p>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+              Manage companies
+            </Link>
+            <Link
+              href="/companies/new"
+              className="inline-flex items-center rounded-lg border border-white/40 px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10"
+            >
+              New company profile
+            </Link>
+          </div>
+        </div>
+
+        {/* Slide 1: How it works */}
+        <div className={`absolute inset-0 transition-opacity duration-1000 flex flex-col justify-center items-center bg-[#eef4ff] p-6 sm:p-8 ${activeSlide === 1 ? 'opacity-100 z-10 pointer-events-auto' : 'opacity-0 z-0 pointer-events-none'}`}>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400">
+            How it works
+          </h2>
+          <ol className="mt-4 grid gap-4 sm:grid-cols-3 max-w-4xl mx-auto text-left">
+            {[
+              {
+                step: "1",
+                title: "Company data",
+                body: "Create or edit a company under Manage companies. Directors and office address stay synced everywhere.",
+              },
+              {
+                step: "2",
+                title: "Pick a workflow",
+                body: "Company / LLP incorporation, bank account, or GST — open the flow, choose your sub-stage, then generate.",
+              },
+              {
+                step: "3",
+                title: "Generate",
+                body: "Open a tool, auto-fill from the profile, then download PDF or Word or print.",
+              },
+            ].map((item) => (
+              <li
+                key={item.step}
+                className="flex flex-col items-center text-center gap-3 rounded-lg border border-blue-100 bg-white/90 p-4"
+              >
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800">
+                  {item.step}
+                </span>
+                <div>
+                  <div className="font-semibold text-zinc-900">{item.title}</div>
+                  <p className="mt-1 text-sm leading-snug text-zinc-600">{item.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-20">
+          <button 
+            onClick={() => setActiveSlide(0)} 
+            className={`h-2 w-8 rounded-full transition-colors ${activeSlide === 0 ? 'bg-blue-400' : 'bg-zinc-300'}`} 
+            aria-label="Show slide 1"
+          />
+          <button 
+            onClick={() => setActiveSlide(1)} 
+            className={`h-2 w-8 rounded-full transition-colors ${activeSlide === 1 ? 'bg-blue-400' : 'bg-zinc-300'}`} 
+            aria-label="Show slide 2"
+          />
+        </div>
+      </div>
 
       {/* Flows */}
       <section>

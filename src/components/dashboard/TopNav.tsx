@@ -10,9 +10,6 @@ import {
 
 const MAIN_NAV = [
   { href: "/", label: "WORKSPACE" },
-  { href: "/incorporation", label: "INCORPORATION" },
-  { href: "/bank-account", label: "BANK ACCOUNT" },
-  { href: "/gst", label: "GST / TAX" },
 ];
 
 const SEARCH_DEBOUNCE_MS = 280;
@@ -360,10 +357,6 @@ export default function TopNav() {
           ) : null}
         </div>
 
-        {/* User avatar */}
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-400 text-xs font-bold text-white">
-          CS
-        </div>
       </div>
     </header>
   );

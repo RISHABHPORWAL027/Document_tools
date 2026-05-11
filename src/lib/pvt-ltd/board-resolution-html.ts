@@ -10,7 +10,7 @@ export interface BrFormData {
   auditorFirmName: string;
   auditorFrn: string;
   chairmanName: string;
-  directors: { name: string; din: string; designation: string }[];
+  directors: { name: string; din: string; designation: string; pan?: string }[];
   signatoryName: string;
   signatoryDesignation: string;
   signatureImage?: string;
