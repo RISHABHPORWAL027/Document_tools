@@ -17,6 +17,8 @@ export interface BrFormData {
   place: string;
   date: string;
   resolutions: string[];
+  contactNo?: string;
+  email?: string;
 }
 
 function e(s: string): string {
@@ -104,6 +106,27 @@ export function buildBrHtml(data: BrFormData) {
       background: #fff;
       padding: 0;
     }
+    .company-header {
+      margin-bottom: 8mm;
+      font-family: "Times New Roman", Times, serif;
+      font-weight: bold;
+      color: #000;
+      text-align: center;
+    }
+    .company-header .company-name {
+      font-size: 18pt;
+      line-height: 1.2;
+      text-transform: uppercase;
+    }
+    .company-header .cin, .company-header .office, .company-header .contact {
+      font-size: 10pt;
+      line-height: 1.35;
+      font-weight: normal;
+    }
+    .company-header .contact {
+      border-bottom: 1px solid #000;
+      padding-bottom: 2pt;
+    }
     .page {
       width: 100%;
       min-height: 297mm;
@@ -169,13 +192,22 @@ export function buildBrHtml(data: BrFormData) {
     .dir-din { font-size: 10pt; margin-top: 1mm; }
 
     @media print {
-      body { padding: 0; }
+      @page { size: auto; margin: 0; }
+      body { padding: 0; margin: 0; }
       .page { width: 210mm; margin: 0; padding: 15mm 20mm; }
     }
   </style>
 </head>
 <body>
   <div class="page">
+
+    <!-- ── Company Header ── -->
+    <div class="company-header">
+      <div class="company-name">${e(company)}</div>
+      ${data.cin ? `<div class="cin">CIN: ${e(data.cin)}</div>` : ""}
+      <div class="office">Regd. Office: ${e(regAddr)}</div>
+      <div class="contact">Contact No.: ${e(data.contactNo || "")}; Email id: ${e(data.email || "")}</div>
+    </div>
 
     <!-- ── Title ── -->
     <div class="title-block">

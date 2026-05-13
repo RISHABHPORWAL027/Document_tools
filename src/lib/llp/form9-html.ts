@@ -229,7 +229,11 @@ export function buildLlpForm9Html(v: LlpForm9Values): string {
     font-style: italic;
   }
 
-  @media print { body { padding: 0; } .page { width: 210mm; margin: 0; padding: 18mm 22mm; } }
+  @media print { 
+    @page { size: auto; margin: 0; }
+    body { padding: 0; margin: 0; } 
+    .page { width: 210mm; margin: 0; padding: 18mm 22mm; } 
+  }
 </style>
 </head>
 <body>

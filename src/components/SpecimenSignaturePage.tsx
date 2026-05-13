@@ -119,13 +119,21 @@ export default function SpecimenSignaturePage() {
   }
 
   function printPreview() {
-    const w = window.open("", "_blank", "noopener,noreferrer");
+    const w = window.open("", "_blank");
     if (!w) return;
-    w.document.open();
     w.document.write(previewHtml);
     w.document.close();
-    w.focus();
-    w.print();
+    w.onload = () => {
+      w.focus();
+      w.print();
+    };
+    // Fallback
+    setTimeout(() => {
+      if (w) {
+        w.focus();
+        w.print();
+      }
+    }, 500);
   }
 
   return (
@@ -424,8 +432,9 @@ function buildSpecimenHtml(data: SpecimenFormData): string {
     }
 
     @media print {
-      body { padding: 0; }
-      .page { max-width: none; }
+      @page { size: auto; margin: 0; }
+      body { padding: 0; margin: 0; }
+      .page { max-width: none; padding: 15mm; }
     }
   </style>
 </head>

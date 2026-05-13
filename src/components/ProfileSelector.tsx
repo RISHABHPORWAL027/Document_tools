@@ -59,16 +59,18 @@ export default function ProfileSelector({
   }
 
   return (
-    <div className="mb-4 rounded-xl border border-blue-200 bg-blue-50 px-4 py-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="text-sm font-semibold text-blue-900">Auto-fill from</div>
+    <div className="mb-4 border border-[#eeeeee] bg-white px-4 py-3">
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[#888888]">
+          Auto-fill from
+        </span>
 
         {companies.length === 0 ? (
-          <div className="flex items-center gap-2 text-sm text-blue-700">
+          <div className="flex items-center gap-2 text-sm text-[#666666]">
             <span>No companies saved.</span>
             <Link
               href="/companies/new"
-              className="font-semibold underline hover:text-blue-900"
+              className="font-bold text-black underline underline-offset-2 hover:no-underline"
             >
               Add company →
             </Link>
@@ -76,7 +78,7 @@ export default function ProfileSelector({
         ) : (
           <>
             <select
-              className="rounded-lg border border-blue-300 bg-white px-3 py-1.5 text-sm text-zinc-900 focus:outline-none focus:ring-1 focus:ring-blue-400"
+              className="border border-[#d9d9d9] bg-[#f6f6f6] px-3 py-1.5 text-sm text-black focus:outline-none focus:border-black focus:bg-white transition-colors"
               value={selectedId}
               onChange={(e) => handleSelect(e.target.value)}
             >
@@ -89,7 +91,7 @@ export default function ProfileSelector({
             </select>
 
             {filled && (
-              <span className="text-xs font-medium text-green-700">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
                 ✓ Auto-filled
               </span>
             )}
@@ -98,7 +100,7 @@ export default function ProfileSelector({
 
         <Link
           href="/companies"
-          className="ml-auto text-xs font-medium text-blue-700 hover:underline"
+          className="ml-auto text-xs font-bold text-[#888888] hover:text-black transition-colors"
         >
           Manage Companies →
         </Link>

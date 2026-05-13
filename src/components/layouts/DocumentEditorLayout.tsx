@@ -29,9 +29,8 @@ export default function DocumentEditorLayout({
   iframeTitle = "Document Preview",
   extraActions,
 }: DocumentEditorLayoutProps) {
-  
+
   const printPreview = () => {
-    // Create a hidden iframe
     const iframe = document.createElement("iframe");
     iframe.style.position = "fixed";
     iframe.style.right = "0";
@@ -48,28 +47,31 @@ export default function DocumentEditorLayout({
     doc.write(previewHtml);
     doc.close();
 
-    // Wait for content to load and then print
     setTimeout(() => {
       iframe.contentWindow?.focus();
       iframe.contentWindow?.print();
-      
-      // Remove iframe after some time to allow print dialog to handle it
       setTimeout(() => {
         if (document.body.contains(iframe)) {
           document.body.removeChild(iframe);
         }
-      }, 2000); // Increased timeout to be safe
+      }, 2000);
     }, 500);
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 p-4 lg:p-8">
+    <div className="min-h-screen bg-[#f6f6f6] p-4 lg:p-8">
       <div className="mx-auto w-full max-w-[2400px]">
-        {/* HEADER SECTION */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-zinc-900">{title}</h1>
-            <p className="text-sm text-zinc-500">{description}</p>
+
+        {/* HEADER */}
+        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="border-l-4 border-black pl-4">
+            <h1
+              className="text-2xl font-black tracking-tight text-black"
+              style={{ letterSpacing: "-0.025em" }}
+            >
+              {title}
+            </h1>
+            <p className="mt-1 text-sm text-[#666666]">{description}</p>
           </div>
           <ProfileSelector
             initialCompanyId={companyId}
@@ -77,71 +79,69 @@ export default function DocumentEditorLayout({
           />
         </div>
 
-        {/* MAIN GRID: 320px Input, remaining Preview */}
+        {/* MAIN GRID */}
         <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-          {/* LEFT: INPUTS — scrollable */}
-          <div className="space-y-6 max-h-[calc(100vh-10rem)] overflow-y-auto pr-2 pb-10 scrollbar-thin scrollbar-thumb-zinc-300">
+
+          {/* LEFT: INPUTS */}
+          <div className="space-y-5 max-h-[calc(100vh-10rem)] overflow-y-auto pr-2 pb-10">
             {inputSection}
           </div>
 
-          {/* RIGHT: PREVIEW — scrollable both directions */}
-          <section className="flex flex-col rounded-xl border bg-white shadow-sm overflow-hidden h-fit sticky top-4">
-            <div className="border-b bg-zinc-50 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-zinc-500 flex justify-between items-center">
-              <span>Live Preview</span>
-              <span className="text-[10px] text-zinc-400 normal-case font-normal">Document Preview · Scroll to view</span>
+          {/* RIGHT: PREVIEW */}
+          <section className="flex flex-col bg-white border border-[#eeeeee] overflow-hidden h-fit sticky top-4 shadow-sm">
+            <div className="border-b border-[#eeeeee] bg-[#f6f6f6] px-5 py-3 flex justify-between items-center">
+              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
+                Live Preview
+              </span>
+              <span className="text-[10px] text-[#b0b0b0]">
+                Scroll to view full document
+              </span>
             </div>
             <div
-              className="overflow-auto bg-zinc-100 p-4 scrollbar-thin scrollbar-thumb-zinc-300 flex justify-center"
+              className="overflow-auto bg-[#eeeeee] p-4 flex sm:justify-center"
               style={{ maxHeight: "calc(100vh - 12rem)" }}
             >
-              <div
-                className="w-full"
-                style={{
-                  maxWidth: "100%", // Takes full width of the right column
-                }}
-              >
-                <iframe
-                  title={iframeTitle}
-                  className="mx-auto bg-white shadow-xl ring-1 ring-zinc-200 border-none w-full"
-                  style={{
-                    minHeight: "1350px",
-                  }}
-                  srcDoc={previewHtml}
-                  sandbox="allow-same-origin allow-scripts allow-modals"
-                />
-              </div>
+              <iframe
+                title={iframeTitle}
+                className="bg-white shadow-lg border-none shrink-0"
+                style={{ width: "210mm", minWidth: "210mm", minHeight: "1350px" }}
+                srcDoc={previewHtml}
+                sandbox="allow-same-origin allow-scripts allow-modals"
+              />
             </div>
           </section>
         </div>
 
-        {/* GLOBAL ACTION BUTTONS */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4 border-t border-zinc-200 pt-8">
+        {/* ACTION BUTTONS — Uber style */}
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4 border-t border-[#eeeeee] pt-8">
           <button
             onClick={() => onDownload("pdf")}
             disabled={busy}
-            className="min-w-[180px] rounded-lg bg-zinc-900 px-8 py-3.5 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-60 shadow-lg shadow-zinc-200 transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="min-w-[180px] bg-black px-8 py-3.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             {busy ? (
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
             ) : (
-              "⬇"
+              <span>⬇</span>
             )}
-            {busy ? "Generating..." : "Download PDF"}
+            {busy ? "Generating…" : "Download PDF"}
           </button>
-          
+
           <button
             onClick={() => onDownload("docx")}
             disabled={busy}
-            className="min-w-[180px] rounded-lg border border-zinc-300 bg-white px-8 py-3.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="min-w-[180px] border-2 border-black bg-white px-8 py-3.5 text-sm font-bold text-black hover:bg-[#f6f6f6] disabled:opacity-40 transition-all active:scale-95 flex items-center justify-center gap-2"
           >
-            <span>⬇</span> Download DOCX
+            <span>⬇</span>
+            Download DOCX
           </button>
-          
+
           <button
             onClick={printPreview}
-            className="min-w-[140px] rounded-lg border border-zinc-300 bg-white px-8 py-3.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 shadow-sm transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="min-w-[140px] border border-[#d9d9d9] bg-white px-8 py-3.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-all active:scale-95 flex items-center justify-center gap-2"
           >
-            <span>🖨</span> Print
+            <span>🖨</span>
+            Print
           </button>
 
           {extraActions}

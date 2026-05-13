@@ -149,8 +149,17 @@ export default function LlpForm9Page() {
     if (!w) return;
     w.document.write(buildLlpForm9Html(data));
     w.document.close();
-    w.focus();
-    w.print();
+    w.onload = () => {
+      w.focus();
+      w.print();
+    };
+    // Fallback
+    setTimeout(() => {
+      if (w) {
+        w.focus();
+        w.print();
+      }
+    }, 500);
   }
 
   return (

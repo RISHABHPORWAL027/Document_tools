@@ -52,7 +52,7 @@ export default function ToolRunner({ toolId }: ToolRunnerProps) {
 
   if (!tool) {
     return (
-      <div className="rounded-2xl border bg-white p-6 text-sm text-zinc-600">
+      <div className="border border-[#eeeeee] bg-white p-6 text-sm text-[#666666]">
         {error ? error : "Loading tool…"}
       </div>
     );
@@ -167,21 +167,31 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
       setError("Generate a preview first.");
       return;
     }
-    const w = window.open("", "_blank", "noopener,noreferrer");
+    const w = window.open("", "_blank");
     if (!w) return;
-    w.document.open();
     w.document.write(previewHtml);
     w.document.close();
-    w.focus();
-    w.print();
+    w.onload = () => {
+      w.focus();
+      w.print();
+    };
+    // Fallback
+    setTimeout(() => {
+      if (w) {
+        w.focus();
+        w.print();
+      }
+    }, 500);
   }
 
   return (
     <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
-      <section className="rounded-2xl border bg-white p-6">
-        <h2 className="text-sm font-semibold text-zinc-900">Inputs</h2>
+      <section className="border border-[#eeeeee] bg-white">
+        <div className="border-b border-[#eeeeee] bg-[#f6f6f6] px-5 py-3">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">Inputs</h2>
+        </div>
         <form
-          className="mt-4 space-y-4"
+          className="p-5 space-y-4"
           onSubmit={form.handleSubmit(generate)}
         >
           {tool.fields.map((field) => (
@@ -195,7 +205,7 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
           ))}
 
           {error ? (
-            <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            <div className="border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
               {error}
             </div>
           ) : null}
@@ -204,7 +214,7 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
             <button
               type="submit"
               disabled={isGenerating}
-              className="inline-flex items-center justify-center rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-60"
+              className="inline-flex items-center justify-center bg-black px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-colors"
             >
               {isGenerating ? "Generating…" : "Generate"}
             </button>
@@ -212,7 +222,7 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
               type="button"
               disabled={isGenerating}
               onClick={() => download("pdf")}
-              className="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium hover:bg-zinc-50 disabled:opacity-60"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black disabled:opacity-40 transition-colors"
             >
               Download PDF
             </button>
@@ -220,21 +230,21 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
               type="button"
               disabled={isGenerating}
               onClick={() => download("docx")}
-              className="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium hover:bg-zinc-50 disabled:opacity-60"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black disabled:opacity-40 transition-colors"
             >
               Download DOCX
             </button>
             <button
               type="button"
               onClick={copyText}
-              className="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium hover:bg-zinc-50"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
             >
               Copy Text
             </button>
             <button
               type="button"
               onClick={print}
-              className="inline-flex items-center justify-center rounded-lg border px-4 py-2 text-sm font-medium hover:bg-zinc-50"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
             >
               Print
             </button>
@@ -242,23 +252,24 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
         </form>
       </section>
 
-      <section className="rounded-2xl border bg-white p-6">
-        <div className="flex items-center justify-between gap-3">
-          <h2 className="text-sm font-semibold text-zinc-900">Preview</h2>
-          <div className="text-xs text-zinc-500">
+      <section className="border border-[#eeeeee] bg-white">
+        <div className="border-b border-[#eeeeee] bg-[#f6f6f6] px-5 py-3 flex items-center justify-between">
+          <h2 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">Preview</h2>
+          <span className="text-[10px] text-[#b0b0b0]">
             Tip: click Generate after edits
-          </div>
+          </span>
         </div>
-        <div className="mt-4 overflow-hidden rounded-xl border bg-zinc-50">
+        <div className="overflow-auto bg-[#eeeeee] p-4 flex sm:justify-center">
           {previewHtml ? (
             <iframe
               title="Preview"
-              className="h-[72vh] w-full"
+              className="bg-white shadow-sm border-none shrink-0"
+              style={{ width: "210mm", minWidth: "210mm", height: "72vh" }}
               srcDoc={previewHtml}
             />
           ) : (
-            <div className="p-4 text-sm text-zinc-600">
-              Preview will appear here.
+            <div className="flex h-40 w-full items-center justify-center text-sm text-[#888888]">
+              Preview will appear here after you click Generate.
             </div>
           )}
         </div>
@@ -291,13 +302,13 @@ function FieldRenderer({
 
   const error = errors?.[field.name]?.message as string | undefined;
   const inputClass =
-    "mt-1 w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400";
+    "mt-1 w-full border border-[#d9d9d9] bg-[#f6f6f6] px-3 py-2 text-sm text-black outline-none focus:border-black focus:bg-white transition-colors";
 
   return (
     <div>
-      <label className="text-sm font-medium text-zinc-900">{field.label}</label>
+      <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#666666]">{field.label}</label>
       {field.description ? (
-        <div className="mt-1 text-xs text-zinc-500">{field.description}</div>
+        <div className="mt-1 text-xs text-[#888888]">{field.description}</div>
       ) : null}
       {field.type === "textarea" ? (
         <textarea
@@ -340,17 +351,17 @@ function RepeatableFieldRenderer({
   const arrayError = errors?.[field.name]?.message as string | undefined;
 
   return (
-    <div className="rounded-xl border bg-zinc-50 p-4">
+    <div className="border border-[#eeeeee] bg-[#f6f6f6] p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-sm font-medium text-zinc-900">{field.label}</div>
+          <div className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#666666]">{field.label}</div>
           {field.description ? (
-            <div className="mt-1 text-xs text-zinc-500">{field.description}</div>
+            <div className="mt-1 text-xs text-[#888888]">{field.description}</div>
           ) : null}
         </div>
         <button
           type="button"
-          className="rounded-lg border bg-white px-3 py-1.5 text-xs font-medium hover:bg-zinc-50"
+          className="border border-[#d9d9d9] bg-white px-3 py-1.5 text-xs font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
           onClick={() => {
             const item: Record<string, unknown> = {};
             for (const sf of field.fields) item[sf.name] = "";
@@ -367,14 +378,14 @@ function RepeatableFieldRenderer({
 
       <div className="mt-4 space-y-4">
         {fields.map((row, idx: number) => (
-          <div key={row.id} className="rounded-xl border bg-white p-4">
+          <div key={row.id} className="border border-[#eeeeee] bg-white p-4">
             <div className="flex items-center justify-between gap-3">
-              <div className="text-xs font-medium text-zinc-700">
+              <div className="text-[10px] font-bold uppercase tracking-[0.1em] text-[#888888]">
                 {(field.itemLabel ?? "Item") + " " + (idx + 1)}
               </div>
               <button
                 type="button"
-                className="rounded-md px-2 py-1 text-xs font-medium text-red-700 hover:bg-red-50"
+                className="text-xs font-medium text-[#888888] hover:text-black transition-colors"
                 onClick={() => remove(idx)}
               >
                 Remove
@@ -391,11 +402,11 @@ function RepeatableFieldRenderer({
                 ]);
 
                 const inputClass =
-                  "mt-1 w-full rounded-lg border bg-white px-3 py-2 text-sm outline-none focus:border-zinc-400";
+                  "mt-1 w-full border border-[#d9d9d9] bg-[#f6f6f6] px-3 py-2 text-sm text-black outline-none focus:border-black focus:bg-white transition-colors";
 
                 return (
                   <div key={name}>
-                    <label className="text-sm font-medium text-zinc-900">
+                    <label className="text-[11px] font-bold uppercase tracking-[0.1em] text-[#666666]">
                       {sf.label}
                     </label>
                     {sf.type === "textarea" ? (

@@ -205,7 +205,8 @@ export function buildBankAccountHtml(v: BankAccountValues): string {
   }
 
   @media print {
-    body { padding: 0; }
+    @page { size: auto; margin: 0; }
+    body { padding: 0; margin: 0; }
     .page { width: 210mm; margin: 0; padding: 15mm 20mm; }
   }
 </style>

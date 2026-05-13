@@ -38,6 +38,8 @@ export default function BoardResolutionPage() {
     place: "",
     date: new Date().toISOString().split("T")[0],
     resolutions: [],
+    contactNo: "",
+    email: "",
   });
 
   const [busy, setBusy] = useState(false);
@@ -56,6 +58,8 @@ export default function BoardResolutionPage() {
         }))
       : undefined,
     signatoryName: (p) => p.directors[0]?.directorName || "",
+    contactNo: (p) => p.contactNumber || "",
+    email: (p) => p.email || "",
   });
 
   const update = (field: keyof BrFormData, value: any) => {
@@ -98,6 +102,8 @@ export default function BoardResolutionPage() {
               }))
             : prev.directors,
           signatoryName: p.directors[0]?.directorName || "",
+          contactNo: p.contactNumber || "",
+          email: p.email || "",
         }));
       }}
       busy={busy}
@@ -121,6 +127,16 @@ export default function BoardResolutionPage() {
             <div className="space-y-1">
               <label className="text-xs font-medium text-zinc-500 uppercase">Registered Office Address</label>
               <textarea className={inputClass} rows={2} value={data.regAddress} onChange={(e) => update("regAddress", e.target.value)} />
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-zinc-500 uppercase">Contact No</label>
+                <input className={inputClass} value={data.contactNo} onChange={(e) => update("contactNo", e.target.value)} />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-zinc-500 uppercase">Email</label>
+                <input className={inputClass} value={data.email} onChange={(e) => update("email", e.target.value)} />
+              </div>
             </div>
           </div>
 

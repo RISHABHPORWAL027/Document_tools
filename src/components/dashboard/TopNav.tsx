@@ -152,27 +152,34 @@ export default function TopNav() {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-[#1a2e7e] text-white shadow-md">
-      <div className="mx-auto flex min-h-14 max-w-[1400px] items-center gap-3 px-3 py-2 sm:gap-4 sm:px-4">
-        {/* Brand + workspace menu (Companies lives here — not in main nav) */}
+    <header className="sticky top-0 z-40 bg-black text-white border-b border-white/10">
+      <div className="mx-auto flex min-h-[60px] max-w-[1400px] items-center gap-4 px-4 py-2 sm:px-6">
+
+        {/* Brand */}
         <div className="relative shrink-0" ref={brandMenuRef}>
           <button
             type="button"
             onClick={() => setBrandMenuOpen((o) => !o)}
-            className={`flex items-center gap-2 rounded-md px-2 py-1.5 text-left font-bold tracking-tight transition-colors sm:gap-2 sm:px-2.5 ${
+            className={`flex items-center gap-2.5 rounded-none px-2 py-2 text-left transition-colors ${
               companiesActive
-                ? "bg-white/20 text-white"
-                : "text-white hover:bg-white/10"
+                ? "text-white"
+                : "text-white hover:text-white/70"
             }`}
             aria-expanded={brandMenuOpen}
             aria-haspopup="menu"
           >
-            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-white/20 text-sm">
-              📋
+            {/* Uber-style wordmark */}
+            <span
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-sm text-black text-sm font-black"
+              style={{ background: "#ffffff" }}
+            >
+              CD
             </span>
-            <span className="hidden text-sm sm:inline">ComplianceDraft</span>
+            <span className="hidden text-[15px] font-bold tracking-tight sm:inline">
+              ComplianceDraft
+            </span>
             <svg
-              className={`h-4 w-4 shrink-0 opacity-80 transition-transform ${brandMenuOpen ? "rotate-180" : ""}`}
+              className={`h-3.5 w-3.5 shrink-0 opacity-60 transition-transform ${brandMenuOpen ? "rotate-180" : ""}`}
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -181,7 +188,7 @@ export default function TopNav() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={2.5}
                 d="M19 9l-7 7-7-7"
               />
             </svg>
@@ -190,12 +197,17 @@ export default function TopNav() {
           {brandMenuOpen ? (
             <div
               role="menu"
-              className="absolute left-0 top-full z-50 mt-1.5 min-w-[240px] rounded-lg border border-zinc-200 bg-white py-1 shadow-lg"
+              className="absolute left-0 top-full z-50 mt-1 min-w-[220px] rounded-none border border-white/10 bg-black py-1 shadow-2xl"
             >
+              <div className="px-4 pt-2 pb-1">
+                <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-white/40">
+                  Navigation
+                </span>
+              </div>
               <Link
                 href="/"
                 role="menuitem"
-                className="block px-4 py-2.5 text-sm font-semibold text-zinc-900 hover:bg-zinc-50"
+                className="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
                 onClick={() => setBrandMenuOpen(false)}
               >
                 Workspace home
@@ -203,7 +215,7 @@ export default function TopNav() {
               <Link
                 href="/companies"
                 role="menuitem"
-                className="block px-4 py-2.5 text-sm font-semibold text-zinc-900 hover:bg-zinc-50"
+                className="block px-4 py-2.5 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
                 onClick={() => setBrandMenuOpen(false)}
               >
                 Registered companies
@@ -211,7 +223,7 @@ export default function TopNav() {
               <Link
                 href="/companies/new"
                 role="menuitem"
-                className="block px-4 py-2.5 text-sm text-zinc-700 hover:bg-zinc-50"
+                className="block px-4 py-2.5 text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors"
                 onClick={() => setBrandMenuOpen(false)}
               >
                 New company
@@ -220,10 +232,13 @@ export default function TopNav() {
           ) : null}
         </div>
 
-        {/* Main nav — modules only */}
+        {/* Divider */}
+        <div className="h-5 w-px bg-white/20 shrink-0" />
+
+        {/* Main nav */}
         <nav
           aria-label="Primary navigation"
-          className="-mx-1 flex min-w-0 flex-1 items-center gap-1 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-none"
+          className="-mx-1 flex min-w-0 flex-1 items-center gap-0.5 overflow-x-auto px-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden md:flex-none"
         >
           {MAIN_NAV.map((item) => {
             const active =
@@ -234,10 +249,10 @@ export default function TopNav() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`shrink-0 rounded-md px-3 py-2 text-xs font-semibold tracking-wide transition-colors ${
+                className={`shrink-0 rounded-none px-4 py-2 text-xs font-bold tracking-[0.12em] transition-colors border-b-2 ${
                   active
-                    ? "bg-white/20 text-white"
-                    : "text-blue-200 hover:bg-white/10 hover:text-white"
+                    ? "border-white text-white"
+                    : "border-transparent text-white/50 hover:text-white hover:border-white/40"
                 }`}
               >
                 {item.label}
@@ -246,14 +261,14 @@ export default function TopNav() {
           })}
         </nav>
 
-        {/* Global search — debounced, dropdown results */}
+        {/* Global search */}
         <div
           ref={searchWrapRef}
           className="relative ml-auto hidden min-w-0 flex-1 md:block md:max-w-sm"
         >
           <div className="relative w-full">
             <svg
-              className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-blue-300"
+              className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/40"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -284,7 +299,7 @@ export default function TopNav() {
                 if (searchQuery.trim()) setSearchOpen(true);
               }}
               onKeyDown={onSearchKeyDown}
-              className="w-full rounded-md bg-white/10 py-1.5 pl-8 pr-3 text-sm text-white placeholder:text-blue-300 outline-none focus:bg-white/20"
+              className="w-full rounded-none border border-white/20 bg-white/5 py-2 pl-9 pr-3 text-sm text-white placeholder:text-white/30 outline-none focus:bg-white/10 focus:border-white/50 transition-colors"
             />
           </div>
 
@@ -293,16 +308,16 @@ export default function TopNav() {
               id="global-search-results"
               role="listbox"
               aria-label="Search results"
-              className="absolute right-0 top-[calc(100%+6px)] z-50 max-h-[min(70vh,380px)] w-[min(calc(100vw-2rem),22rem)] overflow-auto rounded-lg border border-zinc-200 bg-white py-1 shadow-xl"
+              className="absolute right-0 top-[calc(100%+4px)] z-50 max-h-[min(70vh,380px)] w-[min(calc(100vw-2rem),22rem)] overflow-auto border border-white/10 bg-black py-1 shadow-2xl"
               onMouseDown={(e) => e.preventDefault()}
             >
               {searchPending ? (
-                <div className="px-3 py-4 text-center text-sm text-zinc-500">
+                <div className="px-4 py-4 text-center text-sm text-white/40">
                   Searching…
                 </div>
               ) : searchResults.length === 0 ? (
-                <div className="px-3 py-4 text-center text-sm text-zinc-500">
-                  No workflows or tools match &ldquo;{debouncedSearch.trim()}&rdquo;.
+                <div className="px-4 py-4 text-center text-sm text-white/40">
+                  No results for &ldquo;{debouncedSearch.trim()}&rdquo;
                 </div>
               ) : (
                 searchResults.map((hit, index) => {
@@ -319,8 +334,8 @@ export default function TopNav() {
                       href={href}
                       role="option"
                       aria-selected={active}
-                      className={`flex items-start gap-3 px-3 py-2.5 text-left transition-colors ${
-                        active ? "bg-blue-50" : "hover:bg-zinc-50"
+                      className={`flex items-start gap-3 px-4 py-3 text-left transition-colors ${
+                        active ? "bg-white/10" : "hover:bg-white/5"
                       }`}
                       onMouseEnter={() => setActiveHitIndex(index)}
                       onClick={() => {
@@ -332,21 +347,21 @@ export default function TopNav() {
                         {icon}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block text-sm font-semibold text-zinc-900">
+                        <span className="block text-sm font-semibold text-white">
                           {hitLabel(hit)}
                         </span>
-                        <span className="mt-0.5 line-clamp-2 text-xs text-zinc-500">
+                        <span className="mt-0.5 line-clamp-2 text-xs text-white/40">
                           {hitSubLabel(hit)}
                         </span>
                       </span>
                       {hit.kind === "tool" &&
                       hit.tool.status === "coming_soon" ? (
-                        <span className="shrink-0 self-center rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold uppercase text-amber-800">
+                        <span className="shrink-0 self-center rounded-none bg-white/10 px-2 py-0.5 text-[9px] font-bold uppercase text-white/60">
                           Soon
                         </span>
                       ) : (
-                        <span className="shrink-0 self-center text-xs text-blue-600">
-                          Open
+                        <span className="shrink-0 self-center text-xs font-semibold text-white/50">
+                          Open →
                         </span>
                       )}
                     </Link>
@@ -356,7 +371,6 @@ export default function TopNav() {
             </div>
           ) : null}
         </div>
-
       </div>
     </header>
   );

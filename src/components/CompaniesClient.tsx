@@ -62,34 +62,37 @@ export default function CompaniesClient() {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Page header */}
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-bold text-zinc-900">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div className="border-l-4 border-black pl-4">
+          <h1
+            className="text-2xl font-black tracking-tight text-black"
+            style={{ letterSpacing: "-0.025em" }}
+          >
             Registered Companies
           </h1>
-          <p className="mt-0.5 text-sm text-zinc-500">
+          <p className="mt-0.5 text-sm text-[#666666]">
             Central directory for all client entities and their document status.
           </p>
         </div>
         <Link
           href="/companies/new"
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700"
+          className="flex items-center gap-2 bg-black px-5 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] transition-colors"
         >
-          <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
           </svg>
           NEW ENTITY
         </Link>
       </div>
 
       {/* Search + filter row */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-white px-4 py-3 shadow-sm">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-3 border border-[#eeeeee] bg-white px-4 py-3">
+        <div className="flex items-center gap-3">
           <div className="relative">
             <svg
-              className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-zinc-400"
+              className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#b0b0b0]"
               fill="none" stroke="currentColor" viewBox="0 0 24 24"
             >
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -100,12 +103,12 @@ export default function CompaniesClient() {
               placeholder="Search companies..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="rounded-lg border border-zinc-200 py-1.5 pl-8 pr-3 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-blue-400"
+              className="border border-[#d9d9d9] bg-[#f6f6f6] py-2 pl-9 pr-3 text-sm text-black placeholder:text-[#b0b0b0] outline-none focus:border-black focus:bg-white transition-colors"
             />
           </div>
           <button
             onClick={exportCsv}
-            className="flex items-center gap-1.5 rounded-lg border border-zinc-200 px-3 py-1.5 text-sm font-medium text-zinc-700 hover:bg-zinc-50"
+            className="flex items-center gap-1.5 border border-[#d9d9d9] bg-white px-3 py-2 text-xs font-bold text-[#444444] hover:border-black hover:text-black transition-colors uppercase tracking-[0.08em]"
           >
             <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -114,22 +117,25 @@ export default function CompaniesClient() {
             CSV
           </button>
         </div>
-        <div className="text-sm text-zinc-500">
+        <div className="text-xs text-[#888888]">
           Showing{" "}
-          <span className="font-semibold text-zinc-900">{filtered.length}</span>{" "}
+          <span className="font-bold text-black">{filtered.length}</span>{" "}
           {filtered.length === 1 ? "result" : "results"}
         </div>
       </div>
 
       {/* Table */}
-      <div className="overflow-hidden rounded-xl border bg-white shadow-sm">
+      <div className="overflow-hidden border border-[#eeeeee] bg-white">
         {filtered.length === 0 ? (
-          <div className="px-6 py-16 text-center">
-            <div className="text-4xl">🏢</div>
-            <div className="mt-3 text-base font-semibold text-zinc-700">
+          <div className="px-6 py-20 text-center">
+            <div className="text-5xl">🏢</div>
+            <div
+              className="mt-4 text-lg font-black tracking-tight text-black"
+              style={{ letterSpacing: "-0.02em" }}
+            >
               {companies.length === 0 ? "No companies yet" : "No results found"}
             </div>
-            <p className="mt-1 text-sm text-zinc-500">
+            <p className="mt-1.5 text-sm text-[#666666]">
               {companies.length === 0
                 ? "Click NEW ENTITY to add your first company and start generating documents."
                 : "Try a different search term."}
@@ -137,7 +143,7 @@ export default function CompaniesClient() {
             {companies.length === 0 && (
               <Link
                 href="/companies/new"
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                className="mt-5 inline-flex items-center gap-2 bg-black px-6 py-3 text-sm font-bold text-white hover:bg-[#1a1a1a] transition-colors"
               >
                 + Add Company
               </Link>
@@ -146,72 +152,72 @@ export default function CompaniesClient() {
         ) : (
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b bg-zinc-50 text-left">
-                <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+              <tr className="border-b border-[#eeeeee] bg-[#f6f6f6] text-left">
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
                   Company Details
                 </th>
-                <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
                   Sector
                 </th>
-                <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
                   State
                 </th>
-                <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
                   Directors
                 </th>
-                <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
                   Updated
                 </th>
-                <th className="px-4 py-3 text-[10px] font-semibold uppercase tracking-widest text-zinc-500">
+                <th className="px-5 py-3 text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100">
+            <tbody className="divide-y divide-[#f0f0f0]">
               {filtered.map((company) => (
-                <tr key={company.id} className="hover:bg-zinc-50">
-                  <td className="px-4 py-3">
-                    <div className="font-semibold text-zinc-900">
+                <tr key={company.id} className="hover:bg-[#f6f6f6] transition-colors">
+                  <td className="px-5 py-3.5">
+                    <div className="font-semibold text-black">
                       {company.name}
                     </div>
                     {company.cin && (
-                      <div className="mt-0.5 text-xs text-zinc-400">
+                      <div className="mt-0.5 text-xs text-[#888888] font-mono">
                         {company.cin}
                       </div>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-zinc-700">
+                  <td className="px-5 py-3.5 text-[#444444]">
                     {company.sector || "—"}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3.5">
                     {company.state ? (
-                      <span className="inline-flex items-center justify-center rounded-md bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-700">
+                      <span className="inline-flex items-center justify-center bg-black px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-[0.08em]">
                         {stateCode(company.state)}
                       </span>
                     ) : (
-                      <span className="text-zinc-400">—</span>
+                      <span className="text-[#b0b0b0]">—</span>
                     )}
                   </td>
-                  <td className="px-4 py-3">
-                    <span className="font-medium text-zinc-900">
+                  <td className="px-5 py-3.5">
+                    <span className="font-bold text-black">
                       {company.directors.length}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-zinc-500">
+                  <td className="px-5 py-3.5 text-[#888888]">
                     {fmtDate(company.updatedAt)}
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
+                  <td className="px-5 py-3.5">
+                    <div className="flex items-center gap-4">
                       <Link
                         href={`/companies/${company.id}`}
-                        className="font-semibold text-blue-600 hover:underline"
+                        className="text-sm font-bold text-black hover:underline underline-offset-2"
                       >
                         Manage
                       </Link>
                       <button
                         onClick={() => confirmDelete(company.id, company.name)}
                         disabled={deletingId === company.id}
-                        className="text-red-500 hover:underline disabled:opacity-50"
+                        className="text-sm text-[#888888] hover:text-black disabled:opacity-40 transition-colors"
                       >
                         Delete
                       </button>

@@ -14,9 +14,9 @@ import {
 } from "@/lib/companies/types";
 
 const inputCls =
-  "w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 placeholder:text-zinc-400 outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-100";
+  "w-full border border-[#d9d9d9] bg-[#f6f6f6] px-3 py-2 text-sm text-black placeholder:text-[#b0b0b0] outline-none focus:border-black focus:bg-white transition-colors";
 
-const labelCls = "mb-1 block text-xs font-semibold text-zinc-700";
+const labelCls = "mb-1 block text-[11px] font-bold uppercase tracking-[0.1em] text-[#666666]";
 
 interface Props {
   companyId?: string;
@@ -106,21 +106,24 @@ export default function CompanyFormPage({ companyId }: Props) {
     <div className="mx-auto max-w-3xl space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-sm text-zinc-500">
+        <div className="border-l-4 border-black pl-4">
+          <div className="flex items-center gap-2 text-xs text-[#888888]">
             <button
               onClick={() => router.push("/companies")}
-              className="hover:text-blue-600 hover:underline"
+              className="font-medium hover:text-black transition-colors"
             >
               Companies
             </button>
             <span>/</span>
             <span>{isEdit ? "Edit Company" : "New Company"}</span>
           </div>
-          <h1 className="mt-1 text-xl font-bold text-zinc-900">
+          <h1
+            className="mt-1 text-2xl font-black tracking-tight text-black"
+            style={{ letterSpacing: "-0.025em" }}
+          >
             {isEdit ? "Edit Company Profile" : "New Company"}
           </h1>
-          <p className="mt-0.5 text-sm text-zinc-500">
+          <p className="mt-0.5 text-sm text-[#666666]">
             Fill in the details below. This data will auto-fill all document
             generators.
           </p>
@@ -128,33 +131,33 @@ export default function CompanyFormPage({ companyId }: Props) {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 rounded-xl border bg-white p-1 shadow-sm">
+      <div className="flex border border-[#eeeeee] bg-white">
         <button
           onClick={() => setActiveTab("details")}
-          className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-colors ${
+          className={`flex-1 py-3 text-xs font-bold uppercase tracking-[0.1em] transition-colors border-b-2 ${
             activeTab === "details"
-              ? "bg-blue-600 text-white shadow"
-              : "text-zinc-600 hover:bg-zinc-50"
+              ? "border-black text-black bg-white"
+              : "border-transparent text-[#888888] hover:text-black bg-[#f6f6f6]"
           }`}
         >
-          🏢 Company Details
+          Company Details
         </button>
         <button
           onClick={() => setActiveTab("directors")}
-          className={`flex-1 rounded-lg py-2 text-sm font-semibold transition-colors ${
+          className={`flex-1 py-3 text-xs font-bold uppercase tracking-[0.1em] transition-colors border-b-2 ${
             activeTab === "directors"
-              ? "bg-blue-600 text-white shadow"
-              : "text-zinc-600 hover:bg-zinc-50"
+              ? "border-black text-black bg-white"
+              : "border-transparent text-[#888888] hover:text-black bg-[#f6f6f6]"
           }`}
         >
-          👤 Directors ({company.directors.length})
+          Directors ({company.directors.length})
         </button>
       </div>
 
       {/* Company Details Tab */}
       {activeTab === "details" && (
-        <div className="space-y-4 rounded-xl border bg-white p-5 shadow-sm">
-          <div className="text-sm font-bold text-zinc-800">Company Details</div>
+        <div className="space-y-4 border border-[#eeeeee] bg-white p-6">
+          <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#888888]">Company Details</div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
@@ -302,10 +305,10 @@ export default function CompanyFormPage({ companyId }: Props) {
             </div>
           </div>
 
-          <div className="flex justify-end gap-3 border-t pt-4">
+          <div className="flex justify-end gap-3 border-t border-[#eeeeee] pt-4">
             <button
               onClick={() => setActiveTab("directors")}
-              className="rounded-lg bg-blue-600 px-5 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+              className="bg-black px-5 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] transition-colors"
             >
               Next: Directors →
             </button>
@@ -319,7 +322,7 @@ export default function CompanyFormPage({ companyId }: Props) {
           {company.directors.map((dir, idx) => (
             <div
               key={dir.id}
-              className="overflow-hidden rounded-xl border bg-white shadow-sm"
+              className="overflow-hidden border border-[#eeeeee] bg-white"
             >
               {/* Director header (accordion) */}
               <button
@@ -329,7 +332,7 @@ export default function CompanyFormPage({ companyId }: Props) {
                 className="flex w-full items-center justify-between px-5 py-3 text-left"
               >
                 <div className="flex items-center gap-3">
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-100 text-xs font-bold text-blue-700">
+                  <div className="flex h-7 w-7 items-center justify-center bg-black text-xs font-bold text-white">
                     {idx + 1}
                   </div>
                   <div>
@@ -546,7 +549,7 @@ export default function CompanyFormPage({ companyId }: Props) {
 
           <button
             onClick={addDirector}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-blue-300 py-3 text-sm font-semibold text-blue-600 hover:bg-blue-50"
+            className="flex w-full items-center justify-center gap-2 border-2 border-dashed border-[#d9d9d9] py-3.5 text-sm font-bold text-[#888888] hover:border-black hover:text-black transition-colors"
           >
             + Add Another Director
           </button>
@@ -554,17 +557,17 @@ export default function CompanyFormPage({ companyId }: Props) {
       )}
 
       {/* Save bar */}
-      <div className="sticky bottom-4 flex items-center justify-between rounded-xl border bg-white px-5 py-3 shadow-lg">
+      <div className="sticky bottom-4 flex items-center justify-between border border-[#d9d9d9] bg-white px-5 py-3.5 shadow-xl">
         <button
           onClick={() => router.push("/companies")}
-          className="text-sm font-medium text-zinc-500 hover:text-zinc-700"
+          className="text-sm font-medium text-[#888888] hover:text-black transition-colors"
         >
           Cancel
         </button>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-60"
+          className="bg-black px-7 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-colors"
         >
           {saving ? "Saving…" : isEdit ? "Save Changes" : "Create Company"}
         </button>

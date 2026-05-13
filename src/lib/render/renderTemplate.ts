@@ -21,7 +21,11 @@ const BASE_CSS = `
   .doc__sign { margin-top: 18px; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
   .doc__signBlock { min-width: 260px; }
   .doc__spacer { height: 48px; }
-  @media print { body { padding: 0; } .page { max-width: none; margin: 0; } }
+  @media print { 
+    @page { size: auto; margin: 0; }
+    body { padding: 0; margin: 0; } 
+    .page { max-width: none; margin: 0; padding: 20mm; } 
+  }
 `;
 
 let helpersRegistered = false;

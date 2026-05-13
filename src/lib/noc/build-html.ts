@@ -196,7 +196,8 @@ export function buildNocHtml(raw: NocValues): string {
   .sig-block .s-pos { margin-bottom: 1.5mm; }
 
   @media print {
-    body { padding: 0; }
+    @page { size: auto; margin: 0; }
+    body { padding: 0; margin: 0; }
     .page { width: 210mm; margin: 0; padding: 22mm 20mm 20mm 25mm; }
   }
 </style>
