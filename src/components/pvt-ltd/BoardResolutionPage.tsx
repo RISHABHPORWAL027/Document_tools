@@ -58,7 +58,7 @@ export default function BoardResolutionPage() {
         }))
       : undefined,
     signatoryName: (p) => p.directors[0]?.directorName || "",
-    contactNo: (p) => p.contactNumber || "",
+    contactNo: (p) => p.mobileNumber || "",
     email: (p) => p.email || "",
   });
 
@@ -102,7 +102,7 @@ export default function BoardResolutionPage() {
               }))
             : prev.directors,
           signatoryName: p.directors[0]?.directorName || "",
-          contactNo: p.contactNumber || "",
+          contactNo: p.mobileNumber || "",
           email: p.email || "",
         }));
       }}
