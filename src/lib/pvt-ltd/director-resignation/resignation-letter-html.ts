@@ -146,9 +146,11 @@ export function buildResignationLetterDirectorHtml(data: ResignationLetterDirect
   <!-- ── Header Company Details (Letterhead) ── -->
   <div class="header-letterhead">
     <div class="header-company-name">${e(company)}</div>
-    <div class="header-cin">CIN: ${e(cin)}</div>
+    ${cin ? `<div class="header-cin">CIN: ${e(cin)}</div>` : ""}
     <div class="header-office">Regd. Office: ${e(companyAddr)}</div>
-    <div class="header-contact">Contact No.: ${e(companyPhone)}; Email id: ${e(companyEmail)}</div>
+    <div class="header-contact">
+      Contact No.: ${e(companyPhone)} ${companyEmail ? `; Email id: ${e(companyEmail)}` : ""}
+    </div>
   </div>
 
   <div class="date-line"><strong>Date:</strong> ${e(date)}</div>
