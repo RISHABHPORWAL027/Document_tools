@@ -61,12 +61,80 @@ body {
 
 /* Focus rings */
 *:focus-visible {
-  outline: 2px solid #000000;
+  outline: 2px solid #1A2E7E;
   outline-offset: 2px;
 }
 
 /* Selection */
 ::selection {
-  background: #000000;
+  background: #1A2E7E;
   color: #ffffff;
 }
+
+/* Redesign animations and visual styles */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(1.5deg);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 4s ease-in-out infinite;
+}
+
+/* Beautiful soft mesh gradients for joyful backgrounds */
+.bg-mesh-gradient-1 {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(at 5% 5%, hsla(244, 100%, 96%, 1) 0px, transparent 45%),
+    radial-gradient(at 95% 5%, hsla(335, 100%, 96%, 1) 0px, transparent 45%),
+    radial-gradient(at 50% 95%, hsla(188, 100%, 96%, 1) 0px, transparent 45%);
+}
+
+.bg-mesh-gradient-2 {
+  background-color: #ffffff;
+  background-image:
+    radial-gradient(at 5% 5%, hsla(188, 100%, 96%, 1) 0px, transparent 45%),
+    radial-gradient(at 95% 5%, hsla(244, 100%, 96%, 1) 0px, transparent 45%),
+    radial-gradient(at 50% 95%, hsla(335, 100%, 96%, 1) 0px, transparent 45%);
+}
+
+/* Custom Glassmorphism utility */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+}
+

@@ -12,24 +12,32 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL("https://compliancedraft.com"),
   title: {
-    default: "ComplianceDraft — CA/CS Document Automation",
+    default: "ComplianceDraft — Legal, MCA & Business Document Templates for CAs & CSs",
     template: "%s · ComplianceDraft",
   },
   description:
-    "Generate professional compliance and legal documents instantly. Store company profiles once, auto-fill all documents. PDF and DOCX export for LLP, Pvt Ltd, and more.",
+    "Download 10,000+ ready-to-use legal, MCA, ROC, GST, HR and corporate document templates in Word & PDF. DIR-2, DIR-8, Board Resolutions, LLP Agreement, Appointment Letters and more. Updated as per latest MCA & GST rules.",
   keywords: [
-    "legal document automation",
-    "CA tools",
-    "CS tools",
-    "LLP incorporation documents",
-    "private limited company incorporation",
-    "board resolution generator",
-    "MCA compliance tools",
-    "legal drafting",
+    "DIR-2 format",
+    "DIR-2 word format",
+    "board resolution format",
+    "startup legal templates",
+    "LLP agreement draft",
+    "appointment letter format",
+    "legal document templates India",
+    "CA CS document templates",
+    "GST declaration format",
+    "company incorporation documents",
+    "ROC filing templates",
+    "compliance document library",
+    "corporate document templates",
+    "MGT-14 draft",
+    "INC-9 format",
   ],
   openGraph: {
-    title: "ComplianceDraft — CA/CS Document Automation",
-    description: "Generate professional compliance and legal documents instantly.",
+    title: "ComplianceDraft — Legal, MCA & Business Document Templates",
+    description:
+      "Download 10,000+ ready-to-use legal, MCA, ROC, GST, HR and corporate document templates in Word & PDF. Updated as per latest MCA & GST rules.",
     url: "https://compliancedraft.com",
     siteName: "ComplianceDraft",
     locale: "en_IN",
@@ -37,8 +45,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "ComplianceDraft — CA/CS Document Automation",
-    description: "Generate professional compliance and legal documents instantly.",
+    title: "ComplianceDraft — Legal, MCA & Business Document Templates",
+    description:
+      "Download 10,000+ ready-to-use legal, MCA, ROC, GST, HR and corporate document templates in Word & PDF.",
+  },
+  icons: {
+    icon: "/Assets/logo.webp",
   },
 };
 
