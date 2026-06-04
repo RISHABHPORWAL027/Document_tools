@@ -224,25 +224,6 @@ export default function TopNav() {
 
       {/* ── Right utilities ── */}
       <div className="ml-auto flex items-center gap-2">
-        {/* Bell */}
-        <button
-          type="button"
-          className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:opacity-70"
-          style={{ color: "#44474E" }}
-          aria-label="Notifications"
-        >
-          <Bell className="h-4 w-4" />
-        </button>
-
-        {/* Help */}
-        <button
-          type="button"
-          className="flex h-8 w-8 items-center justify-center rounded-lg transition-colors hover:opacity-70"
-          style={{ color: "#44474E" }}
-          aria-label="Help"
-        >
-          <HelpCircle className="h-4 w-4" />
-        </button>
 
         {/* Company selector */}
         <div className="relative" ref={brandMenuRef}>
@@ -287,13 +268,17 @@ export default function TopNav() {
           )}
         </div>
 
-        {/* Avatar */}
+        {/* Avatar / Logo */}
         <div
-          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-black"
-          style={{ backgroundColor: "#1A2E7E", color: "#F8F9FF" }}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full overflow-hidden"
+          style={{ backgroundColor: "#F8F9FF", border: "1px solid #C4C6D0" }}
           aria-label="User profile"
         >
-          CA
+          <img
+            src="/Assets/logo.webp"
+            alt="ComplianceDraft Logo"
+            className="h-full w-full object-contain"
+          />
         </div>
       </div>
     </header>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,6 +10,8 @@ import {
   Settings,
   Plus,
   FileText,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -34,6 +37,7 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   function isActive(href: string, exact: boolean) {
     if (exact) return pathname === href;
@@ -54,43 +58,51 @@ export default function Sidebar() {
 
   return (
     <aside
-      className="flex h-screen w-[220px] shrink-0 flex-col sticky top-0 z-30"
+      className={`flex h-screen shrink-0 flex-col sticky top-0 z-30 transition-all duration-300 relative ${isCollapsed ? "w-[76px]" : "w-[220px]"}`}
       style={{ backgroundColor: "#1A2E7E" }}
     >
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="absolute -right-3 top-7 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm transition-transform hover:scale-110 z-50"
+        style={{ backgroundColor: "#F8F9FF", borderColor: "#C4C6D0", color: "#1A2E7E" }}
+        aria-label="Toggle Sidebar"
+      >
+        {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+      </button>
+
       {/* ── Logo ── */}
-      <div className="flex items-center gap-3 border-b px-5 py-[18px]" style={{ borderColor: "#44474E" }}>
+      <div className={`flex items-center border-b py-[18px] transition-all overflow-hidden ${isCollapsed ? "px-5 justify-center" : "px-5 gap-3"}`} style={{ borderColor: "#44474E" }}>
         <img
           src="/Assets/logo.webp"
           alt="ComplianceDraft Logo"
           className="h-8 w-8 shrink-0 object-contain"
         />
-        <div className="min-w-0">
+        <div className={`min-w-0 transition-all duration-300 ${isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"}`}>
           <div className="truncate text-[13px] font-bold leading-tight" style={{ color: "#F8F9FF" }}>
             ComplianceDraft
           </div>
-          <div className="text-[10px] leading-tight mt-0.5" style={{ color: "#CBDBF5" }}>
+          <div className="text-[10px] leading-tight mt-0.5 whitespace-nowrap" style={{ color: "#CBDBF5" }}>
             Professional Suite
           </div>
         </div>
       </div>
 
       {/* ── Nav ── */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-0.5" aria-label="Sidebar navigation">
+      <nav className={`flex-1 overflow-y-auto py-4 space-y-0.5 ${isCollapsed ? "px-2" : "px-3"}`} aria-label="Sidebar navigation">
         {NAV_ITEMS.map((item) => {
           const active = isActive(item.href, item.exact);
           return (
             <Link
               key={item.href}
               href={item.href}
-              className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150 ${
-                active
-                  ? "bg-white/10"
-                  : "hover:bg-white/5"
-              }`}
+              title={isCollapsed ? item.label : undefined}
+              className={`group flex items-center rounded-lg py-2.5 text-sm font-medium transition-all duration-150 overflow-hidden ${
+                active ? "bg-white/10" : "hover:bg-white/5"
+              } ${isCollapsed ? "justify-center px-0" : "gap-3 px-3"}`}
               style={
                 active
-                  ? { color: "#F8F9FF", borderLeft: "2px solid #CBDBF5", paddingLeft: "10px" }
-                  : { color: "#CBDBF5", borderLeft: "2px solid transparent", paddingLeft: "10px" }
+                  ? { color: "#F8F9FF", borderLeft: isCollapsed ? "none" : "2px solid #CBDBF5", paddingLeft: isCollapsed ? "0" : "10px" }
+                  : { color: "#CBDBF5", borderLeft: isCollapsed ? "none" : "2px solid transparent", paddingLeft: isCollapsed ? "0" : "10px" }
               }
             >
               <item.icon
@@ -98,22 +110,29 @@ export default function Sidebar() {
                 style={{ color: active ? "#F8F9FF" : "inherit" }}
                 aria-hidden
               />
-              {item.label}
+              <span className={`truncate transition-all duration-300 ${isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"}`}>
+                {item.label}
+              </span>
             </Link>
           );
         })}
       </nav>
 
       {/* ── Create button ── */}
-      <div className="border-t p-4" style={{ borderColor: "#44474E" }}>
+      <div className={`border-t transition-all ${isCollapsed ? "p-3" : "p-4"}`} style={{ borderColor: "#44474E" }}>
         <Link
           href="/companies/new"
           id="sidebar-create-document"
-          className="flex w-full items-center justify-center gap-2 rounded-xl py-2.5 text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+          title={isCollapsed ? "Create New Document" : undefined}
+          className={`flex items-center justify-center rounded-xl font-bold transition-all hover:opacity-90 active:scale-95 overflow-hidden ${
+            isCollapsed ? "w-10 h-10 mx-auto" : "w-full gap-2 py-2.5 text-sm"
+          }`}
           style={{ backgroundColor: "#F8F9FF", color: "#1A2E7E" }}
         >
-          <Plus className="h-4 w-4" aria-hidden />
-          Create New Document
+          <Plus className="h-4 w-4 shrink-0" aria-hidden />
+          <span className={`truncate transition-all duration-300 ${isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"}`}>
+            Create New Document
+          </span>
         </Link>
       </div>
     </aside>
