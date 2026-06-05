@@ -4,6 +4,7 @@ export interface Person {
   email: string;
   phone: string;
   role: string;
+  designation?: string;
   address: string;
   taxId?: string; // PAN/VAT or other tax identifier
   bankAccount?: string;

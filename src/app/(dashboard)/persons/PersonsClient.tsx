@@ -28,6 +28,7 @@ export default function PersonsClient() {
       name,
       email,
       designation,
+      role: designation,
       address,
       phone,
       taxId,
