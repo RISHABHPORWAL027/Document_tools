@@ -11,6 +11,9 @@ import {
   ChevronLeft,
   ChevronRight,
   X,
+  Banknote,
+  Receipt,
+  Users,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -21,8 +24,8 @@ const NAV_ITEMS = [
     exact: true,
   },
   {
-    href: "/companies",
-    label: "Companies",
+    href: "/master-data",
+    label: "Entity Management",
     icon: Building2,
     exact: false,
   },
@@ -30,6 +33,19 @@ const NAV_ITEMS = [
     href: "/incorporation",
     label: "Workflows",
     icon: GitBranch,
+    exact: false,
+  },
+  {
+    href: "/payslips",
+    label: "Payslips",
+    icon: Banknote,
+    exact: false,
+  },
+
+  {
+    href: "/invoice",
+    label: "Invoices",
+    icon: Receipt,
     exact: false,
   },
 ];
@@ -111,12 +127,8 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
               !isMobileDrawer && isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
             }`}
           >
-            <div className="truncate text-[13px] font-bold leading-tight" style={{ color: "#F8F9FF" }}>
-              ComplianceDraft
-            </div>
-            <div className="text-[10px] leading-tight mt-0.5 whitespace-nowrap" style={{ color: "#CBDBF5" }}>
-              Professional Suite
-            </div>
+            <h1 className="text-[10px] font-bold truncate max-w-full" style={{ color: "#F8F9FF" }}>ComplianceDraft</h1>
+            <div className="text-[10px] leading-tight mt-0.5 whitespace-nowrap" style={{ color: "#CBDBF5" }}>Professional Suite</div>
           </div>
         </div>
 
@@ -195,6 +207,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
           </span>
         </Link>
       </div>
+
     </aside>
   );
 

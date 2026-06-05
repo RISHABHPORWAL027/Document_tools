@@ -9,6 +9,10 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   return (
     <div className="mx-auto max-w-2xl rounded-2xl border bg-white p-10 text-center shadow-sm" style={{ borderColor: "#C4C6D0" }}>
+  {/* ── BANNER ────────────────────────────────────────────────── */}
+  <div className="w-full max-w-lg mx-auto overflow-hidden rounded-2xl shadow-sm border border-slate-200 mt-1 sm:mt-2">
+    <img src="/Assets/company_banner.webp" alt="Company Banner" className="w-full h-auto block" />
+  </div>
       <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full" style={{ backgroundColor: "#EFF4FF", color: "#1A2E7E" }}>
         <Mail className="h-6 w-6" />
       </div>

@@ -17,7 +17,7 @@ export type DocCard = {
 
 export type ToolStatus = "live" | "coming_soon";
 
-export type FlowId = "incorporation" | "bank_account" | "gst";
+export type FlowId = "incorporation" | "bank_account" | "gst" | "payslips" | "invoice";
 
 export type SubflowDefinition = {
   id: string;
@@ -182,6 +182,22 @@ export const SUBFLOWS: SubflowDefinition[] = (
       order: 1,
       variant: "numbered",
     },
+    {
+      id: "payslips-shared",
+      flowId: "payslips",
+      title: "Payslips & Payroll",
+      summary: "Create and print customized monthly payslips for your employees.",
+      order: 1,
+      variant: "shared",
+    },
+    {
+      id: "invoice-shared",
+      flowId: "invoice",
+      title: "Invoices",
+      summary: "Create and print customized professional invoices.",
+      order: 1,
+      variant: "shared",
+    },
   ] as SubflowDefinition[]
 );
 
@@ -242,6 +258,36 @@ export const FLOWS = (
       "Bank Account Details",
       "Digital Signature (for companies & LLPs)",
       "Letter of Authorisation",
+    ],
+  },
+  {
+    id: "payslips",
+    path: "payslips",
+    title: "Payslips & Payroll",
+    subtitle: "Generate, customize, and print professional employee salary slips.",
+    icon: "💵",
+    accentColor: "#f59e0b",
+    order: 4,
+    requiredDocs: [
+      "Employee PAN & Aadhaar details",
+      "Salary structure details",
+      "Bank account information",
+      "Company attendance registers",
+    ],
+  },
+  {
+    id: "invoice",
+    path: "invoice",
+    title: "Invoices",
+    subtitle: "Generate, customize, and download professional invoices.",
+    icon: "🧾",
+    accentColor: "#059669",
+    order: 5,
+    requiredDocs: [
+      "Seller PAN & GSTIN details",
+      "Client Billing and Shipping addresses",
+      "Item descriptions & pricing structures",
+      "Payment terms & PO numbers",
     ],
   },
 ] as FlowDefinition[]
@@ -609,6 +655,30 @@ export const TOOLS: ToolDefinition[] = [
     subflowId: "inc-auditor-resignation",
     status: "live",
     tags: ["Director", "Resignation", "Attendance"],
+  },
+  {
+    id: "payslip-generator",
+    title: "Salary Payslip Generator",
+    description: "Generate professional salary slips with multiple templates, logo, and automated net pay calculation.",
+    badge: "Payroll",
+    icon: "📄",
+    href: "/payslips",
+    flowId: "payslips",
+    subflowId: "payslips-shared",
+    status: "live",
+    tags: ["Payroll", "HR", "Payslip"],
+  },
+  {
+    id: "invoice-generator",
+    title: "Invoice Generator",
+    description: "Generate professional invoices with custom line items, tax, discount, shipping calculations, and logo uploads.",
+    badge: "Invoicing",
+    icon: "📄",
+    href: "/invoice",
+    flowId: "invoice",
+    subflowId: "invoice-shared",
+    status: "live",
+    tags: ["Invoicing", "Sales", "Invoice"],
   },
 ];
 

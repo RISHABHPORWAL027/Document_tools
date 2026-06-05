@@ -13,7 +13,7 @@ import {
 /* ── Category quick pills ──────────────────────────────────────── */
 const QUICK_CATS = [
   { icon: "🏛️", label: "Corporate & MCA", href: "/incorporation" },
-  { icon: "👥", label: "HR Documents", href: "/noc-format" },
+  { icon: "👥", label: "HR Documents", href: "/hr-documents" },
   { icon: "🧾", label: "GST & Tax", href: "/gst" },
   { icon: "⚖️", label: "Legal Agreements", href: "/incorporation" },
 ];
@@ -66,14 +66,7 @@ export default function WorkspaceHomeClient() {
   return (
     <div className="mx-auto max-w-[1440px] w-full space-y-8 sm:space-y-12 px-0 sm:px-8 lg:px-16 py-4 sm:py-6">
 
-      {/* ── BANNER ────────────────────────────────────────────────── */}
-      <div className="w-full max-w-lg mx-auto overflow-hidden rounded-2xl shadow-sm border border-slate-200 mt-1 sm:mt-2">
-        <img
-          src="/Assets/company_banner.webp"
-          alt="Company Banner"
-          className="w-full h-auto block"
-        />
-      </div>
+{/* Banner removed */}
 
       {/* ── HERO ──────────────────────────────────────────────────── */}
       <div className="pt-1 sm:pt-2 text-center">
@@ -112,19 +105,7 @@ export default function WorkspaceHomeClient() {
           </button>
         </div>
 
-        {/* Category pills */}
-        <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-0">
-          {QUICK_CATS.map((cat) => (
-            <Link
-              key={cat.label}
-              href={cat.href}
-              className="inline-flex items-center gap-1.5 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-xs font-semibold text-slate-600 hover:border-teal-300 hover:text-teal-700 hover:bg-teal-50 transition-all shadow-sm"
-            >
-              <span aria-hidden>{cat.icon}</span>
-              {cat.label}
-            </Link>
-          ))}
-        </div>
+{/* Category pills removed */}
       </div>
 
       {/* ── RECENTLY USED ─────────────────────────────────────────── */}
@@ -132,9 +113,6 @@ export default function WorkspaceHomeClient() {
         <section aria-label="Recently used documents">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-[15px] font-bold text-slate-900">Recently Used</h2>
-            <button className="text-xs font-semibold text-teal-600 hover:underline flex items-center gap-1">
-              View History <ArrowRight className="h-3 w-3" />
-            </button>
           </div>
           <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {recentTools.map((tool) => (
