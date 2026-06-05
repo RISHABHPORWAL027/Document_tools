@@ -6,8 +6,8 @@ const AppointmentLetterPage = dynamic(() => import("@/components/pvt-ltd/Appoint
 });;
 
 export const metadata = {
-  title: "Letter of Appointment | Incorporation",
-  description: "Generate formal appointment letters for directors and auditors.",
+  title: "Auditor Appointment Letter Format Word | Companies Act",
+  description: "Generate and download the formal letter of appointment for statutory or first auditors under Section 139 of the Companies Act.",
 };
 
 export default function Page() {

@@ -7,9 +7,8 @@ const LlpSubscriptionPage = dynamic(() => import("@/components/llp/LlpSubscripti
 });;
 
 export const metadata: Metadata = {
-  title: "LLP Subscription Sheet Generator | MCA Compliance",
-  description: "Generate professional LLP Subscription Sheets with automated partner details and signature sections.",
-  keywords: ["LLP subscription sheet", "subscriber sheet", "LLP incorporation", "MCA form generator"],
+  title: "LLP Subscription Sheet Word Format & PDF Generator",
+  description: "Create and download legally compliant Limited Liability Partnership (LLP) subscriber sheet templates for MCA incorporation filing.",
 };
 
 function Fallback() {
@@ -23,6 +22,17 @@ function Fallback() {
 export default function LlpSubscriptionRoute() {
   return (
     <Suspense fallback={<Fallback />}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "DigitalDocument",
+            "name": "LLP Subscription Sheet",
+            "description": "Create and download legally compliant Limited Liability Partnership (LLP) subscriber sheet templates for MCA incorporation filing.",
+          }),
+        }}
+      />
       <LlpSubscriptionPage />
     </Suspense>
   );

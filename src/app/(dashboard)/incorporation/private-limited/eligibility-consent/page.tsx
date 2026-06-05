@@ -6,8 +6,8 @@ const EligibilityConsentPage = dynamic(() => import("@/components/pvt-ltd/Eligib
 });;
 
 export const metadata = {
-  title: "Eligibility & Consent Letter | Incorporation",
-  description: "Generate auditor eligibility and consent letters.",
+  title: "Auditor Eligibility Certificate & Consent Letter Format (Word)",
+  description: "Generate and download the statutory auditor eligibility certificate and consent letter required under Sections 139 & 141 of the Companies Act.",
 };
 
 export default function Page() {

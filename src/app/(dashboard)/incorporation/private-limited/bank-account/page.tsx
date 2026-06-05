@@ -7,8 +7,8 @@ const BankAccountPage = dynamic(() => import("@/components/pvt-ltd/BankAccountPa
 });;
 
 export const metadata: Metadata = {
-  title: "Bank Account Opening | Incorporation",
-  description: "Generate board resolution for opening a bank account.",
+  title: "Board Resolution for Bank Account Opening Word Format",
+  description: "Download and generate the certified true copy board resolution format required by banks to open a corporate current account.",
 };
 
 export default function Page() {

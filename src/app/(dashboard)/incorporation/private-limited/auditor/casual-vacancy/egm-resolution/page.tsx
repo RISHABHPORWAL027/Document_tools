@@ -6,8 +6,8 @@ const EgmResolutionCasualVacancyPage = dynamic(() => import("@/components/pvt-lt
 });;
 
 export const metadata = {
-  title: "EGM Resolution — Casual Vacancy of Auditor",
-  description: "Generate EGM resolution for appointing statutory auditor to fill casual vacancy.",
+  title: "EGM Resolution for Auditor Casual Vacancy (Word Template)",
+  description: "Download and generate the EGM shareholder ordinary resolution format for appointing a statutory auditor to fill a casual vacancy under Section 139(8).",
 };
 
 export default function Page() {

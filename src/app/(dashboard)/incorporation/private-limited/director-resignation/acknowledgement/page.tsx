@@ -10,8 +10,8 @@ const AcknowledgementPage = dynamic(() => import("@/components/pvt-ltd/director-
 });
 
 export const metadata = {
-  title: "Acknowledgement of Resignation — Resignation of Director",
-  description: "Generate letter acknowledging the receipt of director resignation.",
+  title: "Resignation Acknowledgement Letter Format for Director (Word)",
+  description: "Generate the formal company acknowledgement letter format confirming the receipt and acceptance of a director's resignation.",
 };
 
 export default function Page() {

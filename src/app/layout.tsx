@@ -11,13 +11,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://compliancedraft.com"),
+  metadataBase: new URL("https://www.compliancedraft.co.in"),
   title: {
-    default: "ComplianceDraft — Legal, MCA & Business Document Templates for CAs & CSs",
+    default: "ComplianceDraft - MCA, ROC, Legal & Business Document Templates",
     template: "%s · ComplianceDraft",
   },
   description:
-    "Download 10,000+ ready-to-use legal, MCA, ROC, GST, HR and corporate document templates in Word & PDF. DIR-2, DIR-8, Board Resolutions, LLP Agreement, Appointment Letters and more. Updated as per latest MCA & GST rules.",
+    "Access ready-to-use MCA, ROC, Company Law, LLP, GST, HR and Legal document templates. Download professional drafts, resolutions and compliance formats.",
   keywords: [
     "DIR-2 format",
     "DIR-2 word format",

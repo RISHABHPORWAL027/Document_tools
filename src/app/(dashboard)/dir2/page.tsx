@@ -7,7 +7,8 @@ const Dir2Page = dynamic(() => import("@/components/Dir2Page"), {
 });;
 
 export const metadata: Metadata = {
-  title: "DIR-2 Consent to Act as Director",
+  title: "DIR-2 Word Format & Consent to Act as Director (PDF Template)",
+  description: "Generate and download Form DIR-2 consent template for director appointment as per Companies Act rules. Ready for MCA SPICe+ company filing.",
 };
 
 function Dir2Fallback() {
@@ -21,6 +22,17 @@ function Dir2Fallback() {
 export default function Dir2Route() {
   return (
     <Suspense fallback={<Dir2Fallback />}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "DigitalDocument",
+            "name": "DIR-2 Consent to Act as Director",
+            "description": "Generate and download Form DIR-2 consent template for director appointment as per Companies Act rules.",
+          }),
+        }}
+      />
       <Dir2Page />
     </Suspense>
   );

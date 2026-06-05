@@ -1,7 +1,23 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CATEGORIES, getTool } from "@/lib/tools/registry";
 import ToolRunner from "@/components/ToolRunner";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ toolId: string }>;
+}): Promise<Metadata> {
+  const { toolId } = await params;
+  const tool = getTool(toolId);
+  if (!tool) return {};
+  return {
+    title: `${tool.title} Generator (Word & PDF)`,
+    description: `${tool.summary} Instantly customize and download legally compliant, auto-formatted template files.`,
+    keywords: tool.keywords || [],
+  };
+}
 
 export default async function ToolPage({
   params,
@@ -47,6 +63,17 @@ export default async function ToolPage({
       </header>
 
       <main className="mx-auto max-w-6xl px-4 py-10">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "DigitalDocument",
+              "name": `${tool.title} Generator`,
+              "description": tool.summary,
+            }),
+          }}
+        />
         <h1 className="text-2xl font-semibold tracking-tight">{tool.title}</h1>
         <p className="mt-2 max-w-3xl text-sm text-zinc-600">{tool.summary}</p>
 

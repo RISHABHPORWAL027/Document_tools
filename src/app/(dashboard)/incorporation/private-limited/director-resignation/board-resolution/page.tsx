@@ -10,8 +10,8 @@ const BoardResolutionResignationPage = dynamic(() => import("@/components/pvt-lt
 });
 
 export const metadata = {
-  title: "Board Resolution — Resignation of Director",
-  description: "Generate certified true copy of board resolution accepting director resignation.",
+  title: "Board Resolution for Resignation of Director Word Format",
+  description: "Download the certified true copy board resolution format for accepting a director's resignation under Companies Act requirements.",
 };
 
 export default function Page() {

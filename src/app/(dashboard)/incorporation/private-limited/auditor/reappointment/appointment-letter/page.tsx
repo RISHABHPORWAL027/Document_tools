@@ -13,8 +13,8 @@ const ReappointmentDocumentPage = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Appointment Letter - Auditor Reappointment",
-  description: "Generate appointment letter for reappointment of statutory auditor.",
+  title: "Auditor Reappointment Letter Format Word | 5-Year Term",
+  description: "Generate and download the statutory auditor reappointment letter template under the Companies Act for a five-year term.",
 };
 
 export default function AppointmentLetterReappointmentRoute() {

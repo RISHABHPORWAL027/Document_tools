@@ -6,9 +6,11 @@ const WorkspaceHomeClient = dynamic(() => import("@/components/site/WorkspaceHom
 });;
 
 export const metadata: Metadata = {
-  title: "Workspace",
+  title: {
+    absolute: "ComplianceDraft - MCA, ROC, Legal & Business Document Templates",
+  },
   description:
-    "Compliance workspace — workflows, document generators, and shared company profiles.",
+    "Access ready-to-use MCA, ROC, Company Law, LLP, GST, HR and Legal document templates. Download professional drafts, resolutions and compliance formats.",
 };
 
 export default function DashboardHomePage() {

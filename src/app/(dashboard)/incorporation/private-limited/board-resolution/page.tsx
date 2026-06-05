@@ -6,8 +6,8 @@ const BoardResolutionPage = dynamic(() => import("@/components/pvt-ltd/BoardReso
 });;
 
 export const metadata = {
-  title: "Board Resolution | Incorporation",
-  description: "Generate board resolutions for company incorporation.",
+  title: "Board Resolution for Company Incorporation Word Format",
+  description: "Download and generate the certified true copy board resolution format for private limited company incorporation, bank accounts, and MCA filings.",
 };
 
 export default function Page() {

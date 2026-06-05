@@ -13,8 +13,8 @@ const ReappointmentDocumentPage = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Consent Certificate - Auditor Reappointment",
-  description: "Generate consent letter and eligibility certificate for auditor reappointment.",
+  title: "Auditor Reappointment Consent & Eligibility Certificate (Word)",
+  description: "Download and generate the statutory auditor's eligibility certificate and consent letter format for reappointment under Sections 139 and 141.",
 };
 
 export default function ConsentCertificateReappointmentRoute() {

@@ -10,8 +10,8 @@ const AttendanceSheetPage = dynamic(() => import("@/components/pvt-ltd/director-
 });
 
 export const metadata = {
-  title: "Board Meeting Attendance Sheet — Resignation of Director",
-  description: "Generate attendance sheet of the board meeting for director resignation.",
+  title: "Board Meeting Attendance Sheet for Director Resignation (Word)",
+  description: "Generate and download the Board Meeting (BM) attendance sheet format of directors for accepting director resignation compliance.",
 };
 
 export default function Page() {

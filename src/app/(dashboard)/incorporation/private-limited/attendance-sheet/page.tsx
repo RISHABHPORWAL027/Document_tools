@@ -10,8 +10,8 @@ const AttendanceSheetPage = dynamic(() => import("@/components/pvt-ltd/director-
 });
 
 export const metadata = {
-  title: "Board Meeting Attendance Sheet — First Auditor Appointment",
-  description: "Generate attendance sheet of the board meeting for first auditor appointment.",
+  title: "Board Meeting Attendance Sheet Template Word & PDF",
+  description: "Download and draft the standard Board Meeting (BM) attendance sheet format of directors for first auditor appointments and corporate records.",
 };
 
 export default function Page() {

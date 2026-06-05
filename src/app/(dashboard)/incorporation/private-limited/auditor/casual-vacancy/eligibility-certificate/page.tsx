@@ -6,8 +6,8 @@ const EligibilityLetterCasualVacancyPage = dynamic(() => import("@/components/pv
 });;
 
 export const metadata = {
-  title: "Eligibility Certificate — Casual Vacancy of Auditor",
-  description: "Generate eligibility cum consent certificate for auditor filling casual vacancy.",
+  title: "Auditor Eligibility Certificate for Casual Vacancy (Word Format)",
+  description: "Download statutory auditor eligibility certificate format under Sections 139 and 141 to fill an auditor casual vacancy in a company.",
 };
 
 export default function Page() {

@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CATEGORIES, getToolsByCategory } from "@/lib/tools/registry";
 import type { ToolCategoryId } from "@/lib/tools/types";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ categoryId: string }>;
+}): Promise<Metadata> {
+  const { categoryId } = await params;
+  const category = CATEGORIES.find((c) => c.id === categoryId);
+  if (!category) return {};
+  return {
+    title: `${category.name} Templates & Forms`,
+    description: `${category.summary} Download, edit and generate legally compliant drafts in Word & PDF formats.`,
+  };
+}
 
 export default async function CategoryPage({
   params,

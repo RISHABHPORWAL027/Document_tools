@@ -7,9 +7,8 @@ const LlpNocRoPage = dynamic(() => import("@/components/llp/LlpNocRoPage"), {
 });;
 
 export const metadata: Metadata = {
-  title: "LLP NOC for Registered Office | No Objection Certificate Generator",
-  description: "Create a No Objection Certificate (NOC) from the property owner for LLP incorporation. Verbatim legal format.",
-  keywords: ["LLP NOC", "No Objection Certificate", "registered office address proof", "LLP address proof"],
+  title: "LLP NOC for Registered Office Word Format & PDF Generator",
+  description: "Download property owner NOC template for LLP registered office address proof required during MCA registration/filing.",
 };
 
 function Fallback() {
@@ -23,6 +22,17 @@ function Fallback() {
 export default function LlpNocRoRoute() {
   return (
     <Suspense fallback={<Fallback />}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "DigitalDocument",
+            "name": "LLP NOC for Registered Office",
+            "description": "Download property owner NOC template for LLP registered office address proof required during MCA registration/filing.",
+          }),
+        }}
+      />
       <LlpNocRoPage />
     </Suspense>
   );

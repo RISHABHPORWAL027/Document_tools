@@ -10,8 +10,8 @@ const ResignationLetterPage = dynamic(() => import("@/components/pvt-ltd/directo
 });
 
 export const metadata = {
-  title: "Resignation Letter — Resignation of Director",
-  description: "Generate resignation letter for a director resigning from the company.",
+  title: "Director Resignation Letter Format Word | Companies Act",
+  description: "Generate and download a formal resignation notice letter template for a director resigning from a private limited company.",
 };
 
 export default function Page() {

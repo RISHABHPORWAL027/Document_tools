@@ -13,8 +13,8 @@ const ReappointmentDocumentPage = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "AGM Resolution - Auditor Reappointment",
-  description: "Generate AGM resolution for reappointment of statutory auditor.",
+  title: "AGM Resolution for Auditor Reappointment Word Format",
+  description: "Download and generate the AGM ordinary resolution template for the reappointment of statutory auditors under Section 139 of the Companies Act.",
 };
 
 export default function AgmResolutionReappointmentRoute() {

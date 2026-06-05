@@ -6,8 +6,8 @@ const AppointmentLetterCasualVacancyPage = dynamic(() => import("@/components/pv
 });;
 
 export const metadata = {
-  title: "Appointment Letter — Casual Vacancy of Auditor",
-  description: "Generate appointment letter for statutory auditor filling casual vacancy.",
+  title: "Auditor Appointment Letter Format for Casual Vacancy (Word)",
+  description: "Generate and download the statutory auditor appointment letter template used to fill a casual vacancy under Section 139(8) of the Companies Act.",
 };
 
 export default function Page() {

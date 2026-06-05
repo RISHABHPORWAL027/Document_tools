@@ -7,7 +7,8 @@ const LlpForm9Page = dynamic(() => import("@/components/llp/LlpForm9Page"), {
 });;
 
 export const metadata: Metadata = {
-  title: "LLP Form 9 — Designated Partner Consent",
+  title: "LLP Form 9 Word Format | Designated Partner Consent Template",
+  description: "Download and generate LLP Form 9 consent template to act as Designated Partner of an LLP. Required for MCA FiLLiP registration.",
 };
 
 function Fallback() {
@@ -21,6 +22,17 @@ function Fallback() {
 export default function LlpForm9Route() {
   return (
     <Suspense fallback={<Fallback />}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "DigitalDocument",
+            "name": "LLP Form 9 Designated Partner Consent",
+            "description": "Download and generate LLP Form 9 consent template to act as Designated Partner of an LLP. Required for MCA FiLLiP registration.",
+          }),
+        }}
+      />
       <LlpForm9Page />
     </Suspense>
   );

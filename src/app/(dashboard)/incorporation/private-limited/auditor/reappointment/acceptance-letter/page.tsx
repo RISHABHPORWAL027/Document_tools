@@ -13,8 +13,8 @@ const ReappointmentDocumentPage = dynamic(
 );
 
 export const metadata: Metadata = {
-  title: "Acceptance Letter - Auditor Reappointment",
-  description: "Generate auditor acceptance letter for reappointment.",
+  title: "Auditor Acceptance Letter for Reappointment Word Format",
+  description: "Download and draft the auditor's formal letter of acceptance for their reappointment as the statutory auditor of a company.",
 };
 
 export default function AcceptanceLetterReappointmentRoute() {
