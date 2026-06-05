@@ -275,7 +275,7 @@ export default function PayslipGeneratorPage() {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-2">
             {/* Template Card 1: Modern Minimal (Orange) */}
             <div 
               onClick={() => handleSelectTemplate("modern")}
@@ -526,6 +526,20 @@ export default function PayslipGeneratorPage() {
                   className="w-full text-center mt-5 py-2.5 px-4 text-xs font-bold text-zinc-900 bg-zinc-100 group-hover:bg-emerald-605 group-hover:text-white rounded-lg transition-all"
                 >
                   Use Template
+                </button>
+              </div>
+            </div>
+            <div className="group cursor-default bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm flex flex-col h-full opacity-50">
+              <div className="bg-zinc-100 p-6 h-72 flex items-center justify-center border-b border-zinc-200">
+                <span className="text-zinc-500 text-sm">Coming Soon</span>
+              </div>
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="text-base font-bold text-zinc-950">More Payslip Formats</h3>
+                  <p className="text-xs text-zinc-500 mt-2">Stay tuned for additional payslip templates.</p>
+                </div>
+                <button className="w-full text-center mt-5 py-2.5 px-4 text-xs font-bold text-zinc-600 bg-zinc-200 rounded-lg cursor-not-allowed" disabled>
+                  Coming Soon
                 </button>
               </div>
             </div>

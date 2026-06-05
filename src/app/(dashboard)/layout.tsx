@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import TopNav from "@/components/dashboard/TopNav";
 import Sidebar from "@/components/dashboard/Sidebar";
+import WhatsNewBanner from "@/components/dashboard/WhatsNewBanner";
 import { LayoutDashboard, Building2, GitBranch } from "lucide-react";
 
 const BOTTOM_NAV_ITEMS = [
@@ -50,6 +51,7 @@ export default function DashboardLayout({
 
         {/* Page content — extra bottom padding on mobile for bottom nav */}
         <main className="flex-1 overflow-y-auto px-[6px] py-4 sm:px-6 sm:py-6 pb-20 md:pb-6 flex flex-col justify-between">
+          {pathname === '/' && <WhatsNewBanner />}
           <div className="flex-1">
             {children}
           </div>
