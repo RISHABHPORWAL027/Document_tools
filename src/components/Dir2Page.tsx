@@ -212,8 +212,11 @@ export default function Dir2Page() {
         <h1 className="text-xl font-bold tracking-tight text-zinc-900">
           DIR-2 Consent to Act as Director
         </h1>
-        <p className="mt-1 text-sm text-zinc-600">
+        <p className="mt-1 text-sm text-zinc-600 hidden sm:block">
           Fill fields on the left. Preview updates automatically on the right.
+        </p>
+        <p className="mt-1 text-sm text-zinc-600 sm:hidden">
+          Fill the form below, then scroll down for preview.
         </p>
 
         <div className="mt-4">
@@ -247,9 +250,9 @@ export default function Dir2Page() {
           </div>
         )}
 
-        <div className="mt-2 grid gap-5 lg:grid-cols-[3fr_7fr]">
+        <div className="mt-2 grid gap-4 sm:gap-5 grid-cols-1 lg:grid-cols-[3fr_7fr]">
           {/* INPUT SECTION */}
-          <section className="max-h-[88vh] overflow-y-auto rounded-xl border bg-white p-4">
+          <section className="lg:max-h-[88vh] overflow-y-auto rounded-xl border bg-white p-3 sm:p-4">
             <div className="grid gap-3">
               <Input label="Company Name" required>
                 <input
@@ -496,7 +499,7 @@ export default function Dir2Page() {
             <div className="border-b bg-zinc-50 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-zinc-500">
               Live Preview
             </div>
-            <div className="max-h-[calc(100vh-12rem)] overflow-auto bg-zinc-100 p-4">
+            <div className="max-h-[60vh] lg:max-h-[calc(100vh-12rem)] overflow-auto bg-zinc-100 p-2 sm:p-4 mobile-scroll-hide">
               <div
                 style={{
                   transform: "scale(0.9)",
@@ -514,12 +517,12 @@ export default function Dir2Page() {
         </div>
 
         {/* ── Action buttons — centered below both panels ── */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center sm:justify-center gap-2 sm:gap-3">
           <button
             type="button"
             onClick={() => download("pdf")}
             disabled={busy}
-            className="min-w-[160px] rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-60"
+            className="sm:min-w-[160px] rounded-lg bg-zinc-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-60"
           >
             {busy ? "Generating…" : "⬇ Download PDF"}
           </button>
@@ -527,14 +530,14 @@ export default function Dir2Page() {
             type="button"
             onClick={() => download("docx")}
             disabled={busy}
-            className="min-w-[160px] rounded-lg border border-zinc-300 px-6 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60"
+            className="sm:min-w-[160px] rounded-lg border border-zinc-300 px-6 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50 disabled:opacity-60"
           >
             ⬇ Download DOCX
           </button>
           <button
             type="button"
             onClick={printPreview}
-            className="min-w-[160px] rounded-lg border border-zinc-300 px-6 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
+            className="sm:min-w-[160px] rounded-lg border border-zinc-300 px-6 py-2.5 text-sm font-semibold text-zinc-700 hover:bg-zinc-50"
           >
             🖨 Print
           </button>

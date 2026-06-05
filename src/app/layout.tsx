@@ -1,4 +1,5 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 
@@ -54,6 +55,14 @@ export const metadata: Metadata = {
   },
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#1A2E7E",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -71,6 +80,7 @@ export default function RootLayout({
         style={{ fontFamily: "var(--font-inter), Inter, system-ui, sans-serif" }}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );

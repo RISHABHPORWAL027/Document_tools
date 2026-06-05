@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import Link from "next/link";
-import { Bell, HelpCircle, Search, Building2, ChevronDown } from "lucide-react";
+import { Menu, Search, Building2, ChevronDown } from "lucide-react";
 import {
   type GlobalSearchHit,
   searchWorkspace,
@@ -55,7 +55,11 @@ function useBreadcrumb(pathname: string): string {
   return "Workspace";
 }
 
-export default function TopNav() {
+interface TopNavProps {
+  onMenuToggle?: () => void;
+}
+
+export default function TopNav({ onMenuToggle }: TopNavProps) {
   const pathname = usePathname();
   const router = useRouter();
   const pageTitle = useBreadcrumb(pathname);
@@ -149,10 +153,20 @@ export default function TopNav() {
   }, [brandMenuOpen]);
 
   return (
-    <header className="sticky top-0 z-20 flex h-[56px] items-center gap-4 border-b shrink-0 px-5" style={{ backgroundColor: "#F8F9FF", borderColor: "#C4C6D0" }}>
+    <header className="sticky top-0 z-20 flex h-[56px] items-center gap-2 sm:gap-4 border-b shrink-0 px-3 sm:px-5" style={{ backgroundColor: "#F8F9FF", borderColor: "#C4C6D0" }}>
+
+      {/* ── Mobile hamburger ── */}
+      <button
+        type="button"
+        onClick={onMenuToggle}
+        className="flex md:hidden h-9 w-9 items-center justify-center rounded-lg hover:bg-black/5 transition-colors shrink-0"
+        aria-label="Open menu"
+      >
+        <Menu className="h-5 w-5" style={{ color: "#1A2E7E" }} />
+      </button>
 
       {/* ── Global search ── */}
-      <div ref={searchWrapRef} className="relative flex-1 max-w-sm">
+      <div ref={searchWrapRef} className="relative flex-1 max-w-sm min-w-0">
         <Search
           className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2" style={{ color: "#44474E" }}
           aria-hidden

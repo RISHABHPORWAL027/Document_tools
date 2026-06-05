@@ -67,16 +67,16 @@ export default function ModulePageClient({
         className={`overflow-hidden rounded-xl border shadow-sm`}
         style={{ borderColor: `${accentColor}33`, background: `${accentColor}08` }}
       >
-        <div className="px-6 py-5">
+        <div className="px-4 sm:px-6 py-4 sm:py-5">
           <div className="flex items-center gap-3">
             <div
-              className="flex h-12 w-12 items-center justify-center rounded-xl text-2xl shadow-sm"
+              className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl text-xl sm:text-2xl shadow-sm"
               style={{ background: `${accentColor}20` }}
             >
               {icon}
             </div>
             <div>
-              <h1 className="text-xl font-bold text-zinc-900">{title}</h1>
+              <h1 className="text-lg sm:text-xl font-bold text-zinc-900">{title}</h1>
               <p className="mt-0.5 text-sm text-zinc-600">{subtitle}</p>
             </div>
           </div>
@@ -84,7 +84,7 @@ export default function ModulePageClient({
       </div>
 
       {/* Company selector */}
-      <div className="rounded-xl border bg-white p-4 shadow-sm">
+      <div className="rounded-xl border bg-white p-3 sm:p-4 shadow-sm">
         <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="text-base font-bold text-zinc-950">
@@ -163,9 +163,9 @@ export default function ModulePageClient({
       </div>
 
       {/* Two-column layout */}
-      <div className="grid gap-5 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-5 grid-cols-1 lg:grid-cols-3">
         {/* Required documents */}
-        <div className="rounded-xl border bg-white p-4 shadow-sm lg:col-span-1">
+        <div className="rounded-xl border bg-white p-3 sm:p-4 shadow-sm lg:col-span-1">
           <div className="mb-3 flex items-center gap-2">
             <span className="text-base">📋</span>
             <div className="text-sm font-bold text-zinc-800">
@@ -208,7 +208,7 @@ export default function ModulePageClient({
                 <Accordion.Content className="overflow-hidden">
                   <div className="px-5 py-5">
                     <Tabs.Root defaultValue="incorporation" className="flex flex-col gap-5">
-                      <Tabs.List className="flex flex-wrap gap-2 border-b border-zinc-200 pb-2">
+                      <Tabs.List className="flex gap-2 border-b border-zinc-200 pb-2 overflow-x-auto mobile-scroll-hide">
                         <Tabs.Trigger
                           value="incorporation"
                           className="rounded-lg px-4 py-2 text-sm font-medium text-zinc-600 transition-colors hover:bg-zinc-100 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
@@ -232,7 +232,7 @@ export default function ModulePageClient({
 
                       <Tabs.Content value="auditor" className="outline-none focus:ring-0">
                         <Tabs.Root defaultValue="inc-auditor-first" className="flex flex-col gap-4 rounded-xl border bg-zinc-50 p-4">
-                          <Tabs.List className="flex flex-wrap gap-2">
+                          <Tabs.List className="flex gap-2 overflow-x-auto mobile-scroll-hide">
                             <Tabs.Trigger
                               value="inc-auditor-first"
                               className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-zinc-600 shadow-sm border border-zinc-200 data-[state=active]:border-zinc-900 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"

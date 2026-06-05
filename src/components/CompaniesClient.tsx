@@ -254,12 +254,12 @@ export default function CompaniesClient() {
       </div>
 
       {/* ── Two-panel layout ── */}
-      <div className="grid gap-5 lg:grid-cols-[1fr_320px]">
+      <div className="grid gap-4 sm:gap-5 grid-cols-1 lg:grid-cols-[1fr_320px]">
 
         {/* Left: Client Portfolio Table */}
         <div className="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden">
           {/* Table header */}
-          <div className="flex items-center justify-between gap-3 border-b border-slate-100 px-5 py-3.5">
+          <div className="flex items-center justify-between gap-2 sm:gap-3 border-b border-slate-100 px-4 sm:px-5 py-3 sm:py-3.5">
             <h2 className="text-[13px] font-bold text-slate-900">Client Portfolio</h2>
             <div className="flex items-center gap-2">
               <button
@@ -306,8 +306,8 @@ export default function CompaniesClient() {
                 />
               </div>
 
-              {/* Column headers */}
-              <div className="grid grid-cols-[2fr_2fr_1.5fr_1fr] border-b border-slate-100 px-5 py-2.5">
+              {/* Column headers — hidden on mobile */}
+              <div className="hidden sm:grid grid-cols-[2fr_2fr_1.5fr_1fr] border-b border-slate-100 px-5 py-2.5">
                 {["COMPANY NAME", "CIN", "PAN", "DIRECTORS"].map((h) => (
                   <div key={h} className="text-[9px] font-bold uppercase tracking-[0.14em] text-slate-400">
                     {h}
@@ -323,29 +323,38 @@ export default function CompaniesClient() {
                     <li
                       key={company.id}
                       onClick={() => setSelectedId(company.id)}
-                      className={`grid grid-cols-[2fr_2fr_1.5fr_1fr] items-center px-5 py-3.5 cursor-pointer transition-colors ${
+                      className={`flex sm:grid sm:grid-cols-[2fr_2fr_1.5fr_1fr] items-center px-4 sm:px-5 py-3 sm:py-3.5 cursor-pointer transition-colors ${
                         isSelected
                           ? "bg-indigo-50"
                           : "hover:bg-slate-50"
                       }`}
                       style={isSelected ? { borderLeft: "3px solid #1A2E7E" } : { borderLeft: "3px solid transparent" }}
                     >
-                      <div>
+                      <div className="min-w-0 flex-1 sm:flex-none">
                         <div className={`text-[13px] font-bold leading-snug ${isSelected ? "text-teal-700" : "text-slate-900"}`}>
                           {company.name}
                         </div>
                         {company.sector && (
                           <div className="text-[11px] text-slate-400 mt-0.5">{company.sector}</div>
                         )}
+                        {/* Mobile-only: show directors count inline */}
+                        <div className="flex items-center gap-2 mt-1 sm:hidden">
+                          <span className="text-[11px] text-slate-500">{company.directors.length} directors</span>
+                          {company.cin && <span className="text-[10px] text-slate-400 font-mono truncate max-w-[120px]">{company.cin}</span>}
+                        </div>
                       </div>
-                      <div className="font-mono text-[11px] text-slate-500 truncate pr-2">
+                      <div className="hidden sm:block font-mono text-[11px] text-slate-500 truncate pr-2">
                         {company.cin || "—"}
                       </div>
-                      <div className="font-mono text-[11px] text-slate-500 truncate pr-2">
+                      <div className="hidden sm:block font-mono text-[11px] text-slate-500 truncate pr-2">
                         {(company as any).pan || "—"}
                       </div>
-                      <div className="text-[13px] font-bold text-slate-700">
+                      <div className="hidden sm:block text-[13px] font-bold text-slate-700">
                         {String(company.directors.length).padStart(2, "0")}
+                      </div>
+                      {/* Mobile chevron indicator */}
+                      <div className="sm:hidden text-slate-300 shrink-0">
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                       </div>
                     </li>
                   );
@@ -358,7 +367,7 @@ export default function CompaniesClient() {
               </ul>
 
               {/* Row footer */}
-              <div className="border-t border-slate-100 px-5 py-3 flex items-center justify-between">
+              <div className="border-t border-slate-100 px-4 sm:px-5 py-2.5 sm:py-3 flex items-center justify-between">
                 <span className="text-xs text-slate-400">
                   Showing <strong className="text-slate-700">{filtered.length}</strong> of {companies.length} companies
                 </span>
@@ -427,7 +436,7 @@ export default function CompaniesClient() {
                 <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-slate-800" /> Upcoming</span>
               </div>
             </div>
-            <div className="flex items-start gap-2">
+            <div className="flex items-start gap-2 overflow-x-auto mobile-scroll-hide pb-2">
               {[
                 { n: 1, label: "AGM Minutes", date: "Sep 15", done: true },
                 { n: 2, label: "Form MGT-7", date: "Oct 28", done: true },

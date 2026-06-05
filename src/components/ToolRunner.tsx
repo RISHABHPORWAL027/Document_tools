@@ -185,7 +185,7 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[420px_1fr]">
+    <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-[420px_1fr]">
       <section className="border border-[#eeeeee] bg-white">
         <div className="border-b border-[#eeeeee] bg-[#f6f6f6] px-5 py-3">
           <h2 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">Inputs</h2>
@@ -210,11 +210,11 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
             </div>
           ) : null}
 
-          <div className="flex flex-wrap gap-2 pt-2">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-2 pt-2">
             <button
               type="submit"
               disabled={isGenerating}
-              className="inline-flex items-center justify-center bg-black px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-colors"
+              className="inline-flex items-center justify-center bg-black px-4 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-colors w-full sm:w-auto"
             >
               {isGenerating ? "Generating…" : "Generate"}
             </button>
@@ -222,7 +222,7 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
               type="button"
               disabled={isGenerating}
               onClick={() => download("pdf")}
-              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black disabled:opacity-40 transition-colors"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black disabled:opacity-40 transition-colors w-full sm:w-auto"
             >
               Download PDF
             </button>
@@ -230,21 +230,21 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
               type="button"
               disabled={isGenerating}
               onClick={() => download("docx")}
-              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black disabled:opacity-40 transition-colors"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black disabled:opacity-40 transition-colors w-full sm:w-auto"
             >
               Download DOCX
             </button>
             <button
               type="button"
               onClick={copyText}
-              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-colors w-full sm:w-auto"
             >
               Copy Text
             </button>
             <button
               type="button"
               onClick={print}
-              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
+              className="inline-flex items-center justify-center border border-[#d9d9d9] bg-white px-4 py-2.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-colors w-full sm:w-auto"
             >
               Print
             </button>
@@ -259,7 +259,7 @@ function ToolRunnerInner({ tool }: { tool: ToolMetaResponse["tool"] }) {
             Tip: click Generate after edits
           </span>
         </div>
-        <div className="overflow-auto bg-[#eeeeee] p-4 flex sm:justify-center">
+        <div className="overflow-auto bg-[#eeeeee] p-2 sm:p-4 flex sm:justify-center mobile-scroll-hide">
           {previewHtml ? (
             <iframe
               title="Preview"

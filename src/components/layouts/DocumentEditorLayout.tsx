@@ -59,14 +59,14 @@ export default function DocumentEditorLayout({
   };
 
   return (
-    <div className="min-h-screen bg-[#f6f6f6] p-4 lg:p-8">
+    <div className="min-h-screen bg-[#f6f6f6] p-3 sm:p-4 lg:p-8">
       <div className="mx-auto w-full max-w-[2400px]">
 
         {/* HEADER */}
-        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+        <div className="mb-5 sm:mb-8 flex flex-col gap-3 sm:gap-4 md:flex-row md:items-start md:justify-between">
           <div className="border-l-4 border-black pl-4">
             <h1
-              className="text-2xl font-black tracking-tight text-black"
+              className="text-xl sm:text-2xl font-black tracking-tight text-black"
               style={{ letterSpacing: "-0.025em" }}
             >
               {title}
@@ -80,15 +80,15 @@ export default function DocumentEditorLayout({
         </div>
 
         {/* MAIN GRID */}
-        <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 lg:grid-cols-[320px_1fr]">
 
           {/* LEFT: INPUTS */}
-          <div className="space-y-5 max-h-[calc(100vh-10rem)] overflow-y-auto pr-2 pb-10">
+          <div className="space-y-4 sm:space-y-5 lg:max-h-[calc(100vh-10rem)] overflow-y-auto pr-0 lg:pr-2 pb-4 sm:pb-10">
             {inputSection}
           </div>
 
           {/* RIGHT: PREVIEW */}
-          <section className="flex flex-col bg-white border border-[#eeeeee] overflow-hidden h-fit sticky top-4 shadow-sm">
+          <section className="flex flex-col bg-white border border-[#eeeeee] overflow-hidden h-fit lg:sticky lg:top-4 shadow-sm">
             <div className="border-b border-[#eeeeee] bg-[#f6f6f6] px-5 py-3 flex justify-between items-center">
               <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#888888]">
                 Live Preview
@@ -98,7 +98,7 @@ export default function DocumentEditorLayout({
               </span>
             </div>
             <div
-              className="overflow-auto bg-[#eeeeee] p-4 flex sm:justify-center"
+              className="overflow-auto bg-[#eeeeee] p-2 sm:p-4 flex sm:justify-center mobile-scroll-hide"
               style={{ maxHeight: "calc(100vh - 12rem)" }}
             >
               <iframe
@@ -113,11 +113,11 @@ export default function DocumentEditorLayout({
         </div>
 
         {/* ACTION BUTTONS — Uber style */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4 border-t border-[#eeeeee] pt-8">
+        <div className="mt-6 sm:mt-10 flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center sm:justify-center gap-2 sm:gap-4 border-t border-[#eeeeee] pt-5 sm:pt-8">
           <button
             onClick={() => onDownload("pdf")}
             disabled={busy}
-            className="min-w-[180px] bg-black px-8 py-3.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="sm:min-w-[180px] bg-black px-6 sm:px-8 py-3 sm:py-3.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             {busy ? (
               <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -130,7 +130,7 @@ export default function DocumentEditorLayout({
           <button
             onClick={() => onDownload("docx")}
             disabled={busy}
-            className="min-w-[180px] border-2 border-black bg-white px-8 py-3.5 text-sm font-bold text-black hover:bg-[#f6f6f6] disabled:opacity-40 transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="sm:min-w-[180px] border-2 border-black bg-white px-6 sm:px-8 py-3 sm:py-3.5 text-sm font-bold text-black hover:bg-[#f6f6f6] disabled:opacity-40 transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             <span>⬇</span>
             Download DOCX
@@ -138,7 +138,7 @@ export default function DocumentEditorLayout({
 
           <button
             onClick={printPreview}
-            className="min-w-[140px] border border-[#d9d9d9] bg-white px-8 py-3.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="sm:min-w-[140px] border border-[#d9d9d9] bg-white px-6 sm:px-8 py-3 sm:py-3.5 text-sm font-bold text-[#444444] hover:border-black hover:text-black transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             <span>🖨</span>
             Print

@@ -134,7 +134,7 @@ export default function CompanyFormPage({ companyId }: Props) {
       <div className="flex border border-[#eeeeee] bg-white">
         <button
           onClick={() => setActiveTab("details")}
-          className={`flex-1 py-3 text-xs font-bold uppercase tracking-[0.1em] transition-colors border-b-2 ${
+          className={`flex-1 py-3.5 sm:py-3 text-xs font-bold uppercase tracking-[0.1em] transition-colors border-b-2 ${
             activeTab === "details"
               ? "border-black text-black bg-white"
               : "border-transparent text-[#888888] hover:text-black bg-[#f6f6f6]"
@@ -144,7 +144,7 @@ export default function CompanyFormPage({ companyId }: Props) {
         </button>
         <button
           onClick={() => setActiveTab("directors")}
-          className={`flex-1 py-3 text-xs font-bold uppercase tracking-[0.1em] transition-colors border-b-2 ${
+          className={`flex-1 py-3.5 sm:py-3 text-xs font-bold uppercase tracking-[0.1em] transition-colors border-b-2 ${
             activeTab === "directors"
               ? "border-black text-black bg-white"
               : "border-transparent text-[#888888] hover:text-black bg-[#f6f6f6]"
@@ -156,7 +156,7 @@ export default function CompanyFormPage({ companyId }: Props) {
 
       {/* Company Details Tab */}
       {activeTab === "details" && (
-        <div className="space-y-4 border border-[#eeeeee] bg-white p-6">
+        <div className="space-y-4 border border-[#eeeeee] bg-white p-4 sm:p-6">
           <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#888888]">Company Details</div>
 
           <div className="grid gap-4 sm:grid-cols-2">
@@ -557,7 +557,7 @@ export default function CompanyFormPage({ companyId }: Props) {
       )}
 
       {/* Save bar */}
-      <div className="sticky bottom-4 flex items-center justify-between border border-[#d9d9d9] bg-white px-5 py-3.5 shadow-xl">
+      <div className="sticky bottom-0 md:bottom-4 flex items-center justify-between border border-[#d9d9d9] bg-white px-4 sm:px-5 py-3 sm:py-3.5 shadow-xl" style={{ marginBottom: 'env(safe-area-inset-bottom, 0)' }}>
         <button
           onClick={() => router.push("/companies")}
           className="text-sm font-medium text-[#888888] hover:text-black transition-colors"
@@ -567,7 +567,7 @@ export default function CompanyFormPage({ companyId }: Props) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="bg-black px-7 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-colors"
+          className="bg-black px-5 sm:px-7 py-2.5 text-sm font-bold text-white hover:bg-[#1a1a1a] disabled:opacity-40 transition-colors"
         >
           {saving ? "Saving…" : isEdit ? "Save Changes" : "Create Company"}
         </button>

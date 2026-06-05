@@ -64,10 +64,10 @@ export default function WorkspaceHomeClient() {
   }
 
   return (
-    <div className="mx-auto max-w-[1440px] w-full space-y-12 px-10 sm:px-16 py-6">
+    <div className="mx-auto max-w-[1440px] w-full space-y-8 sm:space-y-12 px-0 sm:px-8 lg:px-16 py-4 sm:py-6">
 
       {/* ── BANNER ────────────────────────────────────────────────── */}
-      <div className="w-full max-w-lg mx-auto overflow-hidden rounded-2xl shadow-sm border border-slate-200 mt-2">
+      <div className="w-full max-w-lg mx-auto overflow-hidden rounded-2xl shadow-sm border border-slate-200 mt-1 sm:mt-2">
         <img
           src="/Assets/company_banner.webp"
           alt="Company Banner"
@@ -76,34 +76,36 @@ export default function WorkspaceHomeClient() {
       </div>
 
       {/* ── HERO ──────────────────────────────────────────────────── */}
-      <div className="pt-2 text-center">
+      <div className="pt-1 sm:pt-2 text-center">
         <h1
-          className="text-4xl sm:text-[2.6rem] font-extrabold leading-tight text-slate-900"
+          className="text-2xl sm:text-4xl lg:text-[2.6rem] font-extrabold leading-tight text-slate-900"
           style={{ letterSpacing: "-0.03em" }}
         >
           Find the right{" "}
           <span style={{ color: "#1A2E7E" }}>document</span>{" "}
           in seconds.
         </h1>
-        <p className="mt-4 text-base text-slate-500 max-w-2xl mx-auto leading-relaxed">
+        <p className="mt-3 sm:mt-4 text-sm sm:text-base text-slate-500 max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
           The ultimate productivity suite for CAs, CSs, and corporate lawyers. Instantly draft automated, precision-engineered legal templates and MCA compliance forms.
         </p>
 
         {/* Search bar */}
-        <div className="mt-8 flex items-center gap-0 rounded-2xl border border-slate-200 bg-white shadow-lg overflow-hidden max-w-4xl mx-auto">
-          <Search className="ml-5 h-5 w-5 shrink-0 text-slate-400" aria-hidden />
-          <input
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search documents, forms, or workflows (e.g. DIR-2, GST)…"
-            className="flex-1 py-4 px-4 text-base text-slate-900 placeholder:text-slate-400 outline-none bg-transparent"
-            aria-label="Search templates"
-            id="home-search"
-          />
+        <div className="mt-5 sm:mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-2xl border border-slate-200 bg-white shadow-lg overflow-hidden max-w-4xl mx-auto">
+          <div className="flex items-center flex-1 min-w-0">
+            <Search className="ml-4 sm:ml-5 h-5 w-5 shrink-0 text-slate-400" aria-hidden />
+            <input
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search documents, forms…"
+              className="flex-1 py-3 sm:py-4 px-3 sm:px-4 text-sm sm:text-base text-slate-900 placeholder:text-slate-400 outline-none bg-transparent min-w-0"
+              aria-label="Search templates"
+              id="home-search"
+            />
+          </div>
           <button
             onClick={scrollToCatalogue}
-            className="m-1.5 rounded-xl px-8 py-3.5 text-base font-bold text-white transition-all hover:opacity-90 active:scale-95 shrink-0"
+            className="mx-2 mb-2 sm:m-1.5 rounded-xl px-6 sm:px-8 py-3 sm:py-3.5 text-sm sm:text-base font-bold text-white transition-all hover:opacity-90 active:scale-95 shrink-0"
             style={{ backgroundColor: "#1A2E7E" }}
           >
             Search
@@ -111,7 +113,7 @@ export default function WorkspaceHomeClient() {
         </div>
 
         {/* Category pills */}
-        <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+        <div className="mt-4 sm:mt-5 flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 px-2 sm:px-0">
           {QUICK_CATS.map((cat) => (
             <Link
               key={cat.label}
@@ -134,7 +136,7 @@ export default function WorkspaceHomeClient() {
               View History <ArrowRight className="h-3 w-3" />
             </button>
           </div>
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {recentTools.map((tool) => (
               <Link
                 key={tool.id}
@@ -179,7 +181,7 @@ export default function WorkspaceHomeClient() {
             </span>
           </div>
 
-          <div className="grid gap-4 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_350px]">
+          <div className="grid gap-4 grid-cols-1 lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_350px]">
             {/* Large featured card */}
             {FLOWS[0] && (
               <Link
@@ -285,7 +287,7 @@ export default function WorkspaceHomeClient() {
         id="document-catalogue"
         aria-label="All document tools"
       >
-        <div className="border-b border-slate-100 px-6 py-4 flex items-center justify-between gap-4">
+        <div className="border-b border-slate-100 px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 sm:gap-4">
           <div>
             <h2 className="text-[15px] font-bold text-slate-900">All Document Generators</h2>
             <p className="text-xs text-slate-500 mt-0.5">Live tools open the editor. Fill details → export Word or PDF.</p>
@@ -302,7 +304,7 @@ export default function WorkspaceHomeClient() {
             const live = t.status === "live";
             const href = live && t.href !== "#" ? t.href : null;
             const inner = (
-              <div className="flex flex-1 items-center gap-3 sm:gap-4">
+              <div className="flex flex-1 items-center gap-2.5 sm:gap-4 min-w-0">
                 <span className="text-xl shrink-0" aria-hidden>{t.icon}</span>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
@@ -323,12 +325,12 @@ export default function WorkspaceHomeClient() {
             );
             return href ? (
               <li key={t.id}>
-                <Link href={href} className="flex items-center px-6 py-3.5 hover:bg-slate-50 transition-colors group">
+                <Link href={href} className="flex items-center px-4 sm:px-6 py-3 sm:py-3.5 hover:bg-slate-50 transition-colors group">
                   {inner}
                 </Link>
               </li>
             ) : (
-              <li key={t.id} className="flex items-center px-6 py-3.5 opacity-50">{inner}</li>
+              <li key={t.id} className="flex items-center px-4 sm:px-6 py-3 sm:py-3.5 opacity-50">{inner}</li>
             );
           })}
         </ul>
@@ -345,14 +347,14 @@ export default function WorkspaceHomeClient() {
 
       {/* ── REACH-OUT BANNER ─────────────────────────────────────── */}
       <section
-        className="relative overflow-hidden rounded-2xl px-8 py-10 shadow-sm"
+        className="relative overflow-hidden rounded-2xl px-5 sm:px-8 py-8 sm:py-10 shadow-sm"
         style={{ backgroundColor: "#1A2E7E" }}
         aria-label="Contribute and collaborate"
       >
         <div className="pointer-events-none absolute -top-16 -right-16 h-64 w-64 rounded-full opacity-20 blur-3xl" style={{ backgroundColor: "#1A2E7E" }} />
         <div className="pointer-events-none absolute -bottom-16 -left-16 h-64 w-64 rounded-full opacity-10 blur-3xl" style={{ backgroundColor: "#7c3aed" }} />
 
-        <div className="relative z-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative z-10 flex flex-col gap-5 sm:gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="max-w-lg">
             <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-teal-400/30 bg-teal-500/10 px-3 py-1">
               <span className="h-1.5 w-1.5 rounded-full bg-teal-400 animate-pulse" />
