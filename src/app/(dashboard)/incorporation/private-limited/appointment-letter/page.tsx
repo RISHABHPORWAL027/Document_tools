@@ -1,9 +1,5 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const AppointmentLetterPage = dynamic(() => import("@/components/pvt-ltd/AppointmentLetterPage"), {
-  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
-});;
+import AppointmentLetterPage from "@/components/pvt-ltd/AppointmentLetterPage";
 
 export const metadata = {
   title: "Auditor Appointment Letter Format Word | Companies Act",

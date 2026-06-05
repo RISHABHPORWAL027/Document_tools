@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  description: "Read the Privacy Policy of ComplianceDraft. Learn how we handle, protect, and secure your personal, company, and director data.",
+};
+
 export default function PrivacyPolicyPage() {
   return (
     <div className="mx-auto max-w-3xl rounded-2xl border bg-white p-8 shadow-sm" style={{ borderColor: "#C4C6D0" }}>

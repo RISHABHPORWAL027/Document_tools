@@ -10,6 +10,7 @@ import SignatureUpload from "@/components/SignatureUpload";
 import { downloadPdf } from "@/lib/render/pdf-client";
 import { downloadDocx } from "@/lib/render/docx-client";
 import type { CompanyProfile } from "@/lib/profiles/types";
+import { getRelatedDocs } from "@/lib/site/registry";
 import {
   buildResignationLetterDirectorHtml,
   type ResignationLetterDirectorData,
@@ -40,6 +41,10 @@ export default function ResignationLetterPage() {
   const [profile, setProfile] = useState<CompanyProfile | null>(null);
   const [data, setData] = useState(initialData);
   const [busy, setBusy] = useState(false);
+
+  const relatedDocs = useMemo(() => {
+    return getRelatedDocs("director-resignation-letter", "inc-auditor-resignation");
+  }, []);
 
   useEffect(() => {
     if (urlProfile) {
@@ -100,6 +105,7 @@ export default function ResignationLetterPage() {
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="Resignation Letter Preview"
+      relatedDocs={relatedDocs}
       inputSection={
         <>
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">

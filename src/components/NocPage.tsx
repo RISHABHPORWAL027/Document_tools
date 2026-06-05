@@ -6,7 +6,7 @@ import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import { buildNocHtml } from "@/lib/noc/build-html";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 // ── types ────────────────────────────────────────────────────────────────────
 type Signatory = {
@@ -196,15 +196,7 @@ export default function NocPage() {
   const previewHtml = useMemo(() => buildNocHtml(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "noc" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("noc", "inc-shared");
   }, []);
 
   function update<K extends keyof NocFormData>(key: K, value: NocFormData[K]) {

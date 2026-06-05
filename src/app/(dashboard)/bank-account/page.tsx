@@ -8,7 +8,10 @@ import { getFlow, moduleGroupedDocsForFlow } from "@/lib/site/registry";
 
 const flow = getFlow("bank_account");
 
-export const metadata: Metadata = { title: flow.title };
+export const metadata: Metadata = {
+  title: flow.title,
+  description: "Generate board resolutions and official bank-facing authorization letters to open corporate bank accounts for private limited companies.",
+};
 
 export default function BankAccountPage() {
   return (

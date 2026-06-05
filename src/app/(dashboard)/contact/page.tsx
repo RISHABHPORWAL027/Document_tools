@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { Mail } from "lucide-react";
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: "Get in touch with ComplianceDraft. Contact us for legal document templates, dashboard support, or custom compliance workflow inquiries.",
+};
 
 export default function ContactPage() {
   return (

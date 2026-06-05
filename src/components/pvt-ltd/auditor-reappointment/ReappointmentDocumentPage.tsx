@@ -9,6 +9,7 @@ import { downloadPdf } from "@/lib/render/pdf-client";
 import { useCompanyProfile } from "@/lib/profiles/use-profiles";
 import { useDocumentPrefill } from "@/lib/profiles/useDocumentPrefill";
 import type { CompanyProfile } from "@/lib/profiles/types";
+import { getRelatedDocs } from "@/lib/site/registry";
 import {
   buildReappointmentHtml,
   formatReappointmentDate,
@@ -53,6 +54,13 @@ const DOCUMENT_META: Record<
     filePrefix: "Consent_Certificate_Auditor_Reappointment",
     iframeTitle: "Consent and Certificate Preview",
   },
+};
+
+const DOCUMENT_TOOL_IDS: Record<ReappointmentDocumentKind, string> = {
+  "agm-resolution": "auditor-ra-agm-resolution",
+  "appointment-letter": "auditor-ra-appointment-letter",
+  "acceptance-letter": "auditor-ra-acceptance-letter",
+  "consent-certificate": "auditor-ra-consent-certificate",
 };
 
 function directorsFromProfile(profile: CompanyProfile): ReappointmentDirector[] {
@@ -182,6 +190,11 @@ export default function ReappointmentDocumentPage({ documentType }: Props) {
     [data, documentType],
   );
 
+  const relatedDocs = useMemo(() => {
+    const currentToolId = DOCUMENT_TOOL_IDS[documentType];
+    return getRelatedDocs(currentToolId, "inc-auditor-reappointment");
+  }, [documentType]);
+
   async function download(format: "pdf" | "docx") {
     setBusy(true);
     try {
@@ -209,6 +222,7 @@ export default function ReappointmentDocumentPage({ documentType }: Props) {
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle={meta.iframeTitle}
+      relatedDocs={relatedDocs}
       inputSection={
         <>
           <div className="space-y-4 rounded-xl border bg-white p-6 shadow-sm">

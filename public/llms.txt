@@ -1,0 +1,49 @@
+# ComplianceDraft - MCA, ROC, Legal & Business Document Templates
+
+ComplianceDraft is a comprehensive online registry of ready-to-use MCA, ROC, LLP, GST, bank account opening, and corporate law compliance document templates. It provides professional legal drafts, resolutions, letters, and forms in Microsoft Word (DOCX) and PDF formats.
+
+## Main Sections
+- [Workspace Home](https://www.compliancedraft.co.in/) - Main tools catalogue and dashboard.
+- [Company / LLP Incorporation Flow](https://www.compliancedraft.co.in/incorporation) - Essential steps and document templates for incorporating new businesses.
+- [Bank Account Opening Flow](https://www.compliancedraft.co.in/bank-account) - Document pack for opening corporate current bank accounts.
+- [GST Flow](https://www.compliancedraft.co.in/gst) - GST registration, cancelation, and authorization templates.
+
+## Available Document Generators & Templates
+
+### Core Incorporation Templates
+- [DIR-2 Consent Form](https://www.compliancedraft.co.in/dir-2-format) - Mandatory consent form to act as director.
+- [NOC from Property Owner](https://www.compliancedraft.co.in/noc-format) - No Objection Certificate for registered office address.
+- [Specimen Signature Card](https://www.compliancedraft.co.in/specimen-signature) - Specimen signature card template of authorized signatories for MCA & banks.
+
+### First Auditor Appointment Templates
+- [Board Resolution for First Auditor](https://www.compliancedraft.co.in/incorporation/private-limited/board-resolution) - Certified true copy of board resolution.
+- [Eligibility & Consent Letter](https://www.compliancedraft.co.in/incorporation/private-limited/eligibility-consent) - Auditor eligibility certificate and consent under Sections 139 & 141.
+- [Letter of Appointment](https://www.compliancedraft.co.in/incorporation/private-limited/appointment-letter) - Formal letter of appointment for statutory auditors.
+- [BM Attendance Sheet](https://www.compliancedraft.co.in/incorporation/private-limited/attendance-sheet) - Attendance sheet format of the board meeting.
+
+### Auditor Casual Vacancy Templates
+- [EGM Resolution](https://www.compliancedraft.co.in/incorporation/private-limited/auditor/casual-vacancy/egm-resolution) - Ordinary resolution for casual vacancy auditor appointment.
+- [Appointment Letter](https://www.compliancedraft.co.in/incorporation/private-limited/auditor/casual-vacancy/appointment-letter) - Appointment letter for casual vacancy statutory auditor.
+- [Eligibility Certificate](https://www.compliancedraft.co.in/incorporation/private-limited/auditor/casual-vacancy/eligibility-certificate) - Auditor consent & eligibility certificate for casual vacancy.
+
+### Auditor Reappointment Templates
+- [AGM Resolution](https://www.compliancedraft.co.in/incorporation/private-limited/auditor/reappointment/agm-resolution) - Ordinary resolution passed at AGM.
+- [Appointment Letter](https://www.compliancedraft.co.in/incorporation/private-limited/auditor/reappointment/appointment-letter) - Five-year reappointment letter for statutory auditor.
+- [Acceptance Letter](https://www.compliancedraft.co.in/incorporation/private-limited/auditor/reappointment/acceptance-letter) - Auditor reappointment acceptance letter.
+- [Consent Letter and Certificate](https://www.compliancedraft.co.in/incorporation/private-limited/auditor/reappointment/consent-certificate) - Reappointment eligibility certificate under Section 139 & 141.
+
+### Director Resignation Templates
+- [Resignation Letter](https://www.compliancedraft.co.in/incorporation/private-limited/director-resignation/resignation-letter) - Resignation notice tendered by a resigning director.
+- [Acknowledgement Letter](https://www.compliancedraft.co.in/incorporation/private-limited/director-resignation/acknowledgement) - Acknowledgement letter of director resignation receipt.
+- [Board Resolution for Resignation](https://www.compliancedraft.co.in/incorporation/private-limited/director-resignation/board-resolution) - Board resolution accepting resignation of director.
+- [BM Attendance Sheet](https://www.compliancedraft.co.in/incorporation/private-limited/director-resignation/attendance-sheet) - Attendance sheet for resignation board meeting.
+
+### Limited Liability Partnership (LLP) Templates
+- [Management Representation Letter (MRL)](https://www.compliancedraft.co.in/incorporation/llp/mrl) - LLP MRL for statutory audit.
+- [LLP Form 9 Consent](https://www.compliancedraft.co.in/llp/form9) - Consent form to act as Designated Partner.
+- [LLP NOC for Registered Office](https://www.compliancedraft.co.in/llp/noc-ro) - Property owner's NOC for LLP registered office.
+- [LLP Subscription Sheet](https://www.compliancedraft.co.in/llp/subscription) - Partner contribution table sheet.
+
+### Corporate Banking Templates
+- [Board Resolution for Bank Account](https://www.compliancedraft.co.in/incorporation/private-limited/bank-account) - Resolution to open current bank account.
+- [Specimen Signature (Bank)](https://www.compliancedraft.co.in/specimen-signature) - Signatory card format for corporate banking.

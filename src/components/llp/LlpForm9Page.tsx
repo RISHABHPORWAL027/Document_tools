@@ -10,7 +10,7 @@ import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import { buildLlpForm9Html, type LlpForm9Values } from "@/lib/llp/form9-html";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 const REF_FORM9 =
   "/company%20document/Company%20%3A%20LLP%20Incoorpation/LLP/Form%209%20Consent%20to%20Act%20as%20Designated%20Partner.docx";
@@ -139,15 +139,7 @@ export default function LlpForm9Page() {
   const previewHtml = useMemo(() => buildLlpForm9Html(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "llp-form9" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("llp-form9", "inc-llp");
   }, []);
 
   function update<K extends keyof LlpForm9Values>(key: K, value: LlpForm9Values[K]) {

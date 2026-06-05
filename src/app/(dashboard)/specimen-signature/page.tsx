@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const SpecimenSignaturePage = dynamic(() => import("@/components/SpecimenSignaturePage"), {
-  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
-});;
+import SpecimenSignaturePage from "@/components/SpecimenSignaturePage";
 
 export const metadata: Metadata = {
-  title: "Specimen Signature Template for Bank Account & MCA (Word & PDF)",
+  title: "Specimen Signature Card Template",
   description: "Download and draft the specimen signature card/letter template of directors for bank account opening and MCA compliance filings.",
 };
 

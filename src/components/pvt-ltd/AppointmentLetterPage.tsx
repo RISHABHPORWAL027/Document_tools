@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCompanyProfile } from "@/lib/profiles/use-profiles";
 import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 const alSeoContent = (
   <article className="text-zinc-800">
@@ -125,15 +125,7 @@ export default function AppointmentLetterPage() {
   const previewHtml = buildAppointmentLetterHtml(data);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "appointment-letter" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("appointment-letter", "inc-auditor-first");
   }, []);
 
   const download = async (format: "pdf" | "docx") => {

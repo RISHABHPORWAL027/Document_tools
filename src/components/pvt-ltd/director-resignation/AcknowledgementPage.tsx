@@ -9,6 +9,7 @@ import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import { downloadPdf } from "@/lib/render/pdf-client";
 import { downloadDocx } from "@/lib/render/docx-client";
+import { getRelatedDocs } from "@/lib/site/registry";
 import {
   buildAcknowledgementResignationHtml,
   type AcknowledgementResignationData,
@@ -46,6 +47,10 @@ export default function AcknowledgementPage() {
   const { profile } = useCompanyProfile(companyId || undefined);
   const [data, setData] = useState(initialData);
   const [busy, setBusy] = useState(false);
+
+  const relatedDocs = useMemo(() => {
+    return getRelatedDocs("director-resignation-acknowledgement", "inc-auditor-resignation");
+  }, []);
 
   useDocumentPrefill(profile, setData, {
     companyName: (p) => p.companyName || "",
@@ -109,6 +114,7 @@ export default function AcknowledgementPage() {
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="Acknowledgement Preview"
+      relatedDocs={relatedDocs}
       inputSection={
         <>
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">

@@ -1,16 +1,6 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
-
-const ReappointmentDocumentPage = dynamic(
-  () => import("@/components/pvt-ltd/auditor-reappointment/ReappointmentDocumentPage"),
-  {
-    loading: () => (
-      <div className="flex h-screen items-center justify-center">
-        <div className="animate-pulse text-zinc-500">Loading Appointment Letter...</div>
-      </div>
-    ),
-  },
-);
+import { Suspense } from "react";
+import ReappointmentDocumentPage from "@/components/pvt-ltd/auditor-reappointment/ReappointmentDocumentPage";
 
 export const metadata: Metadata = {
   title: "Auditor Reappointment Letter Format Word | 5-Year Term",
@@ -18,5 +8,9 @@ export const metadata: Metadata = {
 };
 
 export default function AppointmentLetterReappointmentRoute() {
-  return <ReappointmentDocumentPage documentType="appointment-letter" />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ReappointmentDocumentPage documentType="appointment-letter" />
+    </Suspense>
+  );
 }

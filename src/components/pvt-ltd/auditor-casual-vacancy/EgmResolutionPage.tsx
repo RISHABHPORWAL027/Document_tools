@@ -8,6 +8,7 @@ import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
 import LegalDatePicker from "@/components/LegalDatePicker";
 import { downloadPdf } from "@/lib/render/pdf-client";
 import { downloadDocx } from "@/lib/render/docx-client";
+import { getRelatedDocs } from "@/lib/site/registry";
 import {
   buildEgmResolutionCasualVacancyHtml,
   type EgmResolutionCasualVacancyData,
@@ -46,6 +47,10 @@ export default function EgmResolutionCasualVacancyPage() {
   const { profile } = useCompanyProfile(companyId || undefined);
   const [data, setData] = useState(initialData);
   const [busy, setBusy] = useState(false);
+
+  const relatedDocs = useMemo(() => {
+    return getRelatedDocs("auditor-cv-egm", "inc-auditor-casual");
+  }, []);
 
   useDocumentPrefill(profile, setData, {
     companyName: (p) => p.companyName || "",
@@ -118,6 +123,7 @@ export default function EgmResolutionCasualVacancyPage() {
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="EGM Resolution Preview"
+      relatedDocs={relatedDocs}
       inputSection={
         <>
           {/* Company & Meeting Details */}

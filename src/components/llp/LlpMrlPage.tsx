@@ -13,7 +13,7 @@ import {
   buildLlpMrlHtml,
   type LlpMrlValues,
 } from "@/lib/llp/mrl-html";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 const mrlSeoContent = (
   <article className="text-zinc-800">
@@ -119,15 +119,7 @@ export default function LlpMrlPage() {
   const previewHtml = useMemo(() => buildLlpMrlHtml(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "mrl" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("mrl", "inc-llp");
   }, []);
 
   const download = async (format: "pdf" | "docx") => {

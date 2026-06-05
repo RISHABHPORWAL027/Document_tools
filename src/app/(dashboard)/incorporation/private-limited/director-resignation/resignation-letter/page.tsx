@@ -1,13 +1,5 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const ResignationLetterPage = dynamic(() => import("@/components/pvt-ltd/director-resignation/ResignationLetterPage"), {
-  loading: () => (
-    <div className="flex h-screen items-center justify-center">
-      <div className="text-zinc-500 animate-pulse">Loading Document Editor...</div>
-    </div>
-  ),
-});
+import ResignationLetterPage from "@/components/pvt-ltd/director-resignation/ResignationLetterPage";
 
 export const metadata = {
   title: "Director Resignation Letter Format Word | Companies Act",

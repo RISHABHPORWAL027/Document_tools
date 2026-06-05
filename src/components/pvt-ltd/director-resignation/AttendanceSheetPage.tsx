@@ -9,6 +9,7 @@ import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import { downloadPdf } from "@/lib/render/pdf-client";
 import { downloadDocx } from "@/lib/render/docx-client";
+import { getRelatedDocs } from "@/lib/site/registry";
 import {
   buildAttendanceSheetHtml,
   type AttendanceSheetData,
@@ -40,6 +41,13 @@ export default function AttendanceSheetPage({ subflowTitle = "Resignation of Dir
   const { profile } = useCompanyProfile(companyId || undefined);
   const [data, setData] = useState(initialData);
   const [busy, setBusy] = useState(false);
+
+  const relatedDocs = useMemo(() => {
+    const isFirstAuditor = subflowTitle === "First Auditor Appointment";
+    const currentToolId = isFirstAuditor ? "first-auditor-attendance-sheet" : "director-resignation-attendance-sheet";
+    const currentSubflowId = isFirstAuditor ? "inc-auditor-first" : "inc-auditor-resignation";
+    return getRelatedDocs(currentToolId, currentSubflowId);
+  }, [subflowTitle]);
 
   useDocumentPrefill(profile, setData, {
     companyName: (p) => p.companyName || "",
@@ -109,6 +117,7 @@ export default function AttendanceSheetPage({ subflowTitle = "Resignation of Dir
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="Attendance Sheet Preview"
+      relatedDocs={relatedDocs}
       inputSection={
         <>
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">

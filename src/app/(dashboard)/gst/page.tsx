@@ -8,7 +8,10 @@ import { getFlow, moduleGroupedDocsForFlow } from "@/lib/site/registry";
 
 const flow = getFlow("gst");
 
-export const metadata: Metadata = { title: flow.title };
+export const metadata: Metadata = {
+  title: flow.title,
+  description: "Access compliance templates and board resolutions for GST registration, GST cancellation, and GST authorization letter formats.",
+};
 
 export default function GstPage() {
   return (

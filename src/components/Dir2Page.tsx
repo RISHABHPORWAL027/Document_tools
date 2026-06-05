@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import ProfileSelector from "@/components/ProfileSelector";
 import type { CompanyProfile, DirectorProfile } from "@/lib/profiles/types";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 type CompanyItem = {
   companyName: string;
@@ -100,15 +100,7 @@ export default function Dir2Page() {
   const previewHtml = useMemo(() => buildDir2Html(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "dir2" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("dir2", "inc-shared");
   }, []);
 
   function update<K extends keyof Dir2FormData>(key: K, value: Dir2FormData[K]) {
@@ -731,7 +723,7 @@ function DynamicCard({
 }
 
 function buildDir2Html(data: Dir2FormData) {
-  const val = (s: string) => (s.trim() ? escapeHtml(s) : '<span class="blank">_______________</span>');
+  const val = (s: string) => (s.trim() ? escapeHtml(s) : "");
   const fDate = (d: string) =>
     d
       ? new Date(d).toLocaleDateString("en-IN", {
@@ -739,7 +731,7 @@ function buildDir2Html(data: Dir2FormData) {
           month: "long",
           year: "numeric",
         })
-      : '<span class="blank">_______________</span>';
+      : "";
 
 
   const narrative = data.priorDirectorshipDetails?.trim();

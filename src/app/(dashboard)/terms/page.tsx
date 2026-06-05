@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Read the Terms of Service for ComplianceDraft. Understand user responsibilities, intellectual property rights, and platform terms of use.",
+};
+
 export default function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl rounded-2xl border bg-white p-8 shadow-sm" style={{ borderColor: "#C4C6D0" }}>

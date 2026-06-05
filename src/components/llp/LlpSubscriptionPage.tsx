@@ -13,7 +13,7 @@ import {
   type LlpSubscriptionPartner,
   type LlpSubscriptionValues,
 } from "@/lib/llp/subscription-html";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 function isoToday(): string {
   const d = new Date();
@@ -165,15 +165,7 @@ export default function LlpSubscriptionPage() {
   const previewHtml = useMemo(() => buildLlpSubscriptionHtml(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "llp-subscription" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("llp-subscription", "inc-llp");
   }, []);
 
   function update<K extends keyof LlpSubscriptionValues>(

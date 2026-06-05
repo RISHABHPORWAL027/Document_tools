@@ -1,13 +1,5 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const BoardResolutionResignationPage = dynamic(() => import("@/components/pvt-ltd/director-resignation/BoardResolutionResignationPage"), {
-  loading: () => (
-    <div className="flex h-screen items-center justify-center">
-      <div className="text-zinc-500 animate-pulse">Loading Document Editor...</div>
-    </div>
-  ),
-});
+import BoardResolutionResignationPage from "@/components/pvt-ltd/director-resignation/BoardResolutionResignationPage";
 
 export const metadata = {
   title: "Board Resolution for Resignation of Director Word Format",

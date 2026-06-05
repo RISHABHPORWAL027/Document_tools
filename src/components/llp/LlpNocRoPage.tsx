@@ -12,7 +12,7 @@ import {
   buildLlpNocRoHtml,
   type LlpNocRoValues,
 } from "@/lib/llp/noc-ro-html";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
@@ -130,15 +130,7 @@ export default function LlpNocRoPage() {
   const previewHtml = useMemo(() => buildLlpNocRoHtml(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "llp-noc-ro" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("llp-noc-ro", "inc-llp");
   }, []);
 
   function update<K extends keyof LlpNocRoValues>(key: K, value: LlpNocRoValues[K]) {

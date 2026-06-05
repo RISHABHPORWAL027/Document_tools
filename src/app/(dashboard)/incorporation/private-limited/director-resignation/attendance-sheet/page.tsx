@@ -1,16 +1,8 @@
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const AttendanceSheetPage = dynamic(() => import("@/components/pvt-ltd/director-resignation/AttendanceSheetPage"), {
-  loading: () => (
-    <div className="flex h-screen items-center justify-center">
-      <div className="text-zinc-500 animate-pulse">Loading Document Editor...</div>
-    </div>
-  ),
-});
+import AttendanceSheetPage from "@/components/pvt-ltd/director-resignation/AttendanceSheetPage";
 
 export const metadata = {
-  title: "Board Meeting Attendance Sheet for Director Resignation (Word)",
+  title: "BM Attendance Sheet (Director Resignation)",
   description: "Generate and download the Board Meeting (BM) attendance sheet format of directors for accepting director resignation compliance.",
 };
 

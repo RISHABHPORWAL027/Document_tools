@@ -10,7 +10,7 @@ import SignatureUpload from "@/components/SignatureUpload";
 import { buildBrHtml, BrFormData } from "@/lib/pvt-ltd/board-resolution-html";
 import { downloadDocx } from "@/lib/render/docx-client";
 import { downloadPdf } from "@/lib/render/pdf-client";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 const brSeoContent = (
   <article className="text-zinc-800">
@@ -130,15 +130,7 @@ export default function BoardResolutionPage() {
   const previewHtml = buildBrHtml(data);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "board-resolution" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("board-resolution", "inc-auditor-first");
   }, []);
 
   const download = async (format: "pdf" | "docx") => {

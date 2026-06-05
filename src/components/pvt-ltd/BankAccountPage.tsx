@@ -9,7 +9,7 @@ import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import { buildBankAccountHtml, BankAccountValues } from "@/lib/pvt-ltd/bank-account-html";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 const bankAccountSeoContent = (
   <article className="text-zinc-800">
@@ -115,15 +115,7 @@ export default function BankAccountPage() {
   const previewHtml = useMemo(() => buildBankAccountHtml(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "board-resolution-bank" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("board-resolution-bank", "bank-resolution");
   }, []);
 
   const update = (field: keyof BankAccountValues, value: any) => {

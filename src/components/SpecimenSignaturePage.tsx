@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import ProfileSelector from "@/components/ProfileSelector";
 import type { CompanyProfile } from "@/lib/profiles/types";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 type DirectorEntry = {
   name: string;
@@ -47,15 +47,7 @@ export default function SpecimenSignaturePage() {
   const previewHtml = useMemo(() => buildSpecimenHtml(data), [data]);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "specimen" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("specimen", "inc-shared");
   }, []);
 
   function update<K extends keyof SpecimenFormData>(

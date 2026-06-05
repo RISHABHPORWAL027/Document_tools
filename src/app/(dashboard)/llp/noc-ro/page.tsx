@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const LlpNocRoPage = dynamic(() => import("@/components/llp/LlpNocRoPage"), {
-  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
-});;
+import LlpNocRoPage from "@/components/llp/LlpNocRoPage";
 
 export const metadata: Metadata = {
   title: "LLP NOC for Registered Office Word Format & PDF Generator",

@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { TOOLS as SITE_TOOLS } from "@/lib/site/registry";
-import { CATEGORIES as TOOL_CATEGORIES, TOOLS as REGISTRY_TOOLS } from "@/lib/tools/registry";
 
 const BASE_URL = "https://www.compliancedraft.co.in";
 
@@ -49,24 +48,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
       };
     });
 
-  // 3. Dynamic Category Pages
-  const categoryPages = TOOL_CATEGORIES.map((cat) => ({
-    url: `${BASE_URL}/category/${cat.id}`,
-    lastModified,
-    changeFrequency: "weekly" as const,
-    priority: 0.7,
-  }));
-
-  // 4. Dynamic General Tools Pages
-  const toolPages = Object.values(REGISTRY_TOOLS).map((tool) => ({
-    url: `${BASE_URL}/tools/${tool.id}`,
-    lastModified,
-    changeFrequency: "weekly" as const,
-    priority: 0.9,
-  }));
-
   // Deduplicate URLs in case of duplicates
-  const allUrls = [...staticPages, ...siteToolPages, ...categoryPages, ...toolPages];
+  const allUrls = [...staticPages, ...siteToolPages];
   const seen = new Set<string>();
   const uniqueUrls: MetadataRoute.Sitemap = [];
 

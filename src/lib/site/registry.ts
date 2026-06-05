@@ -687,6 +687,30 @@ export function allLiveTools(): ToolDefinition[] {
   return TOOLS.filter((t) => t.status === "live");
 }
 
+export type RelatedDoc = {
+  id: string;
+  title: string;
+  href: string;
+  icon: string;
+};
+
+export function getRelatedDocs(currentToolId: string, currentSubflowId: string): RelatedDoc[] {
+  return allLiveTools()
+    .filter((t) => t.id !== currentToolId && t.status === "live" && t.href !== "#" && t.href !== "")
+    .sort((a, b) => {
+      if (a.subflowId === currentSubflowId && b.subflowId !== currentSubflowId) return -1;
+      if (a.subflowId !== currentSubflowId && b.subflowId === currentSubflowId) return 1;
+      return 0;
+    })
+    .slice(0, 4)
+    .map((t) => ({
+      id: t.id,
+      title: t.title,
+      href: t.href,
+      icon: t.icon,
+    }));
+}
+
 export function allFlowsSorted(): FlowDefinition[] {
   return [...FLOWS].sort((a, b) => a.order - b.order);
 }

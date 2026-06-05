@@ -8,7 +8,10 @@ import { getFlow, moduleGroupedDocsForFlow } from "@/lib/site/registry";
 
 const flow = getFlow("incorporation");
 
-export const metadata: Metadata = { title: flow.title };
+export const metadata: Metadata = {
+  title: flow.title,
+  description: "Access templates and document generators for Company and LLP incorporation, including DIR-2, LLP Form 9, subscription sheets, and NOCs.",
+};
 
 export default function IncorporationPage() {
   return (

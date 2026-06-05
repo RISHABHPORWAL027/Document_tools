@@ -10,7 +10,7 @@ import SignatureUpload from "@/components/SignatureUpload";
 import { buildEligibilityConsentHtml, EligibilityConsentData } from "@/lib/pvt-ltd/eligibility-consent-html";
 import { downloadDocx } from "@/lib/render/docx-client";
 import { downloadPdf } from "@/lib/render/pdf-client";
-import { allLiveTools } from "@/lib/site/registry";
+import { getRelatedDocs } from "@/lib/site/registry";
 
 const ecSeoContent = (
   <article className="text-zinc-800">
@@ -112,15 +112,7 @@ export default function EligibilityConsentPage() {
   const previewHtml = buildEligibilityConsentHtml(data);
 
   const relatedDocs = useMemo(() => {
-    return allLiveTools()
-      .filter((t) => t.id !== "eligibility-consent" && t.status === "live" && t.href !== "#")
-      .slice(0, 4)
-      .map((t) => ({
-        id: t.id,
-        title: t.title,
-        href: t.href,
-        icon: t.icon,
-      }));
+    return getRelatedDocs("eligibility-consent", "inc-auditor-first");
   }, []);
 
   const download = async (format: "pdf" | "docx") => {

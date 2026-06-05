@@ -1,10 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const LlpSubscriptionPage = dynamic(() => import("@/components/llp/LlpSubscriptionPage"), {
-  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
-});;
+import LlpSubscriptionPage from "@/components/llp/LlpSubscriptionPage";
 
 export const metadata: Metadata = {
   title: "LLP Subscription Sheet Word Format & PDF Generator",

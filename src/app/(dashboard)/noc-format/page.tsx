@@ -1,13 +1,9 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import dynamic from "next/dynamic";
-
-const NocPage = dynamic(() => import("@/components/NocPage"), {
-  loading: () => <div className="flex h-screen items-center justify-center"><div className="text-zinc-500 animate-pulse">Loading Document Editor...</div></div>
-});;
+import NocPage from "@/components/NocPage";
 
 export const metadata: Metadata = {
-  title: "NOC from Property Owner for Registered Office Address (Word & PDF)",
+  title: "NOC for Registered Office Address Format",
   description: "Download and generate a free, legally compliant No Objection Certificate (NOC) template from property owner to register a company or LLP address.",
 };
 
