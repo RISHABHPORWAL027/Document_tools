@@ -6,6 +6,7 @@ import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import { buildNocHtml } from "@/lib/noc/build-html";
+import { allLiveTools } from "@/lib/site/registry";
 
 // ── types ────────────────────────────────────────────────────────────────────
 type Signatory = {
@@ -97,11 +98,114 @@ function Input({
   );
 }
 
+const nocSeoContent = (
+  <article className="text-zinc-800">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">What is a No Objection Certificate (NOC) for Registered Office?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          A No Objection Certificate (NOC) is a legal document issued by the owner of a property stating that they have no objection to a company or LLP using their property address as the registered office of the business. It is a mandatory attachment for company registration with the Ministry of Corporate Affairs (MCA).
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">When is the NOC Required?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          The NOC from property owner is required under the following scenarios:
+        </p>
+        <ul className="list-disc pl-5 mt-2 text-sm space-y-1 text-zinc-600">
+          <li>Incorporating a new company (Private Limited, OPC, Public Limited) under the SPICe+ filing process.</li>
+          <li>Registering a new Limited Liability Partnership (LLP) under the FiLLiP form.</li>
+          <li>Shifting the registered office of an existing company to a new address (Form INC-22).</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Who Signs the NOC?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          The property owner (the individual or entity whose name appears on the property tax receipt or sale deed) must sign the NOC. If the property is owned by multiple co-owners, all co-owners or the authorized representative must sign the certificate.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Legal Requirements for Registered Office Proof</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          To register a property as a company's office address, the MCA requires:
+        </p>
+        <ul className="list-disc pl-5 mt-2 text-sm space-y-1 text-zinc-600">
+          <li>The signed No Objection Certificate (NOC) in the prescribed format.</li>
+          <li>Utility bill of the premises (Electricity bill, Gas bill, Water bill, or Telephone bill) not older than 2 months.</li>
+          <li>Proof of ownership (e.g., Sale deed, Property Tax Receipt, or Rent/Lease Agreement if rented).</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+        <div className="mt-4 space-y-3">
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Does the NOC need to be printed on stamp paper?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Typically, a simple NOC printed on plain paper and signed by the owner is accepted by the MCA. However, some ROC jurisdictions or bank account opening officers may request a notarized NOC on Rs. 10/20 stamp paper.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Can residential property be used as a registered office?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Yes, a residential property (such as the home address of one of the directors) can be registered as the company's registered office, provided the owner issues a signed NOC.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Is a rent agreement required if I have an NOC?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              If the company is renting the property, both the rent agreement and the NOC are required. If the property is owned by a director or their relative, only the NOC and a utility bill are needed (no rent agreement).
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+  </article>
+);
+
 // ── main component ────────────────────────────────────────────────────────────
 export default function NocPage() {
   const [data, setData] = useState<NocFormData>(initialData);
   const [busy, setBusy] = useState(false);
   const previewHtml = useMemo(() => buildNocHtml(data), [data]);
+
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "noc" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
 
   function update<K extends keyof NocFormData>(key: K, value: NocFormData[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -186,13 +290,16 @@ export default function NocPage() {
 
   return (
     <DocumentEditorLayout
-      title="NOC — No Objection Certificate"
+      title="NOC from Property Owner for Registered Office Address"
       description="For use of owner's property as Registered Office — addressed to MCA / IICA."
       onProfileSelect={handleProfileSelect}
       busy={busy}
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="NOC Preview"
+      aboutDescription="A No Objection Certificate (NOC) is signed by the property owner to permit a company or LLP to use their premises as its registered office address. The MCA mandates this to verify that the business has legal permission to receive official correspondence at the address. It must be submitted along with a recent utility bill of the premises during entity incorporation or when shifting the registered office."
+      relatedDocs={relatedDocs}
+      seoContent={nocSeoContent}
       inputSection={
         <div className="space-y-6">
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">

@@ -10,6 +10,7 @@ import LegalDatePicker from "@/components/LegalDatePicker";
 import SignatureUpload from "@/components/SignatureUpload";
 import type { CompanyProfile } from "@/lib/profiles/types";
 import { buildLlpForm9Html, type LlpForm9Values } from "@/lib/llp/form9-html";
+import { allLiveTools } from "@/lib/site/registry";
 
 const REF_FORM9 =
   "/company%20document/Company%20%3A%20LLP%20Incoorpation/LLP/Form%209%20Consent%20to%20Act%20as%20Designated%20Partner.docx";
@@ -68,6 +69,66 @@ function Input({
   );
 }
 
+const form9SeoContent = (
+  <article className="text-zinc-800">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">What is LLP Form 9?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          LLP Form 9 is the formal written consent of a proposed Designated Partner to act in that capacity. Under the Limited Liability Partnership Act, 2008, no person can act as a designated partner of an LLP unless they have signed and submitted their consent to the LLP, confirming that they meet the qualification criteria and have not been disqualified.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+        <div className="mt-4 space-y-3">
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Is Form 9 mandatory for all LLP partners?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              No, Form 9 is only mandatory for the <em>Designated Partners</em> (DPs) of the LLP. Standard partners who do not have designated management responsibilities do not need to sign Form 9 consent documents.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Who files Form 9 with the ROC?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Form 9 is signed by the designated partner and is submitted as an attachment to the main FiLLiP incorporation form by the professional incorporation agent (like a CA, CS, or advocate) during LLP registration with the ROC.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Can a partner who has been convicted of an offence sign Form 9?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              No, Form 9 contains a specific legal declaration stating that the proposed designated partner is qualified to act as such, has not been convicted of any offence involving fraud or dishonesty, and has not had their DPIN debarred or cancelled.
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+  </article>
+);
+
 export default function LlpForm9Page() {
   const searchParams = useSearchParams();
   const companyFromUrl = searchParams.get("company");
@@ -76,6 +137,18 @@ export default function LlpForm9Page() {
   const [data, setData] = useState<LlpForm9Values>(() => initialForm());
   const [busy, setBusy] = useState(false);
   const previewHtml = useMemo(() => buildLlpForm9Html(data), [data]);
+
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "llp-form9" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
 
   function update<K extends keyof LlpForm9Values>(key: K, value: LlpForm9Values[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -171,6 +244,9 @@ export default function LlpForm9Page() {
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="Form 9 Preview"
+      aboutDescription="LLP Form 9 is the mandatory consent form signed by designated partners of a Limited Liability Partnership. By signing Form 9, the partner formally consents to act as a designated partner and declares that they are qualified to do so under the LLP Act. This form must be filed with the ROC at the time of LLP registration."
+      relatedDocs={relatedDocs}
+      seoContent={form9SeoContent}
       inputSection={
         <div className="space-y-6">
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">

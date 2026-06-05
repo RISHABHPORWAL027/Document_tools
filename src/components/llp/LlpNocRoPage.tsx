@@ -12,6 +12,7 @@ import {
   buildLlpNocRoHtml,
   type LlpNocRoValues,
 } from "@/lib/llp/noc-ro-html";
+import { allLiveTools } from "@/lib/site/registry";
 
 function todayIso(): string {
   return new Date().toISOString().slice(0, 10);
@@ -53,6 +54,66 @@ function Input({
   );
 }
 
+const llpNocSeoContent = (
+  <article className="text-zinc-800">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">LLP No Objection Certificate (NOC)</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          The No Objection Certificate (NOC) for an LLP registered office is a declaration issued by the owner of the property. It certifies that the owner has no objection to the proposed Limited Liability Partnership registering its principal place of business at the premises. This is a mandatory filing requirement with the Registrar of Companies (ROC) to establish proof of address.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+        <div className="mt-4 space-y-3">
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Is an NOC mandatory for registering an LLP office address?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Yes, the MCA requires a No Objection Certificate (NOC) from the property owner to verify that the owner has legally permitted the proposed LLP to use their premises as its registered office address.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>What utility bills are accepted alongside the LLP NOC?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              You must submit a recent utility bill of the property (Electricity bill, Gas bill, Water bill, or Telephone bill) that is not older than 2 months from the filing date, with the owner's name matching the NOC.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Can a rented property be registered as an LLP office address?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Yes, if the property is rented, you must attach the signed rent/lease agreement along with the NOC and the utility bill.
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+  </article>
+);
+
 export default function LlpNocRoPage() {
   const searchParams = useSearchParams();
   const companyId = searchParams.get("company");
@@ -67,6 +128,18 @@ export default function LlpNocRoPage() {
   });
 
   const previewHtml = useMemo(() => buildLlpNocRoHtml(data), [data]);
+
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "llp-noc-ro" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
 
   function update<K extends keyof LlpNocRoValues>(key: K, value: LlpNocRoValues[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -105,6 +178,9 @@ export default function LlpNocRoPage() {
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="LLP NOC Preview"
+      aboutDescription="The LLP NOC is the property owner's written consent allowing a new Limited Liability Partnership to establish its registered office at their property. The ROC requires this certificate along with proof of property ownership (like a utility bill) to verify that the LLP is operating from a legally authorized location."
+      relatedDocs={relatedDocs}
+      seoContent={llpNocSeoContent}
       inputSection={
         <div className="space-y-6">
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">

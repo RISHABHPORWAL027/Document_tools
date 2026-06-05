@@ -13,6 +13,7 @@ import {
   type LlpSubscriptionPartner,
   type LlpSubscriptionValues,
 } from "@/lib/llp/subscription-html";
+import { allLiveTools } from "@/lib/site/registry";
 
 function isoToday(): string {
   const d = new Date();
@@ -75,6 +76,66 @@ function Input({
   );
 }
 
+const subscriptionSeoContent = (
+  <article className="text-zinc-800">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">What is an LLP Subscription Sheet?</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          The LLP Subscription Sheet is a legal declaration executed by the subscribers/partners of a proposed Limited Liability Partnership. It forms a core component of the incorporation documents filed under the FiLLiP form with the Ministry of Corporate Affairs (MCA). In it, partners declare their desire to form the LLP and commit to contributing a specific capital contribution.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+        <div className="mt-4 space-y-3">
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>What is the purpose of the LLP Subscription Sheet?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              The LLP Subscription Sheet is a key constituent of the LLP registration package. It is signed by the initial partners (subscribers) to record their formal agreement to form a Limited Liability Partnership, contribute a specific capital amount, and subscribe to their respective partner shares.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Does the Subscription Sheet need to be signed by all partners?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Yes, all the designated partners and partners who are subscribing to the LLP must sign the subscription sheet. Their signatures must be witnessed by a practicing professional (like an advocate, CA, CS, or Cost Accountant) who also signs and records their membership number.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Can a partner sign the subscription sheet digitally?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Yes, under the MCA systems, partners can sign the sheet digitally or execute a physical subscription sheet and upload the scanned format as part of the FiLLiP registration form on the MCA V3 portal.
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+  </article>
+);
+
 export default function LlpSubscriptionPage() {
   const searchParams = useSearchParams();
   const companyId = searchParams.get("company");
@@ -102,6 +163,18 @@ export default function LlpSubscriptionPage() {
   });
 
   const previewHtml = useMemo(() => buildLlpSubscriptionHtml(data), [data]);
+
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "llp-subscription" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
 
   function update<K extends keyof LlpSubscriptionValues>(
     key: K,
@@ -166,6 +239,9 @@ export default function LlpSubscriptionPage() {
       onDownload={download}
       previewHtml={previewHtml}
       iframeTitle="Subscription Preview"
+      aboutDescription="The LLP Subscription Sheet is signed by the initial partners (subscribers) of a Limited Liability Partnership during its incorporation. It details the names, addresses, and agreed capital contribution of each partner. It is a key constituent of the FiLLiP incorporation package submitted to the ROC to prove partner commitments."
+      relatedDocs={relatedDocs}
+      seoContent={subscriptionSeoContent}
       inputSection={
         <div className="space-y-6">
           <div className="rounded-xl border bg-white p-6 shadow-sm space-y-4">

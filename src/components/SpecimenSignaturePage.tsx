@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import ProfileSelector from "@/components/ProfileSelector";
 import type { CompanyProfile } from "@/lib/profiles/types";
+import { allLiveTools } from "@/lib/site/registry";
 
 type DirectorEntry = {
   name: string;
@@ -44,6 +45,18 @@ export default function SpecimenSignaturePage() {
   );
   const [busy, setBusy] = useState(false);
   const previewHtml = useMemo(() => buildSpecimenHtml(data), [data]);
+
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "specimen" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
 
   function update<K extends keyof SpecimenFormData>(
     key: K,
@@ -139,6 +152,12 @@ export default function SpecimenSignaturePage() {
   return (
     <div>
       <div className="mx-auto max-w-[1440px] px-0 py-0">
+        {/* BREADCRUMB */}
+        <nav className="mb-2.5 flex items-center gap-1.5 text-xs text-[#888888] font-medium" aria-label="Breadcrumb">
+          <a href="/" className="hover:text-black transition-colors">Workspace</a>
+          <span>/</span>
+          <span className="text-[#444444] font-semibold">Specimen Signature Card</span>
+        </nav>
         <h1 className="text-xl font-bold tracking-tight text-zinc-900">
           Specimen Signature Card
         </h1>
@@ -153,6 +172,10 @@ export default function SpecimenSignaturePage() {
         <div className="mt-2 grid gap-5 lg:grid-cols-[3fr_7fr]">
           {/* INPUT PANEL */}
           <section className="max-h-[88vh] overflow-y-auto rounded-xl border bg-white p-4">
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-xs leading-relaxed text-zinc-600 mb-4">
+              <span className="font-bold text-zinc-950 block mb-1.5 uppercase tracking-wider text-[10px]">What is this document?</span>
+              The Specimen Signature Card contains the official signatures of the authorized directors or signatories of a company. Banks and the Ministry of Corporate Affairs (MCA) require this card to verify the authenticity of signatures on resolutions, deeds, and bank account instructions, preventing unauthorized or fraudulent transactions.
+            </div>
             <div className="grid gap-4">
               <Input label="Name of Establishment (Company Name)" required>
                 <input
@@ -303,6 +326,85 @@ export default function SpecimenSignaturePage() {
             🖨 Print
           </button>
         </div>
+
+        {relatedDocs && relatedDocs.length > 0 && (
+          <div className="mt-8 border-t border-[#eeeeee] pt-6 pb-2 max-w-4xl mx-auto w-full">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[#888888] mb-3 text-center sm:text-left">
+              Related Compliance Documents
+            </h3>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              {relatedDocs.map((doc) => (
+                <a
+                  key={doc.id}
+                  href={doc.href}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#d9d9d9] bg-white px-3 py-2 text-xs font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
+                >
+                  <span>{doc.icon}</span>
+                  <span>{doc.title}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* FAQ SECTION */}
+        <article className="mt-12 border-t pt-8 text-zinc-800 max-w-4xl mx-auto w-full">
+          <div className="space-y-6">
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">What is a Specimen Signature Card?</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                A Specimen Signature Card is an official record containing the signatures of the authorized directors or officers of a company or LLP. It serves as a verification benchmark for banks, registry officials (like the ROC), and counterparties to cross-reference and authenticate legal signatures on physical and digital files.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+              <div className="mt-4 space-y-3">
+                <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+                    <span>What is a specimen signature card used for?</span>
+                    <span className="transition-transform duration-300 group-open:rotate-180">
+                      <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+                    A specimen signature card is a reference document that displays the authorized signatures of a company's directors or officers. It is used by banks, government departments (like MCA), and financial institutions to verify that signatures on checks, applications, and resolutions are authentic and authorized.
+                  </div>
+                </details>
+
+                <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+                    <span>Do we need a specimen signature for new company incorporation?</span>
+                    <span className="transition-transform duration-300 group-open:rotate-180">
+                      <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+                    Yes, under the Ministry of Corporate Affairs (MCA) SPICe+ filing, a specimen signature card of the first directors is often required to be uploaded in the prescribed format as part of the incorporation documents.
+                  </div>
+                </details>
+
+                <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+                    <span>Can a director upload a digital signature image?</span>
+                    <span className="transition-transform duration-300 group-open:rotate-180">
+                      <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+                    Yes, directors can upload a clean, scanned image of their physical signature to auto-fill and generate the specimen signature card. However, make sure the image is clear and matches their official government-issued identity documents (like PAN card or Passport).
+                  </div>
+                </details>
+              </div>
+            </section>
+          </div>
+        </article>
       </div>
     </div>
   );

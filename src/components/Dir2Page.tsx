@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import ProfileSelector from "@/components/ProfileSelector";
 import type { CompanyProfile, DirectorProfile } from "@/lib/profiles/types";
+import { allLiveTools } from "@/lib/site/registry";
 
 type CompanyItem = {
   companyName: string;
@@ -97,6 +98,18 @@ export default function Dir2Page() {
   /** 0-based index into activeProfile.directors */
   const [directorIndex, setDirectorIndex] = useState(0);
   const previewHtml = useMemo(() => buildDir2Html(data), [data]);
+
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "dir2" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
 
   function update<K extends keyof Dir2FormData>(key: K, value: Dir2FormData[K]) {
     setData((prev) => ({ ...prev, [key]: value }));
@@ -209,8 +222,14 @@ export default function Dir2Page() {
   return (
     <div>
       <div className="mx-auto max-w-[1440px] px-0 py-0">
+        {/* BREADCRUMB */}
+        <nav className="mb-2.5 flex items-center gap-1.5 text-xs text-[#888888] font-medium" aria-label="Breadcrumb">
+          <a href="/" className="hover:text-black transition-colors">Workspace</a>
+          <span>/</span>
+          <span className="text-[#444444] font-semibold">DIR-2 Consent to Act as Director Format</span>
+        </nav>
         <h1 className="text-xl font-bold tracking-tight text-zinc-900">
-          DIR-2 Consent to Act as Director
+          DIR-2 Consent to Act as Director Format
         </h1>
         <p className="mt-1 text-sm text-zinc-600 hidden sm:block">
           Fill fields on the left. Preview updates automatically on the right.
@@ -253,6 +272,10 @@ export default function Dir2Page() {
         <div className="mt-2 grid gap-4 sm:gap-5 grid-cols-1 lg:grid-cols-[3fr_7fr]">
           {/* INPUT SECTION */}
           <section className="lg:max-h-[88vh] overflow-y-auto rounded-xl border bg-white p-3 sm:p-4">
+            <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4 text-xs leading-relaxed text-zinc-600 mb-4">
+              <span className="font-bold text-zinc-950 block mb-1.5 uppercase tracking-wider text-[10px]">What is this document?</span>
+              Form DIR-2 is the written consent of a proposed director to act in that capacity. Under Section 152(5) of the Companies Act, 2013, a company cannot appoint any director unless they have signed this consent form. It ensures that the appointee is willing to take on the legal responsibilities of directorship and confirms they are not disqualified. It is a mandatory attachment filed with the ROC during company incorporation or director updates.
+            </div>
             <div className="grid gap-3">
               <Input label="Company Name" required>
                 <input
@@ -542,6 +565,118 @@ export default function Dir2Page() {
             🖨 Print
           </button>
         </div>
+
+        {relatedDocs && relatedDocs.length > 0 && (
+          <div className="mt-8 border-t border-[#eeeeee] pt-6 pb-2 max-w-4xl mx-auto w-full">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[#888888] mb-3 text-center sm:text-left">
+              Related Compliance Documents
+            </h3>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              {relatedDocs.map((doc) => (
+                <a
+                  key={doc.id}
+                  href={doc.href}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#d9d9d9] bg-white px-3 py-2 text-xs font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
+                >
+                  <span>{doc.icon}</span>
+                  <span>{doc.title}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* SEO Informational Content */}
+        <article className="mt-12 border-t pt-8 text-zinc-800">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">What is DIR-2?</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                Form DIR-2 is a written consent given by a person to act as a director of a company. Under Rule 8 of the Companies (Appointment and Qualification of Directors) Rules, 2014, every person who is appointed to hold office as a director must sign and submit their consent in this format before their appointment.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">When is DIR-2 Required?</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                DIR-2 is required under the following circumstances:
+              </p>
+              <ul className="list-disc pl-5 mt-2 text-sm space-y-1 text-zinc-600">
+                <li>During incorporation of a new Private Limited, Public Limited, or One Person Company (OPC).</li>
+                <li>At the time of appointing a new director to the board of an existing company.</li>
+                <li>When designating an alternate director, additional director, or independent director.</li>
+              </ul>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">Who Submits DIR-2?</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                The proposed director must fill out, sign, and submit the consent form to the company. The company then files the form with the Registrar of Companies (ROC) along with Form SPICe+ (for new company incorporation) or Form DIR-12 (for changes in directors of an active company).
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">Legal Provision</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                Section 152(5) of the Companies Act, 2013 read with Rule 8 of the Companies (Appointment and Qualification of Directors) Rules, 2014 mandates that no person shall be appointed as a director unless he/she has given consent in writing to act as director in Form DIR-2.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">DIR-2 Format Download &amp; Editable Template</h2>
+              <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+                Our automated editor lets you fill in the director's details, father's name, DIN, residential address, nationality, occupation, and existing directorships. Once filled, you can instantly download a print-ready PDF or editable Word (DOCX) document containing the verbatim MCA-prescribed legal text.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+              <div className="mt-4 space-y-3">
+                <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+                    <span>Is a physical signature mandatory on DIR-2?</span>
+                    <span className="transition-transform duration-300 group-open:rotate-180">
+                      <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+                    Yes, the proposed director must physically or digitally sign the DIR-2 consent document. A self-attested copy of the director's identity proof (such as a PAN card or passport) and address proof must be attached to the form.
+                  </div>
+                </details>
+
+                <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+                    <span>What is the validity of the DIR-2 form?</span>
+                    <span className="transition-transform duration-300 group-open:rotate-180">
+                      <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+                    The DIR-2 form must be signed and dated on or before the date of appointment. It is generally executed close to the incorporation or board resolution date.
+                  </div>
+                </details>
+
+                <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                  <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+                    <span>Can a foreign national act as a director using DIR-2?</span>
+                    <span className="transition-transform duration-300 group-open:rotate-180">
+                      <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </span>
+                  </summary>
+                  <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+                    Yes, foreign nationals can act as directors. For foreign nationals, their passport must be attached as identity proof, and their residency proof must be apostilled or notarized as per home country rules.
+                  </div>
+                </details>
+              </div>
+            </section>
+          </div>
+        </article>
       </div>
     </div>
   );

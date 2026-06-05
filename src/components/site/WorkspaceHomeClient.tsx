@@ -13,7 +13,7 @@ import {
 /* ── Category quick pills ──────────────────────────────────────── */
 const QUICK_CATS = [
   { icon: "🏛️", label: "Corporate & MCA", href: "/incorporation" },
-  { icon: "👥", label: "HR Documents", href: "/noc" },
+  { icon: "👥", label: "HR Documents", href: "/noc-format" },
   { icon: "🧾", label: "GST & Tax", href: "/gst" },
   { icon: "⚖️", label: "Legal Agreements", href: "/incorporation" },
 ];

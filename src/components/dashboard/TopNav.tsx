@@ -49,8 +49,8 @@ function useBreadcrumb(pathname: string): string {
   if (pathname.startsWith("/incorporation")) return "Incorporation";
   if (pathname.startsWith("/gst")) return "GST";
   if (pathname.startsWith("/llp")) return "LLP";
-  if (pathname.startsWith("/noc")) return "NOC";
-  if (pathname.startsWith("/dir2")) return "DIR-2 Consent Form";
+  if (pathname.startsWith("/noc-format") || pathname.startsWith("/noc")) return "NOC";
+  if (pathname.startsWith("/dir-2-format") || pathname.startsWith("/dir2")) return "DIR-2 Consent Form";
   if (pathname.startsWith("/tools")) return "Document Tool";
   return "Workspace";
 }

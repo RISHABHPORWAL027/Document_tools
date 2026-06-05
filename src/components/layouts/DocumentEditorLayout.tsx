@@ -15,6 +15,9 @@ interface DocumentEditorLayoutProps {
   busy?: boolean;
   iframeTitle?: string;
   extraActions?: ReactNode;
+  seoContent?: ReactNode;
+  aboutDescription?: string;
+  relatedDocs?: Array<{ id: string; title: string; href: string; icon: string }>;
 }
 
 export default function DocumentEditorLayout({
@@ -28,6 +31,9 @@ export default function DocumentEditorLayout({
   busy = false,
   iframeTitle = "Document Preview",
   extraActions,
+  seoContent,
+  aboutDescription,
+  relatedDocs,
 }: DocumentEditorLayoutProps) {
 
   const printPreview = () => {
@@ -65,6 +71,12 @@ export default function DocumentEditorLayout({
         {/* HEADER */}
         <div className="mb-5 sm:mb-8 flex flex-col gap-3 sm:gap-4 md:flex-row md:items-start md:justify-between">
           <div className="border-l-4 border-black pl-4">
+            {/* BREADCRUMB */}
+            <nav className="mb-2.5 flex items-center gap-1.5 text-xs text-[#888888] font-medium" aria-label="Breadcrumb">
+              <a href="/" className="hover:text-black transition-colors">Workspace</a>
+              <span>/</span>
+              <span className="text-[#444444] font-semibold">{title}</span>
+            </nav>
             <h1
               className="text-xl sm:text-2xl font-black tracking-tight text-black"
               style={{ letterSpacing: "-0.025em" }}
@@ -84,6 +96,12 @@ export default function DocumentEditorLayout({
 
           {/* LEFT: INPUTS */}
           <div className="space-y-4 sm:space-y-5 lg:max-h-[calc(100vh-10rem)] overflow-y-auto pr-0 lg:pr-2 pb-4 sm:pb-10">
+            {aboutDescription && (
+              <div className="rounded-xl border border-zinc-200 bg-white p-4 shadow-sm text-xs leading-relaxed text-zinc-600">
+                <span className="font-bold text-zinc-950 block mb-1.5 uppercase tracking-wider text-[10px]">What is this document?</span>
+                {aboutDescription}
+              </div>
+            )}
             {inputSection}
           </div>
 
@@ -146,6 +164,32 @@ export default function DocumentEditorLayout({
 
           {extraActions}
         </div>
+
+        {relatedDocs && relatedDocs.length > 0 && (
+          <div className="mt-8 border-t border-[#eeeeee] pt-6 pb-2 max-w-4xl mx-auto w-full">
+            <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-[#888888] mb-3 text-center sm:text-left">
+              Related Compliance Documents
+            </h3>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+              {relatedDocs.map((doc) => (
+                <a
+                  key={doc.id}
+                  href={doc.href}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[#d9d9d9] bg-white px-3 py-2 text-xs font-bold text-[#444444] hover:border-black hover:text-black transition-colors"
+                >
+                  <span>{doc.icon}</span>
+                  <span>{doc.title}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {seoContent && (
+          <div className="mt-12 border-t border-[#eeeeee] pt-10 pb-6">
+            {seoContent}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -7,8 +7,8 @@ const Dir2Page = dynamic(() => import("@/components/Dir2Page"), {
 });;
 
 export const metadata: Metadata = {
-  title: "DIR-2 Word Format & Consent to Act as Director (PDF Template)",
-  description: "Generate and download Form DIR-2 consent template for director appointment as per Companies Act rules. Ready for MCA SPICe+ company filing.",
+  title: "DIR-2 Consent to Act as Director Format | ComplianceDraft",
+  description: "Download DIR-2 Consent to Act as Director format. Ready-to-use editable template with placeholders and professional drafting format.",
 };
 
 function Dir2Fallback() {

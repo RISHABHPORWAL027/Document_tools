@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCompanyProfile } from "@/lib/profiles/use-profiles";
 import { useDocumentPrefill } from "@/lib/profiles/useDocumentPrefill";
@@ -10,6 +10,67 @@ import SignatureUpload from "@/components/SignatureUpload";
 import { buildBrHtml, BrFormData } from "@/lib/pvt-ltd/board-resolution-html";
 import { downloadDocx } from "@/lib/render/docx-client";
 import { downloadPdf } from "@/lib/render/pdf-client";
+import { allLiveTools } from "@/lib/site/registry";
+
+const brSeoContent = (
+  <article className="text-zinc-800">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Corporate Board Resolution</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          A Board Resolution is a formal corporate document representing decision-making by the Board of Directors of a company. Under the Companies Act, 2013, key corporate approvals—including appointing statutory auditors, opening bank accounts, shifting registered offices, and executing transactions—must be passed as official resolutions during a board meeting and recorded in the company's minutes book.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+        <div className="mt-4 space-y-3">
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>What is a board resolution?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              A board resolution is a formal document that records the decisions and actions taken by a company's Board of Directors during a board meeting. It acts as legal proof of the board's collective agreement and authorization of transactions, appointments, or policies.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Is a certified true copy of a board resolution legally valid?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Yes, a certified true copy of a board resolution, signed by a director or the company secretary, is a legally accepted format for submission to bank managers, tax authorities, and registry officials (like the ROC) to prove corporate decisions.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>How many directors must sign a board resolution?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Typically, a board resolution is signed by the chairperson of the meeting or authorized directors as decided by the board. To verify the resolution for bank or MCA filings, a certified true copy signed by at least one authorized director is standard.
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+  </article>
+);
 
 const inputClass = "w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-900 focus:border-zinc-500 focus:ring-1 focus:ring-zinc-500 outline-none";
 
@@ -68,6 +129,18 @@ export default function BoardResolutionPage() {
 
   const previewHtml = buildBrHtml(data);
 
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "board-resolution" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
+
   const download = async (format: "pdf" | "docx") => {
     setBusy(true);
     try {
@@ -86,6 +159,9 @@ export default function BoardResolutionPage() {
       title="Board Resolution"
       description="Generate certified true copies of board resolutions for statutory auditor appointment."
       companyId={companyId}
+      aboutDescription="A Board Resolution is a formal record of decisions passed by the Board of Directors of a company. Under the Companies Act, 2013, key actions like appointing auditors or authorizing bank operations must be passed at a board meeting, with certified true copies submitted to verify the board's collective approval."
+      relatedDocs={relatedDocs}
+      seoContent={brSeoContent}
       onProfileSelect={(p) => {
         setData((prev) => ({
           ...prev,

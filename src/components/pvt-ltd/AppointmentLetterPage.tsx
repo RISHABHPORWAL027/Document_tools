@@ -1,9 +1,70 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import { useCompanyProfile } from "@/lib/profiles/use-profiles";
 import DocumentEditorLayout from "@/components/layouts/DocumentEditorLayout";
+import { allLiveTools } from "@/lib/site/registry";
+
+const alSeoContent = (
+  <article className="text-zinc-800">
+    <div className="max-w-4xl mx-auto space-y-6">
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Statutory Auditor Appointment Letter</h2>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
+          The Auditor Appointment Letter is an official corporate communication issued by a company to its newly appointed statutory auditor following approvals at the Annual General Meeting (AGM) or Board Meeting. It outlines the formal tenure, audit conditions, scope, and remuneration structure. Under Section 139 of the Companies Act, 2013, filing the appointment letter with Form ADT-1 is mandatory.
+        </p>
+      </section>
+
+      <section>
+        <h2 className="text-xl font-bold text-zinc-950">Frequently Asked Questions (FAQs)</h2>
+        <div className="mt-4 space-y-3">
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>What is a statutory auditor appointment letter?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              An auditor appointment letter is a formal document issued by a company to its newly appointed statutory auditor. It outlines the terms of their appointment, the tenure (usually 5 years), the financial year(s) covered, and the compensation or ratification details decided by the shareholders.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>When is the appointment letter issued?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              It is issued immediately after the company passes a resolution in the Annual General Meeting (AGM) or Board Meeting appointing the statutory auditor. A copy is sent to the auditor along with their official consent request.
+            </div>
+          </details>
+
+          <details className="group border border-zinc-200 rounded-xl bg-white transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+            <summary className="flex items-center justify-between gap-4 p-4 font-semibold text-zinc-950 cursor-pointer list-none select-none hover:bg-zinc-50/50">
+              <span>Do private limited companies need to file the appointment letter with the ROC?</span>
+              <span className="transition-transform duration-300 group-open:rotate-180">
+                <svg className="h-5 w-5 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+              </span>
+            </summary>
+            <div className="px-4 pb-4 text-sm leading-relaxed text-zinc-600 border-t border-zinc-100 pt-3">
+              Yes, under Section 139 of the Companies Act, 2013, the appointment letter along with the auditor's eligibility consent certificate must be filed as attachments to Form ADT-1 with the ROC.
+            </div>
+          </details>
+        </div>
+      </section>
+    </div>
+  </article>
+);
 import { buildAppointmentLetterHtml, AppointmentLetterData } from "@/lib/pvt-ltd/appointment-letter-html";
 import { downloadDocx } from "@/lib/render/docx-client";
 import { downloadPdf } from "@/lib/render/pdf-client";
@@ -63,6 +124,18 @@ export default function AppointmentLetterPage() {
 
   const previewHtml = buildAppointmentLetterHtml(data);
 
+  const relatedDocs = useMemo(() => {
+    return allLiveTools()
+      .filter((t) => t.id !== "appointment-letter" && t.status === "live" && t.href !== "#")
+      .slice(0, 4)
+      .map((t) => ({
+        id: t.id,
+        title: t.title,
+        href: t.href,
+        icon: t.icon,
+      }));
+  }, []);
+
   const download = async (format: "pdf" | "docx") => {
     setBusy(true);
     try {
@@ -82,6 +155,9 @@ export default function AppointmentLetterPage() {
       title="Letter of Appointment"
       description="Formal appointment letter for statutory auditor of the company."
       companyId={companyId}
+      aboutDescription="The Letter of Appointment is a formal notice issued to statutory auditors outlining the scope of audit work, agreed term (usually 5 consecutive years), and legal remuneration terms. It serves as mandatory attachment proof for filing Form ADT-1 with the ROC."
+      relatedDocs={relatedDocs}
+      seoContent={alSeoContent}
       onProfileSelect={(p) => {
         setData((prev) => ({
           ...prev,
