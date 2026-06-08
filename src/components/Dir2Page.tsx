@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useCallback, useMemo, useState } from "react";
 import ProfileSelector from "@/components/ProfileSelector";
+import { cleanDir2Text } from "@/lib/dir2/normalize";
 import type { CompanyProfile, DirectorProfile } from "@/lib/profiles/types";
 import { getRelatedDocs } from "@/lib/site/registry";
 
@@ -291,9 +292,7 @@ export default function Dir2Page() {
                   Place &amp; date of signing
                 </div>
                 <p className="mb-3 text-xs leading-relaxed text-amber-900">
-                  These appear on the printed form as{" "}
-                  <strong>Date: _______</strong> and{" "}
-                  <strong>Place: _______</strong> beside your signature. Defaults
+                  These appear on the printed form beside your signature. Defaults
                   to today&apos;s date; you can change it.{" "}
                   <strong>Place</strong> is auto-filled from the director&apos;s{" "}
                   <strong>city</strong> when you load a saved company profile.
@@ -723,29 +722,36 @@ function DynamicCard({
 }
 
 function buildDir2Html(data: Dir2FormData) {
-  const val = (s: string) => (s.trim() ? escapeHtml(s) : "");
-  const fDate = (d: string) =>
-    d
+  const val = (s: string) => {
+    const value = cleanDir2Text(s);
+    return value ? escapeHtml(value) : "";
+  };
+  const fDate = (d: string) => {
+    const value = cleanDir2Text(d);
+    return value
       ? new Date(d).toLocaleDateString("en-IN", {
           day: "2-digit",
           month: "long",
           year: "numeric",
         })
       : "";
+  };
 
 
-  const narrative = data.priorDirectorshipDetails?.trim();
+  const narrative = cleanDir2Text(data.priorDirectorshipDetails);
   const narrativeHtml = narrative
     ? `<div class="prior-narrative" style="margin-bottom:8px;">${escapeHtml(narrative).replace(/\n/g, "<br>")}</div>`
     : "";
 
-  const companiesHtml = data.directorshipsText?.trim()
-    ? `<div class="prior-narrative" style="white-space:pre-wrap;margin-bottom:8px;">${escapeHtml(data.directorshipsText.trim())}</div>`
-    : '<span class="blank">N/A</span>';
+  const directorshipsText = cleanDir2Text(data.directorshipsText);
+  const companiesHtml = directorshipsText
+    ? `<div class="prior-narrative" style="white-space:pre-wrap;margin-bottom:8px;">${escapeHtml(directorshipsText)}</div>`
+    : "";
 
-  const membershipsHtml = data.membershipText?.trim()
-    ? `<div class="prior-narrative" style="white-space:pre-wrap;margin-bottom:8px;">${escapeHtml(data.membershipText.trim())}</div>`
-    : '<span class="blank">N/A</span>';
+  const membershipText = cleanDir2Text(data.membershipText);
+  const membershipsHtml = membershipText
+    ? `<div class="prior-narrative" style="white-space:pre-wrap;margin-bottom:8px;">${escapeHtml(membershipText)}</div>`
+    : "";
 
   return `<!DOCTYPE html>
 <html lang="en">

@@ -76,7 +76,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         pathname.startsWith("/llp") ||
         pathname.startsWith("/noc") ||
         pathname.startsWith("/specimen") ||
-        pathname.startsWith("/dir-2-format") ||
+        pathname.startsWith("/dir2") ||
         pathname.startsWith("/dir2") ||
         pathname.startsWith("/tools")
       );

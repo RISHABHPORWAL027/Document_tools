@@ -1,6 +1,9 @@
 /**
  * Single source of truth for workspace flows and document generators.
  * Add new tools here — they appear on the home catalogue and in the right module.
+ *
+ * `href` must be the live generator route (e.g. `/dir2`), never an SEO landing slug
+ * (e.g. `/dir-2-format`). Use `liveToolHref()` for all in-app navigation.
  */
 
 export type DocCard = {
@@ -300,7 +303,7 @@ export const TOOLS: ToolDefinition[] = [
     description: "Consent to act as director — mandatory for SPICe+ filing.",
     badge: "MCA",
     icon: "📄",
-    href: "/dir-2-format",
+    href: "/dir2",
     flowId: "incorporation",
     subflowId: "inc-shared",
     status: "live",
@@ -720,7 +723,7 @@ function toolToDocCard(t: ToolDefinition): DocCard {
     title: t.title,
     description: t.description,
     badge: t.badge,
-    href: t.status === "live" ? t.href : "#",
+    href: t.status === "live" ? liveToolHref(t) : "#",
     icon: t.icon,
     comingSoon: t.status === "coming_soon",
   };
@@ -743,7 +746,7 @@ export function docCardsForFlow(flowId: FlowId): DocCard[] {
       title: t.title,
       description: t.description,
       badge: t.badge,
-      href: t.href,
+      href: liveToolHref(t),
       icon: t.icon,
     }));
 }
@@ -755,6 +758,11 @@ export function moduleDocCardsForFlow(flowId: FlowId): DocCard[] {
 
 export function allLiveTools(): ToolDefinition[] {
   return TOOLS.filter((t) => t.status === "live");
+}
+
+/** Generator URL for in-app navigation — registry `href` is always the live editor route */
+export function liveToolHref(tool: ToolDefinition): string {
+  return tool.href;
 }
 
 export type RelatedDoc = {
@@ -776,7 +784,7 @@ export function getRelatedDocs(currentToolId: string, currentSubflowId: string):
     .map((t) => ({
       id: t.id,
       title: t.title,
-      href: t.href,
+      href: liveToolHref(t),
       icon: t.icon,
     }));
 }

@@ -12,8 +12,13 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
-        source: "/dir2",
-        destination: "/dir-2-format",
+        source: "/management-representation-letter",
+        destination: "/management-representation-letter-format",
+        permanent: true,
+      },
+      {
+        source: "/director-resignation-letter",
+        destination: "/director-resignation-letter-format",
         permanent: true,
       },
     ];

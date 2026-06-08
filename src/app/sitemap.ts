@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { TOOLS as SITE_TOOLS } from "@/lib/site/registry";
+import { seoDocuments } from "@/data/seoDocuments";
 
 const BASE_URL = "https://www.compliancedraft.co.in";
 
@@ -48,8 +49,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       };
     });
 
+  // 3. Programmatic SEO Pages
+  const seoPages = seoDocuments.map((doc) => ({
+    url: `${BASE_URL}/${doc.slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }));
+
   // Deduplicate URLs in case of duplicates
-  const allUrls = [...staticPages, ...siteToolPages];
+  const allUrls = [...staticPages, ...siteToolPages, ...seoPages];
   const seen = new Set<string>();
   const uniqueUrls: MetadataRoute.Sitemap = [];
 

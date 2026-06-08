@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Menu, Search, Building2, ChevronDown } from "lucide-react";
 import {
   type GlobalSearchHit,
+  liveToolHref,
   searchWorkspace,
 } from "@/lib/site/registry";
 
@@ -33,7 +34,7 @@ function hitSubLabel(hit: GlobalSearchHit): string {
 function hitHref(hit: GlobalSearchHit): string {
   if (hit.kind === "flow") return `/${hit.flow.path}`;
   if (hit.tool.status === "live" && hit.tool.href && hit.tool.href !== "#") {
-    return hit.tool.href;
+    return liveToolHref(hit.tool);
   }
   return `/${hit.flow.path}`;
 }
@@ -50,7 +51,7 @@ function useBreadcrumb(pathname: string): string {
   if (pathname.startsWith("/gst")) return "GST";
   if (pathname.startsWith("/llp")) return "LLP";
   if (pathname.startsWith("/noc-format") || pathname.startsWith("/noc")) return "NOC";
-  if (pathname.startsWith("/dir-2-format") || pathname.startsWith("/dir2")) return "DIR-2 Consent Form";
+  if (pathname.startsWith("/dir2")) return "DIR-2 Consent Form";
   if (pathname.startsWith("/tools")) return "Document Tool";
   return "Workspace";
 }
@@ -108,10 +109,16 @@ export default function TopNav({ onMenuToggle }: TopNavProps) {
     if (searchPending) return;
     const hit = searchResults[activeHitIndex];
     if (!hit) return;
-    router.push(hitHref(hit));
+    const href = hitHref(hit);
     setSearchOpen(false);
     setSearchQuery("");
     searchInputRef.current?.blur();
+    // Full navigation for live generators — avoids client-router detours via SEO pages
+    if (hit.kind === "tool" && hit.tool.status === "live") {
+      window.location.assign(href);
+      return;
+    }
+    router.push(href);
   }, [activeHitIndex, router, searchResults, searchPending]);
 
   const onSearchKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -208,16 +215,9 @@ export default function TopNav({ onMenuToggle }: TopNavProps) {
                 const href = hitHref(hit);
                 const active = index === activeHitIndex;
                 const icon = hit.kind === "flow" ? hit.flow.icon : hit.tool.icon;
-                return (
-                  <Link
-                    key={hit.kind === "flow" ? `flow-${hit.flow.id}` : `tool-${hit.tool.id}`}
-                    href={href}
-                    role="option"
-                    aria-selected={active}
-                    className={`flex items-start gap-3 px-4 py-2.5 transition-colors ${active ? "bg-slate-50" : "hover:bg-slate-50"}`}
-                    onMouseEnter={() => setActiveHitIndex(index)}
-                    onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
-                  >
+                const rowClass = `flex items-start gap-3 px-4 py-2.5 transition-colors ${active ? "bg-slate-50" : "hover:bg-slate-50"}`;
+                const rowBody = (
+                  <>
                     <span className="text-base leading-none mt-0.5" aria-hidden>{icon}</span>
                     <span className="min-w-0 flex-1">
                       <span className="block text-sm font-semibold" style={{ color: "#1A1C1E" }}>{hitLabel(hit)}</span>
@@ -228,6 +228,31 @@ export default function TopNav({ onMenuToggle }: TopNavProps) {
                     ) : (
                       <span className="shrink-0 self-center text-xs font-semibold" style={{ color: "#1A2E7E" }}>Open →</span>
                     )}
+                  </>
+                );
+                return hit.kind === "tool" && hit.tool.status === "live" ? (
+                  <a
+                    key={`tool-${hit.tool.id}`}
+                    href={href}
+                    role="option"
+                    aria-selected={active}
+                    className={rowClass}
+                    onMouseEnter={() => setActiveHitIndex(index)}
+                    onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                  >
+                    {rowBody}
+                  </a>
+                ) : (
+                  <Link
+                    key={hit.kind === "flow" ? `flow-${hit.flow.id}` : `tool-${hit.tool.id}`}
+                    href={href}
+                    role="option"
+                    aria-selected={active}
+                    className={rowClass}
+                    onMouseEnter={() => setActiveHitIndex(index)}
+                    onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
+                  >
+                    {rowBody}
                   </Link>
                 );
               })

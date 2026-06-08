@@ -7,6 +7,7 @@ import {
   FLOWS,
   TOOLS,
   getSubflow,
+  liveToolHref,
   type FlowDefinition,
 } from "@/lib/site/registry";
 
@@ -58,6 +59,16 @@ export default function WorkspaceHomeClient() {
       return blob.includes(q);
     });
   }, [query]);
+
+  // Deduplicate tools so each document appears once in the catalogue
+  const dedupedTools = useMemo(() => {
+    const seen = new Set<string>();
+    return filteredTools.filter((tool) => {
+      if (seen.has(tool.title)) return false;
+      seen.add(tool.title);
+      return true;
+    });
+  }, [filteredTools]);
 
   function scrollToCatalogue() {
     catalogueRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -116,9 +127,9 @@ export default function WorkspaceHomeClient() {
           </div>
           <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {recentTools.map((tool) => (
-              <Link
+              <a
                 key={tool.id}
-                href={tool.href}
+                href={liveToolHref(tool)}
                 className="group flex flex-col rounded-xl border border-slate-200 bg-white p-4 shadow-sm hover:shadow-md hover:border-teal-200 transition-all duration-200"
               >
                 <div className="mb-2 flex items-center justify-between">
@@ -143,7 +154,7 @@ export default function WorkspaceHomeClient() {
                   <Clock className="h-3 w-3" aria-hidden />
                   Opened recently
                 </div>
-              </Link>
+              </a>
             ))}
           </div>
         </section>
@@ -272,15 +283,15 @@ export default function WorkspaceHomeClient() {
           </div>
           {query && (
             <span className="text-xs text-slate-500">
-              <strong className="text-slate-800">{filteredTools.length}</strong> results for &ldquo;{query}&rdquo;
+              <strong className="text-slate-800">{dedupedTools.length}</strong> results for &ldquo;{query}&rdquo;
             </span>
           )}
         </div>
         <ul className="divide-y divide-slate-100">
-          {filteredTools.map((t) => {
+          {dedupedTools.map((t) => {
             const flow = FLOWS.find((f) => f.id === t.flowId);
             const live = t.status === "live";
-            const href = live && t.href !== "#" ? t.href : null;
+            const href = live && t.href !== "#" ? liveToolHref(t) : null;
             const inner = (
               <div className="flex flex-1 items-center gap-2.5 sm:gap-4 min-w-0">
                 <span className="text-xl shrink-0" aria-hidden>{t.icon}</span>
@@ -303,16 +314,16 @@ export default function WorkspaceHomeClient() {
             );
             return href ? (
               <li key={t.id}>
-                <Link href={href} className="flex items-center px-4 sm:px-6 py-3 sm:py-3.5 hover:bg-slate-50 transition-colors group">
+                <a href={href} className="flex items-center px-4 sm:px-6 py-3 sm:py-3.5 hover:bg-slate-50 transition-colors group">
                   {inner}
-                </Link>
+                </a>
               </li>
             ) : (
               <li key={t.id} className="flex items-center px-4 sm:px-6 py-3 sm:py-3.5 opacity-50">{inner}</li>
             );
           })}
         </ul>
-        {filteredTools.length === 0 && (
+        {dedupedTools.length === 0 && (
           <div className="py-14 text-center">
             <Search className="mx-auto h-8 w-8 text-slate-300 mb-2" />
             <p className="text-sm text-slate-500">No results for &ldquo;{query}&rdquo;</p>

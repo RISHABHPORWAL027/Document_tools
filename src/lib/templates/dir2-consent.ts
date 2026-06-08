@@ -83,7 +83,12 @@ export const dir2ConsentTemplateHtml = `
         {{#if priorDirectorshipDetails}}
         <div class="prior-narrative" style="margin-bottom: 8px;">{{{nl2br priorDirectorshipDetails}}}</div>
         {{/if}}
+        {{#if existingDirectorships}}
         <div><strong>{{existingDirectorships}}</strong></div>
+        {{/if}}
+        {{#if directorshipsText}}
+        <div class="prior-narrative" style="white-space: pre-wrap; margin-bottom: 8px;">{{{nl2br directorshipsText}}}</div>
+        {{/if}}
         {{#if directorCompanies.length}}
         {{#each directorCompanies}}
         <div class="sub-item">{{inc @index}}. {{companyName}} — {{designation}}</div>
@@ -95,12 +100,13 @@ export const dir2ConsentTemplateHtml = `
       <td class="col-num">12.</td>
       <td class="col-label">Particulars of membership No. and Certificate of practice No. if the applicant is a member of any professional Institute:</td>
       <td class="col-value">
+        {{#if membershipText}}
+        <div class="prior-narrative" style="white-space: pre-wrap; margin-bottom: 8px;">{{{nl2br membershipText}}}</div>
+        {{/if}}
         {{#if professionalMembership.length}}
         {{#each professionalMembership}}
         <div class="sub-item">{{inc @index}}. {{instituteName}} | Membership No: {{membershipNumber}} | COP No: {{certificateOfPracticeNumber}}</div>
         {{/each}}
-        {{else}}
-        N/A
         {{/if}}
       </td>
     </tr>
