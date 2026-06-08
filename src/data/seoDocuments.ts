@@ -26,6 +26,51 @@ export interface SeoDocument {
   trustBadge?: string;
 }
 
+const SEO_BASE_URL = "https://www.compliancedraft.co.in";
+
+/** In-app paths for breadcrumb middle tier — every ListItem must have a valid `item` URL */
+const CATEGORY_BREADCRUMB_PATHS: Record<string, string> = {
+  "HR & Payroll": "/hr-documents",
+  "GST & Invoicing": "/gst",
+  "Corporate Compliance": "/incorporation",
+  Banking: "/incorporation",
+  Incorporation: "/incorporation",
+  "Audit & Accounts": "/incorporation",
+  "LLP Incorporation": "/incorporation",
+};
+
+export function categoryBreadcrumbUrl(category: string): string {
+  const path = CATEGORY_BREADCRUMB_PATHS[category] ?? "/";
+  return `${SEO_BASE_URL}${path}`;
+}
+
+/** Google requires every ListItem to include `item` with a resolvable URL */
+function breadcrumbListItem(position: number, name: string, url: string) {
+  return {
+    "@type": "ListItem",
+    position,
+    name,
+    item: {
+      "@type": "WebPage",
+      "@id": url,
+    },
+  };
+}
+
+export function buildBreadcrumbSchema(doc: SeoDocument) {
+  const pageUrl = `${SEO_BASE_URL}/${doc.slug}`;
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "@id": `${pageUrl}#breadcrumb`,
+    itemListElement: [
+      breadcrumbListItem(1, "Home", `${SEO_BASE_URL}/`),
+      breadcrumbListItem(2, doc.category, categoryBreadcrumbUrl(doc.category)),
+      breadcrumbListItem(3, doc.documentName, pageUrl),
+    ],
+  };
+}
+
 /** Map related-doc labels to canonical SEO document names */
 const DOCUMENT_ALIASES: Record<string, string> = {
   "NOC from Owner": "NOC for Registered Office",

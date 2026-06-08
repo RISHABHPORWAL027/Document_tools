@@ -1,6 +1,11 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { inAppHref, seoDocuments, uniqueGeneratorLinks } from "@/data/seoDocuments";
+import {
+  buildBreadcrumbSchema,
+  inAppHref,
+  seoDocuments,
+  uniqueGeneratorLinks,
+} from "@/data/seoDocuments";
 import Link from "next/link";
 import SeoLandingTemplate from "@/components/seo/SeoLandingTemplate";
 import SalarySlipLandingPage from "@/components/seo/SalarySlipLandingPage";
@@ -67,30 +72,7 @@ export default async function SeoPage({ params }: Props) {
     })),
   };
 
-  // Generate Breadcrumb Schema
-  const breadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "name": "Home",
-        "item": "https://www.compliancedraft.co.in",
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "name": doc.category,
-      },
-      {
-        "@type": "ListItem",
-        "position": 3,
-        "name": doc.documentName,
-        "item": `https://www.compliancedraft.co.in/${doc.slug}`,
-      },
-    ],
-  };
+  const breadcrumbSchema = buildBreadcrumbSchema(doc);
 
   const articleSchema = {
     "@context": "https://schema.org",
