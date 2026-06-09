@@ -44,16 +44,16 @@ export function categoryBreadcrumbUrl(category: string): string {
   return `${SEO_BASE_URL}${path}`;
 }
 
-/** Google requires every ListItem to include `item` with a resolvable URL */
+/**
+ * Google Breadcrumb rich results require `item` as a URL string on every ListItem.
+ * @see https://developers.google.com/search/docs/appearance/structured-data/breadcrumb
+ */
 function breadcrumbListItem(position: number, name: string, url: string) {
   return {
     "@type": "ListItem",
     position,
     name,
-    item: {
-      "@type": "WebPage",
-      "@id": url,
-    },
+    item: url,
   };
 }
 
