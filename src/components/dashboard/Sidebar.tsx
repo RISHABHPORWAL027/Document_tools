@@ -15,6 +15,8 @@ import {
   Receipt,
   Users,
   Calculator,
+  Calendar,
+  CalendarDays,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -23,6 +25,12 @@ const NAV_ITEMS = [
     label: "Workspace",
     icon: LayoutDashboard,
     exact: true,
+  },
+  {
+    href: "/calendar",
+    label: "India Calendar 2026",
+    icon: CalendarDays,
+    exact: false,
   },
   {
     href: "/calculators",
@@ -49,6 +57,18 @@ const NAV_ITEMS = [
     exact: false,
   },
 
+  {
+    href: "/holiday-calendar",
+    label: "Holiday Calendar",
+    icon: Calendar,
+    exact: false,
+  },
+  {
+    href: "/compliance-calendar",
+    label: "Compliance Calendar",
+    icon: CalendarDays,
+    exact: false,
+  },
   {
     href: "/invoice",
     label: "Invoices",

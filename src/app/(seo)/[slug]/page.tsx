@@ -6,6 +6,8 @@ import {
   seoDocuments,
   uniqueGeneratorLinks,
 } from "@/data/seoDocuments";
+import { SEO_CALCULATORS, getSeoCalculatorBySlug } from "@/data/seoCalculators";
+import { SEO_CALENDARS, getSeoCalendarBySlug } from "@/data/seoCalendars";
 import Link from "next/link";
 import SeoLandingTemplate from "@/components/seo/SeoLandingTemplate";
 import SalarySlipLandingPage from "@/components/seo/SalarySlipLandingPage";
@@ -14,6 +16,8 @@ import Dir2LandingPage from "@/components/seo/Dir2LandingPage";
 import NocRegisteredOfficeLandingPage from "@/components/seo/NocRegisteredOfficeLandingPage";
 import MrlLandingPage from "@/components/seo/MrlLandingPage";
 import AppointmentLetterLandingPage from "@/components/seo/AppointmentLetterLandingPage";
+import CalculatorSeoTemplate from "@/components/seo/CalculatorSeoTemplate";
+import CalendarSeoTemplate from "@/components/seo/CalendarSeoTemplate";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -21,44 +25,90 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const doc = seoDocuments.find((d) => d.slug === slug);
 
-  if (!doc) {
+  // 1. Check Document SEO
+  const doc = seoDocuments.find((d) => d.slug === slug);
+  if (doc) {
     return {
-      title: "Page Not Found",
+      title: doc.metaTitle,
+      description: doc.metaDescription,
+      alternates: { canonical: `https://www.compliancedraft.co.in/${doc.slug}` },
+      openGraph: {
+        title: doc.metaTitle,
+        description: doc.metaDescription,
+        url: `https://www.compliancedraft.co.in/${doc.slug}`,
+        type: "article",
+      },
     };
   }
 
-  return {
-    title: doc.metaTitle,
-    description: doc.metaDescription,
-    alternates: {
-      canonical: `https://www.compliancedraft.co.in/${doc.slug}`,
-    },
-    openGraph: {
-      title: doc.metaTitle,
-      description: doc.metaDescription,
-      url: `https://www.compliancedraft.co.in/${doc.slug}`,
-      type: "article",
-    },
-  };
+  // 2. Check Calculator SEO
+  const calcDoc = getSeoCalculatorBySlug(slug);
+  if (calcDoc) {
+    return {
+      title: calcDoc.metaTitle,
+      description: calcDoc.metaDescription,
+      keywords: calcDoc.keywords,
+      alternates: { canonical: `https://www.compliancedraft.co.in/${calcDoc.slug}` },
+      openGraph: {
+        title: calcDoc.metaTitle,
+        description: calcDoc.metaDescription,
+        url: `https://www.compliancedraft.co.in/${calcDoc.slug}`,
+        type: "article",
+      },
+    };
+  }
+
+  // 3. Check Calendar SEO
+  const calDoc = getSeoCalendarBySlug(slug);
+  if (calDoc) {
+    return {
+      title: calDoc.metaTitle,
+      description: calDoc.metaDescription,
+      keywords: calDoc.keywords,
+      alternates: { canonical: `https://www.compliancedraft.co.in/${calDoc.slug}` },
+      openGraph: {
+        title: calDoc.metaTitle,
+        description: calDoc.metaDescription,
+        url: `https://www.compliancedraft.co.in/${calDoc.slug}`,
+        type: "article",
+      },
+    };
+  }
+
+  return { title: "Page Not Found" };
 }
 
 export async function generateStaticParams() {
-  return seoDocuments.map((doc) => ({
-    slug: doc.slug,
-  }));
+  const docSlugs = seoDocuments.map((doc) => ({ slug: doc.slug }));
+  const calcSlugs = SEO_CALCULATORS.map((doc) => ({ slug: doc.slug }));
+  const calSlugs = SEO_CALENDARS.map((doc) => ({ slug: doc.slug }));
+
+  return [...docSlugs, ...calcSlugs, ...calSlugs];
 }
 
 export default async function SeoPage({ params }: Props) {
   const { slug } = await params;
-  const doc = seoDocuments.find((d) => d.slug === slug);
 
+  // 1. Check Calculator Programmatic SEO
+  const calcDoc = getSeoCalculatorBySlug(slug);
+  if (calcDoc) {
+    return <CalculatorSeoTemplate doc={calcDoc} />;
+  }
+
+  // 2. Check Calendar Programmatic SEO
+  const calDoc = getSeoCalendarBySlug(slug);
+  if (calDoc) {
+    return <CalendarSeoTemplate doc={calDoc} />;
+  }
+
+  // 3. Check Document Programmatic SEO
+  const doc = seoDocuments.find((d) => d.slug === slug);
   if (!doc) {
     notFound();
   }
 
-  // Generate FAQ Schema
+  // Generate FAQ Schema for Document
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

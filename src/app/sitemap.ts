@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { TOOLS as SITE_TOOLS } from "@/lib/site/registry";
 import { seoDocuments } from "@/data/seoDocuments";
+import { SEO_CALCULATORS } from "@/data/seoCalculators";
+import { SEO_CALENDARS } from "@/data/seoCalendars";
 import { CALCULATORS } from "@/lib/calculators/registry";
 
 const BASE_URL = "https://www.compliancedraft.co.in";
@@ -36,6 +38,108 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${BASE_URL}/calculators/category/business`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/calendar`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 1.0,
+    },
+    {
+      url: `${BASE_URL}/calendar/2026`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/calendar/today`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/calendar/month/january-2026`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/calendar/month/august-2026`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/holiday-calendar`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/holiday-calendar/2026`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/holiday-calendar/2027`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    },
+    {
+      url: `${BASE_URL}/long-weekends/2026`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/leave-planner`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compliance-calendar`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compliance-calendar/today`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compliance-calendar/this-week`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compliance-calendar/gst`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compliance-calendar/income-tax`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compliance-calendar/tds`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/compliance-calendar/roc`,
       lastModified,
       changeFrequency: "weekly" as const,
       priority: 0.9,
@@ -82,16 +186,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       };
     });
 
-  // 4. Programmatic SEO Pages
-  const seoPages = seoDocuments.map((doc) => ({
+  // 4. Programmatic SEO Pages (Documents, Calculators, Calendars)
+  const seoDocPages = seoDocuments.map((doc) => ({
     url: `${BASE_URL}/${doc.slug}`,
     lastModified,
     changeFrequency: "weekly" as const,
     priority: 0.7,
   }));
 
+  const seoCalcPages = SEO_CALCULATORS.map((doc) => ({
+    url: `${BASE_URL}/${doc.slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  const seoCalPages = SEO_CALENDARS.map((doc) => ({
+    url: `${BASE_URL}/${doc.slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
   // Deduplicate URLs in case of duplicates
-  const allUrls = [...staticPages, ...calculatorPages, ...siteToolPages, ...seoPages];
+  const allUrls = [...staticPages, ...calculatorPages, ...siteToolPages, ...seoDocPages, ...seoCalcPages, ...seoCalPages];
   const seen = new Set<string>();
   const uniqueUrls: MetadataRoute.Sitemap = [];
 

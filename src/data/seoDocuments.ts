@@ -588,6 +588,143 @@ const legacySeoDocuments: SeoDocument[] = [
     ],
     relatedDocs: ["Board Resolution", "Management Representation Letter"]
   },
+
+  // ---------------------------------------------------------------------------
+  // NEW HIGH-INTENT LONG-TAIL SEO LANDING PAGES (Analytics Boosters)
+  // ---------------------------------------------------------------------------
+  {
+    id: "board-resolution-director-appointment",
+    documentName: "Board Resolution for Director Appointment",
+    slug: "board-resolution-for-director-appointment",
+    generatorUrl: "/incorporation/private-limited/board-resolution",
+    category: "Corporate Compliance",
+    type: "format",
+    metaTitle: "Board Resolution for Director Appointment Format Companies Act",
+    metaDescription: "Download certified draft format of Board Resolution for appointment of Additional Director under Section 161 of Companies Act 2013.",
+    intro: "A formal Board Resolution passed by directors to appoint an additional director or fill a casual vacancy on the Board.",
+    whatIsIt: "Official certified true copy of the board resolution passed at a board meeting approving director appointment.",
+    whenIsItRequired: "When a Private Limited or Public Limited company appoints a new director.",
+    whoNeedsIt: "Company Secretaries, Directors, and Compliance Officers.",
+    howToUse: "Fill director name, DIN, effective date, print on company letterhead, get signed by presiding director.",
+    faqs: [
+      { question: "Is Form DIR-12 mandatory after passing this resolution?", answer: "Yes, e-Form DIR-12 must be filed with the ROC within 30 days of passing the resolution." }
+    ],
+    relatedDocs: ["DIR-2 Consent Form", "Board Resolution"]
+  },
+  {
+    id: "board-resolution-gst-registration",
+    documentName: "Board Resolution for GST Registration",
+    slug: "board-resolution-for-gst-registration",
+    generatorUrl: "/incorporation/private-limited/board-resolution",
+    category: "GST & Invoicing",
+    type: "format",
+    metaTitle: "Board Resolution for GST Registration & Authorized Signatory",
+    metaDescription: "Download Board Resolution format authorizing a director or officer as Authorized Signatory for GST Registration on GST Portal.",
+    intro: "Mandatory authorization resolution required by GST department during new GST registration for companies and LLPs.",
+    whatIsIt: "Board resolution appointing an Authorized Signatory to file GST registration and sign GST returns.",
+    whenIsItRequired: "During application for new GST registration or changing primary authorized signatory.",
+    whoNeedsIt: "Startups, Private Limited Companies, and LLPs.",
+    howToUse: "Fill authorized person details, print on letterhead, sign, and upload on GST Portal.",
+    faqs: [
+      { question: "Can a non-director be appointed as Authorized Signatory for GST?", answer: "Yes, any authorized senior manager or officer can be appointed via board resolution." }
+    ],
+    relatedDocs: ["GST Invoice Generator", "NOC for Registered Office"]
+  },
+  {
+    id: "board-resolution-loan-approval",
+    documentName: "Board Resolution for Bank Loan Approval",
+    slug: "board-resolution-for-loan-approval",
+    generatorUrl: "/incorporation/private-limited/board-resolution",
+    category: "Banking",
+    type: "format",
+    metaTitle: "Board Resolution for Bank Loan & Credit Facility Sanction",
+    metaDescription: "Download Board Resolution format for borrowing money, securing credit facilities, and executing bank loan agreements.",
+    intro: "Required by banks and financial institutions before sanctioning term loans, cash credit, or overdraft limits.",
+    whatIsIt: "Resolution under Section 179(3)(d) authorizing company borrowing and mortgaging assets.",
+    whenIsItRequired: "When applying for corporate bank loans, working capital limits, or term loans.",
+    whoNeedsIt: "Companies and Directors.",
+    howToUse: "Fill bank loan details, sanction amount, authorized director names, and submit certified copy to bank.",
+    faqs: [
+      { question: "Is shareholder approval required for loans?", answer: "If total borrowing exceeds paid-up capital + free reserves, special resolution under Sec 180(1)(c) is required." }
+    ],
+    relatedDocs: ["Board Resolution for Bank Account", "Specimen Signature Card"]
+  },
+  {
+    id: "noc-format-gst-registration",
+    documentName: "NOC Format for GST Registration",
+    slug: "noc-format-for-gst-registration",
+    generatorUrl: "/noc-format",
+    category: "GST & Invoicing",
+    type: "format",
+    metaTitle: "NOC Format for GST Registration from Property Owner",
+    metaDescription: "Download No Objection Certificate (NOC) format from property owner for registered office address proof under GST.",
+    intro: "No Objection Certificate issued by property owner allowing business to use premises for GST registration.",
+    whatIsIt: "Legal consent letter from premises owner permitting business operations and GST registration.",
+    whenIsItRequired: "Filing new GST registration application when premises are rented or owned by director/relative.",
+    whoNeedsIt: "Business Owners, Proprietors, Companies.",
+    howToUse: "Enter owner name, address, property details, print on plain paper or stamp paper, owner signs.",
+    faqs: [
+      { question: "Is stamp paper mandatory for GST NOC?", answer: "Plain paper NOC accompanied by electricity bill is accepted in most jurisdictions, though ₹20-100 stamp paper adds legal validity." }
+    ],
+    relatedDocs: ["NOC for Registered Office", "GST Invoice Generator"]
+  },
+  {
+    id: "noc-company-incorporation",
+    documentName: "NOC for Company Incorporation",
+    slug: "noc-for-company-incorporation",
+    generatorUrl: "/noc-format",
+    category: "Corporate Compliance",
+    type: "format",
+    metaTitle: "NOC for Company Incorporation MCA SPICe+ Format",
+    metaDescription: "Download NOC format for registered office address proof during company incorporation on MCA SPICe+ portal.",
+    intro: "Mandatory address proof document required for filing SPICe+ Part B form during MCA company registration.",
+    whatIsIt: "Owner NOC declaring no objection to establishing company registered office at specified address.",
+    whenIsItRequired: "Incorporating Private Limited, One Person Company (OPC), or Section 8 Company.",
+    whoNeedsIt: "Promoters, Founders, Professional CAs.",
+    howToUse: "Fill proposed company name, address, owner details, print, owner signs, upload on MCA.",
+    faqs: [
+      { question: "What supporting utility bill is required with NOC?", answer: "Utility bill (electricity, gas, mobile, water) not older than 2 months must be attached." }
+    ],
+    relatedDocs: ["DIR-2 Consent Form", "NOC for Registered Office"]
+  },
+  {
+    id: "salary-slip-format-excel-free-download",
+    documentName: "Salary Slip Excel Format",
+    slug: "salary-slip-format-excel-free-download",
+    generatorUrl: "/payslips",
+    category: "HR & Payroll",
+    type: "format",
+    metaTitle: "Salary Slip Format Excel Free Download India",
+    metaDescription: "Download automated Excel salary slip format with formulas for Basic, HRA, PF, PT, and Net Salary calculation.",
+    intro: "Pre-formatted Excel payslip template with built-in statutory deduction formulas.",
+    whatIsIt: "Automated spreadsheet template for generating monthly employee salary slips.",
+    whenIsItRequired: "Monthly payroll processing for small businesses and HR teams.",
+    whoNeedsIt: "Employers, HR Managers, Payroll Staff.",
+    howToUse: "Input gross salary and Basic %, formulas auto-calculate EPF, PT, HRA, and net salary.",
+    faqs: [
+      { question: "Is Excel salary slip valid for bank loan applications?", answer: "Yes, when printed on company letterhead and stamped/signed by employer." }
+    ],
+    relatedDocs: ["Salary Slip Format", "Appointment Letter"]
+  },
+  {
+    id: "payslip-format-small-business",
+    documentName: "Payslip Format for Small Business",
+    slug: "payslip-format-for-small-business",
+    generatorUrl: "/payslips",
+    category: "HR & Payroll",
+    type: "format",
+    metaTitle: "Payslip Format for Small Business India – Free Generator",
+    metaDescription: "Simple and professional salary payslip format designed for Indian small businesses, startups, and proprietorships.",
+    intro: "Clean, compliant monthly payslip template designed specifically for small businesses with 1 to 50 employees.",
+    whatIsIt: "Standardized employee payslip format capturing earnings, deductions, employee ID, and bank details.",
+    whenIsItRequired: "Monthly salary disbursement for staff, workers, and executives.",
+    whoNeedsIt: "Small Business Owners, Startups, Shop Keepers.",
+    howToUse: "Use online generator to fill employee details and instant download PDF or print.",
+    faqs: [
+      { question: "Do small businesses need to issue salary slips?", answer: "Yes, issuing salary slips is required under Shops & Establishments Act and helps employees with income proof." }
+    ],
+    relatedDocs: ["Salary Slip Format", "In-Hand Salary Calculator"]
+  },
 ];
 
 /** Launch-week pages first (rich content), then remaining programmatic SEO */

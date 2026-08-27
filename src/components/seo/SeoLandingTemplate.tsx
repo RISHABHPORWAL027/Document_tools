@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Download, CheckCircle2, Sparkles } from "lucide-react";
 import FaqSection from "./FaqSection";
 import RelatedDocuments from "./RelatedDocuments";
@@ -172,6 +173,53 @@ export default function SeoLandingTemplate({ doc }: SeoLandingTemplateProps) {
 
       {/* FAQ Section */}
       <FaqSection faqs={doc.faqs} />
+
+      {/* Recommended Next Step Widget */}
+      <section className="py-12 bg-slate-50 border-t border-b border-slate-200/80">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="rounded-3xl border border-blue-200 bg-linear-to-br from-[#1A2E7E] via-[#12205B] to-[#0A1238] p-8 text-white shadow-xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-xs font-bold text-blue-200">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>Recommended Next Steps for Your Business</span>
+            </div>
+            <h2 className="text-2xl font-extrabold text-white">
+              Explore Related Compliance & Calculation Tools
+            </h2>
+            <p className="text-sm text-blue-100/90 leading-relaxed">
+              Maximize accuracy and save hours of administrative work by using ComplianceDraft&apos;s instant calculators and statutory calendars.
+            </p>
+
+            <div className="pt-2 grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <Link
+                href="/calculators/in-hand-salary-calculator"
+                className="p-4 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/20 transition-all text-left group"
+              >
+                <div className="text-2xl mb-1">💵</div>
+                <div className="text-xs font-bold text-white group-hover:text-amber-300">In-Hand Salary Calculator</div>
+                <div className="text-[11px] text-blue-200 mt-0.5">Calculate monthly take-home pay</div>
+              </Link>
+
+              <Link
+                href="/calendar"
+                className="p-4 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/20 transition-all text-left group"
+              >
+                <div className="text-2xl mb-1">📅</div>
+                <div className="text-xs font-bold text-white group-hover:text-amber-300">India Calendar 2026</div>
+                <div className="text-[11px] text-blue-200 mt-0.5">Holidays & GST/Tax due dates</div>
+              </Link>
+
+              <Link
+                href="/calculators/gst-calculator"
+                className="p-4 rounded-2xl bg-white/10 border border-white/15 hover:bg-white/20 transition-all text-left group"
+              >
+                <div className="text-2xl mb-1">🧾</div>
+                <div className="text-xs font-bold text-white group-hover:text-amber-300">GST Tax Calculator</div>
+                <div className="text-[11px] text-blue-200 mt-0.5">Calculate CGST/SGST tax split</div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Final CTA */}
       <section className="py-20 bg-mesh-gradient-2 relative overflow-hidden">
