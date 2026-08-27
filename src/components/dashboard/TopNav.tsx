@@ -22,17 +22,21 @@ function useDebouncedValue<T>(value: T, ms: number): T {
 }
 
 function hitLabel(hit: GlobalSearchHit): string {
-  return hit.kind === "flow" ? hit.flow.title : hit.tool.title;
+  if (hit.kind === "flow") return hit.flow.title;
+  if (hit.kind === "calculator") return hit.calculator.title;
+  return hit.tool.title;
 }
 
 function hitSubLabel(hit: GlobalSearchHit): string {
   if (hit.kind === "flow") return "Workflow · " + hit.flow.subtitle;
+  if (hit.kind === "calculator") return "Calculator · " + hit.calculator.categoryName;
   const soon = hit.tool.status === "coming_soon" ? " · Coming soon" : "";
   return hit.flow.title + soon;
 }
 
 function hitHref(hit: GlobalSearchHit): string {
   if (hit.kind === "flow") return `/${hit.flow.path}`;
+  if (hit.kind === "calculator") return `/calculators/${hit.calculator.slug}`;
   if (hit.tool.status === "live" && hit.tool.href && hit.tool.href !== "#") {
     return liveToolHref(hit.tool);
   }
@@ -214,7 +218,7 @@ export default function TopNav({ onMenuToggle }: TopNavProps) {
               searchResults.map((hit, index) => {
                 const href = hitHref(hit);
                 const active = index === activeHitIndex;
-                const icon = hit.kind === "flow" ? hit.flow.icon : hit.tool.icon;
+                const icon = hit.kind === "flow" ? hit.flow.icon : hit.kind === "calculator" ? hit.calculator.icon : hit.tool.icon;
                 const rowClass = `flex items-start gap-3 px-4 py-2.5 transition-colors ${active ? "bg-slate-50" : "hover:bg-slate-50"}`;
                 const rowBody = (
                   <>
@@ -230,21 +234,9 @@ export default function TopNav({ onMenuToggle }: TopNavProps) {
                     )}
                   </>
                 );
-                return hit.kind === "tool" && hit.tool.status === "live" ? (
-                  <a
-                    key={`tool-${hit.tool.id}`}
-                    href={href}
-                    role="option"
-                    aria-selected={active}
-                    className={rowClass}
-                    onMouseEnter={() => setActiveHitIndex(index)}
-                    onClick={() => { setSearchOpen(false); setSearchQuery(""); }}
-                  >
-                    {rowBody}
-                  </a>
-                ) : (
+                return (
                   <Link
-                    key={hit.kind === "flow" ? `flow-${hit.flow.id}` : `tool-${hit.tool.id}`}
+                    key={hit.kind === "flow" ? `flow-${hit.flow.id}` : hit.kind === "calculator" ? `calc-${hit.calculator.id}` : `tool-${hit.tool.id}`}
                     href={href}
                     role="option"
                     aria-selected={active}

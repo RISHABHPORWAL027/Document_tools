@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { TOOLS as SITE_TOOLS } from "@/lib/site/registry";
 import { seoDocuments } from "@/data/seoDocuments";
+import { CALCULATORS } from "@/lib/calculators/registry";
 
 const BASE_URL = "https://www.compliancedraft.co.in";
 
@@ -14,6 +15,30 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified,
       changeFrequency: "daily" as const,
       priority: 1.0,
+    },
+    {
+      url: `${BASE_URL}/calculators`,
+      lastModified,
+      changeFrequency: "daily" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/calculators/category/salary`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/calculators/category/finance`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
+    },
+    {
+      url: `${BASE_URL}/calculators/category/business`,
+      lastModified,
+      changeFrequency: "weekly" as const,
+      priority: 0.9,
     },
     {
       url: `${BASE_URL}/privacy`,
@@ -35,7 +60,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  // 2. Dashboard Document Workflows from site registry (e.g. NOC, GST, etc.)
+  // 2. Calculator Pages
+  const calculatorPages = CALCULATORS.map((calc) => ({
+    url: `${BASE_URL}/calculators/${calc.slug}`,
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: 0.9,
+  }));
+
+  // 3. Dashboard Document Workflows from site registry (e.g. NOC, GST, etc.)
   const siteToolPages = SITE_TOOLS
     .filter((tool) => tool.status === "live" && tool.href && tool.href !== "#")
     .map((tool) => {
@@ -49,7 +82,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       };
     });
 
-  // 3. Programmatic SEO Pages
+  // 4. Programmatic SEO Pages
   const seoPages = seoDocuments.map((doc) => ({
     url: `${BASE_URL}/${doc.slug}`,
     lastModified,
@@ -58,7 +91,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   // Deduplicate URLs in case of duplicates
-  const allUrls = [...staticPages, ...siteToolPages, ...seoPages];
+  const allUrls = [...staticPages, ...calculatorPages, ...siteToolPages, ...seoPages];
   const seen = new Set<string>();
   const uniqueUrls: MetadataRoute.Sitemap = [];
 

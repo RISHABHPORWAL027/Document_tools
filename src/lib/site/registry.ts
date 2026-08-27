@@ -793,10 +793,13 @@ export function allFlowsSorted(): FlowDefinition[] {
   return [...FLOWS].sort((a, b) => a.order - b.order);
 }
 
-/** Nav / command-palette style search over flows and tools */
+import { CALCULATORS } from "@/lib/calculators/registry";
+
+/** Nav / command-palette style search over flows, tools, and calculators */
 export type GlobalSearchHit =
   | { kind: "flow"; flow: FlowDefinition }
-  | { kind: "tool"; tool: ToolDefinition; flow: FlowDefinition };
+  | { kind: "tool"; tool: ToolDefinition; flow: FlowDefinition }
+  | { kind: "calculator"; calculator: { id: string; slug: string; title: string; shortDescription: string; icon: string; categoryName: string } };
 
 function includesI(haystack: string, needle: string): boolean {
   return haystack.toLowerCase().includes(needle);
@@ -824,5 +827,23 @@ export function searchWorkspace(query: string, limit = 15): GlobalSearchHit[] {
     }
   }
 
-  return [...flowHits, ...toolHits].slice(0, limit);
+  const calcHits: GlobalSearchHit[] = [];
+  for (const calc of CALCULATORS) {
+    const blob = `${calc.title} ${calc.shortDescription} ${calc.slug} ${calc.categoryName} ${(calc.seoMeta.keywords ?? []).join(" ")}`;
+    if (includesI(blob, q)) {
+      calcHits.push({
+        kind: "calculator",
+        calculator: {
+          id: calc.id,
+          slug: calc.slug,
+          title: calc.title,
+          shortDescription: calc.shortDescription,
+          icon: calc.icon,
+          categoryName: calc.categoryName,
+        },
+      });
+    }
+  }
+
+  return [...flowHits, ...toolHits, ...calcHits].slice(0, limit);
 }

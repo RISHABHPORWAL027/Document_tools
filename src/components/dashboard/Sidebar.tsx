@@ -14,6 +14,7 @@ import {
   Banknote,
   Receipt,
   Users,
+  Calculator,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -22,6 +23,12 @@ const NAV_ITEMS = [
     label: "Workspace",
     icon: LayoutDashboard,
     exact: true,
+  },
+  {
+    href: "/calculators",
+    label: "Calculators",
+    icon: Calculator,
+    exact: false,
   },
   {
     href: "/master-data",
