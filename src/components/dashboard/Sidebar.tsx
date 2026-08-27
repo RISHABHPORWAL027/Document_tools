@@ -13,24 +13,18 @@ import {
   X,
   Banknote,
   Receipt,
-  Users,
   Calculator,
   Calendar,
   CalendarDays,
+  Sparkles,
 } from "lucide-react";
 
-const NAV_ITEMS = [
+const MAIN_NAV_ITEMS = [
   {
     href: "/",
     label: "Workspace",
     icon: LayoutDashboard,
     exact: true,
-  },
-  {
-    href: "/calendar",
-    label: "India Calendar 2026",
-    icon: CalendarDays,
-    exact: false,
   },
   {
     href: "/calculators",
@@ -56,7 +50,21 @@ const NAV_ITEMS = [
     icon: Banknote,
     exact: false,
   },
+  {
+    href: "/invoice",
+    label: "Invoices",
+    icon: Receipt,
+    exact: false,
+  },
+];
 
+const CALENDAR_NAV_ITEMS = [
+  {
+    href: "/calendar",
+    label: "Master Calendar 2026",
+    icon: CalendarDays,
+    exact: true,
+  },
   {
     href: "/holiday-calendar",
     label: "Holiday Calendar",
@@ -70,9 +78,9 @@ const NAV_ITEMS = [
     exact: false,
   },
   {
-    href: "/invoice",
-    label: "Invoices",
-    icon: Receipt,
+    href: "/leave-planner",
+    label: "Leave Planner",
+    icon: Sparkles,
     exact: false,
   },
 ];
@@ -84,7 +92,7 @@ interface SidebarProps {
   onClose?: () => void;
 }
 
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -95,161 +103,147 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
 
   function isActive(href: string, exact: boolean) {
     if (exact) return pathname === href;
-    // Special: Workflows covers incorporation, gst, llp, noc, etc.
     if (href === "/incorporation") {
       return (
         pathname.startsWith("/incorporation") ||
         pathname.startsWith("/gst") ||
         pathname.startsWith("/llp") ||
-        pathname.startsWith("/noc") ||
-        pathname.startsWith("/specimen") ||
+        pathname.startsWith("/noc-format") ||
         pathname.startsWith("/dir2") ||
-        pathname.startsWith("/dir2") ||
-        pathname.startsWith("/tools")
+        pathname.startsWith("/specimen-signature")
       );
     }
     return pathname.startsWith(href);
   }
 
-  const sidebarContent = (isMobileDrawer: boolean) => (
+  return (
     <aside
-      className={
-        isMobileDrawer
-          ? "mobile-drawer-panel flex h-full flex-col"
-          : `hidden md:flex h-screen shrink-0 flex-col sticky top-0 z-30 transition-all duration-300 relative ${isCollapsed ? "w-[76px]" : "w-[220px]"}`
-      }
-      style={{ backgroundColor: "#1A2E7E" }}
+      className={`sidebar-root flex flex-col transition-transform duration-300 ease-in-out shrink-0 bg-[#1A2E7E]
+        fixed inset-y-0 left-0 z-50 md:static md:translate-x-0 md:z-30
+        ${isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full md:translate-x-0"}
+        ${isCollapsed ? "md:w-[68px]" : "md:w-[240px]"}
+        w-[280px] h-full min-h-screen
+      `}
     >
       {/* Desktop collapse toggle */}
-      {!isMobileDrawer && (
-        <button
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="absolute -right-3 top-7 flex h-6 w-6 items-center justify-center rounded-full border shadow-sm transition-transform hover:scale-110 z-50"
-          style={{ backgroundColor: "#F8F9FF", borderColor: "#C4C6D0", color: "#1A2E7E" }}
-          aria-label="Toggle Sidebar"
-        >
-          {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
-        </button>
-      )}
-
-      {/* ── Logo ── */}
-      <div
-        className={`flex items-center border-b py-[18px] transition-all overflow-hidden ${
-          isMobileDrawer
-            ? "px-5 gap-3 justify-between"
-            : isCollapsed
-              ? "px-5 justify-center"
-              : "px-5 gap-3"
-        }`}
-        style={{ borderColor: "#44474E" }}
+      <button
+        onClick={() => setIsCollapsed(!isCollapsed)}
+        className="hidden md:flex absolute -right-3 top-7 h-6 w-6 items-center justify-center rounded-full border shadow-sm transition-transform hover:scale-110 z-50 bg-[#F8F9FF] border-[#C4C6D0] text-[#1A2E7E]"
+        aria-label="Toggle Sidebar"
       >
+        {isCollapsed ? <ChevronRight className="h-3.5 w-3.5" /> : <ChevronLeft className="h-3.5 w-3.5" />}
+      </button>
+
+      {/* ── Logo & Mobile Close Header ── */}
+      <div className="flex items-center justify-between border-b border-[#44474E] py-[18px] px-5 overflow-hidden">
         <div className="flex items-center gap-3 min-w-0">
           <img
             src="/Assets/logo.webp"
             alt="ComplianceDraft Logo"
             className="h-8 w-8 shrink-0 object-contain"
           />
-          <div
-            className={`min-w-0 transition-all duration-300 ${
-              !isMobileDrawer && isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-            }`}
-          >
-            <h1 className="text-[10px] font-bold truncate max-w-full" style={{ color: "#F8F9FF" }}>ComplianceDraft</h1>
-            <div className="text-[10px] leading-tight mt-0.5 whitespace-nowrap" style={{ color: "#CBDBF5" }}>Professional Suite</div>
+          <div className={`min-w-0 transition-all duration-300 ${isCollapsed ? "md:opacity-0 md:w-0" : "opacity-100 w-auto"}`}>
+            <h1 className="text-[10px] font-bold truncate max-w-full text-[#F8F9FF]">ComplianceDraft</h1>
+            <div className="text-[10px] leading-tight mt-0.5 whitespace-nowrap text-[#CBDBF5]">Professional Suite</div>
           </div>
         </div>
 
         {/* Mobile close button */}
-        {isMobileDrawer && (
-          <button
-            onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-            aria-label="Close menu"
-          >
-            <X className="h-4 w-4 text-white" />
-          </button>
-        )}
+        <button
+          onClick={onClose}
+          className="flex md:hidden h-8 w-8 items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+          aria-label="Close menu"
+        >
+          <X className="h-5 w-5" />
+        </button>
       </div>
 
-      {/* ── Nav ── */}
-      <nav
-        className={`flex-1 overflow-y-auto py-4 space-y-0.5 ${
-          isMobileDrawer ? "px-3" : isCollapsed ? "px-2" : "px-3"
-        }`}
-        aria-label="Sidebar navigation"
-      >
-        {NAV_ITEMS.map((item) => {
-          const active = isActive(item.href, item.exact);
-          const collapsed = !isMobileDrawer && isCollapsed;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              title={collapsed ? item.label : undefined}
-              className={`group flex items-center rounded-lg py-3 md:py-2.5 text-sm font-medium transition-all duration-150 overflow-hidden ${
-                active ? "bg-white/10" : "hover:bg-white/5"
-              } ${collapsed ? "justify-center px-0" : "gap-3 px-3"}`}
-              style={
-                active
-                  ? { color: "#F8F9FF", borderLeft: collapsed ? "none" : "2px solid #CBDBF5", paddingLeft: collapsed ? "0" : "10px" }
-                  : { color: "#CBDBF5", borderLeft: collapsed ? "none" : "2px solid transparent", paddingLeft: collapsed ? "0" : "10px" }
-              }
-            >
-              <item.icon
-                className="h-4 w-4 shrink-0 transition-colors"
-                style={{ color: active ? "#F8F9FF" : "inherit" }}
-                aria-hidden
-              />
-              <span className={`truncate transition-all duration-300 ${collapsed ? "opacity-0 w-0" : "opacity-100 w-auto"}`}>
-                {item.label}
-              </span>
-            </Link>
-          );
-        })}
+      {/* ── Navigation Links ── */}
+      <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-4" aria-label="Sidebar navigation">
+        {/* Main Nav Section */}
+        <div className="space-y-0.5">
+          {MAIN_NAV_ITEMS.map((item) => {
+            const active = isActive(item.href, item.exact);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                title={isCollapsed ? item.label : undefined}
+                className={`group flex items-center rounded-lg py-3 md:py-2.5 text-sm font-medium transition-all duration-150 overflow-hidden ${
+                  active ? "bg-white/10 text-[#F8F9FF]" : "hover:bg-white/5 text-[#CBDBF5]"
+                } ${isCollapsed ? "md:justify-center md:px-0 gap-3 px-3" : "gap-3 px-3"}`}
+                style={
+                  active && !isCollapsed
+                    ? { borderLeft: "2px solid #CBDBF5", paddingLeft: "10px" }
+                    : { borderLeft: "2px solid transparent", paddingLeft: "10px" }
+                }
+              >
+                <item.icon
+                  className="h-4 w-4 shrink-0 transition-colors"
+                  style={{ color: active ? "#F8F9FF" : "inherit" }}
+                  aria-hidden
+                />
+                <span className={`truncate transition-all duration-300 ${isCollapsed ? "md:hidden" : "inline"}`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+
+        {/* All Calendars Section Grouped Together */}
+        <div className="pt-2 border-t border-white/10 space-y-0.5">
+          <div className={`px-3 pb-1 text-[10px] font-extrabold uppercase tracking-wider text-blue-200/60 ${isCollapsed ? "md:hidden" : "block"}`}>
+            Calendars & Schedules
+          </div>
+
+          {CALENDAR_NAV_ITEMS.map((item) => {
+            const active = isActive(item.href, item.exact);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                title={isCollapsed ? item.label : undefined}
+                className={`group flex items-center rounded-lg py-2.5 text-sm font-medium transition-all duration-150 overflow-hidden ${
+                  active ? "bg-white/10 text-[#F8F9FF]" : "hover:bg-white/5 text-[#CBDBF5]"
+                } ${isCollapsed ? "md:justify-center md:px-0 gap-3 px-3" : "gap-3 px-3"}`}
+                style={
+                  active && !isCollapsed
+                    ? { borderLeft: "2px solid #CBDBF5", paddingLeft: "10px" }
+                    : { borderLeft: "2px solid transparent", paddingLeft: "10px" }
+                }
+              >
+                <item.icon
+                  className="h-4 w-4 shrink-0 transition-colors"
+                  style={{ color: active ? "#F8F9FF" : "inherit" }}
+                  aria-hidden
+                />
+                <span className={`truncate transition-all duration-300 ${isCollapsed ? "md:hidden" : "inline"}`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </nav>
 
-      {/* ── Create button ── */}
-      <div
-        className={`border-t transition-all ${
-          isMobileDrawer ? "p-4" : isCollapsed ? "p-3" : "p-4"
-        }`}
-        style={{ borderColor: "#44474E" }}
-      >
+      {/* ── Create Button ── */}
+      <div className="border-t border-[#44474E] p-4">
         <Link
           href="/companies/new"
           id="sidebar-create-document"
-          title={!isMobileDrawer && isCollapsed ? "Create New Document" : undefined}
-          className={`flex items-center justify-center rounded-xl font-bold transition-all hover:opacity-90 active:scale-95 overflow-hidden ${
-            !isMobileDrawer && isCollapsed ? "w-10 h-10 mx-auto" : "w-full gap-2 py-2.5 text-sm"
-          }`}
-          style={{ backgroundColor: "#F8F9FF", color: "#1A2E7E" }}
+          onClick={onClose}
+          className="w-full flex items-center justify-center font-bold text-sm transition-all rounded-xl shadow-md gap-2 py-3 px-4 bg-[#F8F9FF] text-[#1A2E7E]"
+          title={isCollapsed ? "New Entity" : undefined}
         >
-          <Plus className="h-4 w-4 shrink-0" aria-hidden />
-          <span
-            className={`truncate transition-all duration-300 ${
-              !isMobileDrawer && isCollapsed ? "opacity-0 w-0" : "opacity-100 w-auto"
-            }`}
-          >
-            Create New Document
+          <Plus className="h-4 w-4 shrink-0" />
+          <span className={`truncate transition-all duration-300 ${isCollapsed ? "md:hidden" : "inline"}`}>
+            New Entity
           </span>
         </Link>
       </div>
-
     </aside>
-  );
-
-  return (
-    <>
-      {/* Desktop sidebar — always rendered, hidden on mobile via CSS */}
-      {sidebarContent(false)}
-
-      {/* Mobile drawer — rendered only when isOpen is true */}
-      {isOpen && (
-        <>
-          <div className="mobile-drawer-backdrop md:hidden" onClick={onClose} aria-hidden />
-          <div className="md:hidden">{sidebarContent(true)}</div>
-        </>
-      )}
-    </>
   );
 }

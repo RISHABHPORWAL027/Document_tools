@@ -218,6 +218,44 @@ export default function UnifiedCalendarHubClient({
           </div>
         </div>
       )}
+
+      {/* Cross-Linking Section to Calculators & Legal Documents */}
+      <section className="pt-6 border-t border-slate-200 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-extrabold text-[#1A1C1E]">
+            Popular Financial Calculators & Document Generators
+          </h2>
+          <Link href="/calculators" className="text-xs font-bold text-[#1A2E7E] hover:underline">
+            View All Tools →
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <Link href="/calculators/in-hand-salary-calculator" className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#1A2E7E] hover:shadow-sm transition-all group">
+            <span className="text-2xl block mb-1">💵</span>
+            <div className="text-xs font-bold text-[#1A1C1E] group-hover:text-[#1A2E7E]">In-Hand Salary Calculator</div>
+            <div className="text-[11px] text-slate-500 mt-0.5">Calculate take-home salary</div>
+          </Link>
+
+          <Link href="/calculators/gst-calculator" className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#1A2E7E] hover:shadow-sm transition-all group">
+            <span className="text-2xl block mb-1">🧾</span>
+            <div className="text-xs font-bold text-[#1A1C1E] group-hover:text-[#1A2E7E]">GST Tax Calculator</div>
+            <div className="text-[11px] text-slate-500 mt-0.5">CGST / SGST tax split</div>
+          </Link>
+
+          <Link href="/payslips" className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#1A2E7E] hover:shadow-sm transition-all group">
+            <span className="text-2xl block mb-1">📄</span>
+            <div className="text-xs font-bold text-[#1A1C1E] group-hover:text-[#1A2E7E]">Salary Slip Generator</div>
+            <div className="text-[11px] text-slate-500 mt-0.5">Instant employee payslips</div>
+          </Link>
+
+          <Link href="/invoice" className="p-4 rounded-2xl border border-slate-200 bg-white hover:border-[#1A2E7E] hover:shadow-sm transition-all group">
+            <span className="text-2xl block mb-1">📝</span>
+            <div className="text-xs font-bold text-[#1A1C1E] group-hover:text-[#1A2E7E]">GST Invoice Generator</div>
+            <div className="text-[11px] text-slate-500 mt-0.5">Create tax invoices</div>
+          </Link>
+        </div>
+      </section>
     </div>
   );
 }

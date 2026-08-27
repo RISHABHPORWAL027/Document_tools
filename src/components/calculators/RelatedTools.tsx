@@ -53,6 +53,28 @@ export default function RelatedTools({ tools }: Props) {
           </Link>
         ))}
       </div>
+
+      {/* Cross-linking to India Calendar & Leave Planner */}
+      <div className="pt-2 border-t border-indigo-100/80 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+        <Link
+          href="/calendar"
+          className="p-3 rounded-xl bg-linear-to-r from-blue-900 to-indigo-900 text-white font-bold flex items-center justify-between hover:opacity-95 transition-opacity"
+        >
+          <span className="flex items-center gap-1.5">
+            <span>📅</span> India Calendar 2026 & Compliance Dates
+          </span>
+          <span className="text-[10px] font-semibold text-blue-200">Explore →</span>
+        </Link>
+        <Link
+          href="/leave-planner"
+          className="p-3 rounded-xl bg-linear-to-r from-amber-500 to-amber-600 text-slate-900 font-extrabold flex items-center justify-between hover:opacity-95 transition-opacity"
+        >
+          <span className="flex items-center gap-1.5">
+            <span>🌴</span> Take 1 Leave Get 4 Days Off Planner
+          </span>
+          <span className="text-[10px] font-bold text-slate-900">Plan Now →</span>
+        </Link>
+      </div>
     </section>
   );
 }
