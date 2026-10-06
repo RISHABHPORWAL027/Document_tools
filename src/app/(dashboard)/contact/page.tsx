@@ -33,6 +33,9 @@ export default function ContactPage() {
       <div className="mt-8 text-xs" style={{ color: "#44474E" }}>
         Operating Hours: Monday – Friday, 9 AM – 6 PM (IST)
       </div>
+       <div className="mt-8 text-xs" style={{ color: "#44474E" }}>
+          Speical thanks to Priya Porwal (CS) and Mansee Aran (CS)
+          </div>
     </div>
   );
 }
