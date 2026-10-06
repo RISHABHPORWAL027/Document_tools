@@ -32,9 +32,6 @@ export default function PrivacyPolicyPage() {
         <p>
           If you have questions about this Privacy Policy, please contact us at <strong>porwal027@gmail.com</strong>.
         </p>
-         <p>
-          Speical thanks to Priya Porwal (CS) and Mansee Aran (CS)
-        </p>
       </div>
     </div>
   );
